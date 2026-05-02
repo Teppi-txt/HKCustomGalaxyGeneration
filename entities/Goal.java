@@ -1,21 +1,35 @@
 package entities;
-import java.util.ArrayList;
-
 import interface_adapters.IObtainable;
+import java.util.ArrayList;
     
 public class Goal implements IObtainable{
     private String name;
     private ArrayList<IObtainable> dependencies;
-    private ArrayList<IObtainable> effects;
+    private PlayerStateEffect effects;
+    private PlayerState obtainedAtState = null;
     
-    public Goal(String name, ArrayList<IObtainable> dependencies, ArrayList<IObtainable> effects) {
+    public Goal(String name, ArrayList<IObtainable> dependencies, PlayerStateEffect effects) {
         this.name = name;
         this.dependencies = dependencies;
         this.effects = effects;
     }
 
+    public Goal(String name, ArrayList<IObtainable> dependencies, PlayerStateEffect effects, PlayerState obtainedAtState) {
+        this.name = name;
+        this.dependencies = dependencies;
+        this.effects = effects;
+        this.obtainedAtState = obtainedAtState;
+    }
+
     public boolean canObtain(PlayerState state) {
         return true;
+    }
+
+    public boolean isObtained(PlayerState state) {
+        if (obtainedAtState != null) {
+            return state.isGreaterThan(obtainedAtState);
+        }
+        return false;
     }
 
     public String getName() {
@@ -36,7 +50,7 @@ public class Goal implements IObtainable{
         return goals;
     }
 
-    public ArrayList<IObtainable> getEffects() {
+    public PlayerStateEffect getEffects() {
         return this.effects;
     }
 

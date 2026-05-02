@@ -1,4 +1,5 @@
 import entities.Goal;
+import entities.PlayerState;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,28 +16,28 @@ public class TopologicalSort {
 
 
     //implementation of DFS ordering
-    public ArrayList<Goal> sort(ArrayList<Goal> goals) {
-        HashMap<String, ArrayList<String>> map = generateMap(goals);
-        HashMap<String, DFSInfo> dfs = generateDFSMap(goals);
+    // public ArrayList<Goal> sort(ArrayList<Goal> goals) {
+    //     HashMap<String, ArrayList<String>> map = generateMap(goals);
+    //     HashMap<String, DFSInfo> dfs = generateDFSMap(goals);
 
-        ArrayList<Goal> return_list = new ArrayList<>();
+    //     ArrayList<Goal> return_list = new ArrayList<>();
 
-        //run a topological sort
-        time = 0;
+    //     //run a topological sort
+    //     time = 0;
 
-        for (Goal g : goals) {
-            DFSInfo node = dfs.get(g.getName());
-            if (node.getColor() == Color.WHITE) {
-                // start dfs
+    //     for (Goal g : goals) {
+    //         DFSInfo node = dfs.get(g.getName());
+    //         if (node.getColor() == Color.WHITE) {
+    //             // start dfs
 
-                int status = dfs_helper(map, dfs, g, return_list);
-                if (status == -1) { // cycle detected, no top. ordering possible
-                    return null;
-                }
-            }
-        }
-        return return_list;
-    }
+    //             int status = dfs_helper(map, dfs, g, return_list);
+    //             if (status == -1) { // cycle detected, no top. ordering possible
+    //                 return null;
+    //             }
+    //         }
+    //     }
+    //     return return_list;
+    // }
 
     private int dfs_helper(HashMap<String, ArrayList<String>> map, HashMap<String, DFSInfo> dfs, Goal g, ArrayList<Goal> return_list) {
         time += 1;
@@ -61,16 +62,16 @@ public class TopologicalSort {
         return 1;
     }
 
-    private HashMap<String, ArrayList<String>> generateMap(ArrayList<Goal> goals) {
+    private HashMap<String, ArrayList<String>> generateMap(ArrayList<IObtainable> goals) {
         HashMap<String, ArrayList<String>> map = new HashMap<>();
 
         // initialize all nodes
-        for (Goal goal : goals) {
+        for (IObtainable goal : goals) {
             map.put(goal.getName(), new ArrayList<>());
         }
 
         // build edges: dependency -> goal
-        for (Goal goal : goals) {
+        for (IObtainable goal : goals) {
             for (IObtainable dep : goal.getDependencies()) {
                 if (dep instanceof Goal) {
                     String depName = ((Goal) dep).getName();
@@ -87,24 +88,24 @@ public class TopologicalSort {
         return map;
     }
 
-    private HashMap<String, DFSInfo> generateDFSMap(ArrayList<Goal> goals) {
-        HashMap<String, DFSInfo> map = new HashMap<>();
+    // private HashMap<String, DFSInfo> generateDFSMap(ArrayList<IObtainable> goals) {
+    //     HashMap<String, DFSInfo> map = new HashMap<>();
 
-        // initialize all nodes
-        for (Goal goal : goals) {
-            map.put(goal.getName(), new DFSInfo());
-        }
-        return map;
-    }
+    //     // initialize all nodes
+    //     for (Goal goal : goals) {
+    //         map.put(goal.getName(), new DFSInfo());
+    //     }
+    //     return map;
+    // }
 
-    private HashMap<String, KahnInfo> generateInMap(ArrayList<Goal> goals) {
+    private HashMap<String, KahnInfo> generateInMap(ArrayList<IObtainable> goals) {
         HashMap<String, KahnInfo> map = new HashMap<>();
 
-        for (Goal goal : goals) {
+        for (IObtainable goal : goals) {
             map.put(goal.getName(), new KahnInfo(goal));
         }
 
-        for (Goal goal : goals) {
+        for (IObtainable goal : goals) {
             KahnInfo goalInfo = map.get(goal.getName());
 
             for (IObtainable dep : goal.getDependencies()) {
@@ -206,13 +207,14 @@ public class TopologicalSort {
         }
     }
 
-    public ArrayList<IObtainable> sort_and_reduce(ArrayList<Goal> goals) {
+    public ArrayList<IObtainable> sort_and_reduce(ArrayList<IObtainable> goals) {
         ArrayList<KahnInfo> q = new ArrayList<>();
         HashMap<String, KahnInfo> map = generateInMap(goals);
         ArrayList<IObtainable> return_list = new ArrayList<>();
         HashSet<String> queued = new HashSet<>();
+        PlayerState state = new PlayerState();
 
-        for (Goal g : goals) {
+        for (IObtainable g : goals) {
             KahnInfo k = map.get(g.getName());
 
             if (k.hasDegreeZero()) {
@@ -224,7 +226,18 @@ public class TopologicalSort {
         while (!q.isEmpty()) {
             int index = (int) (q.size() * Math.random());
             KahnInfo top = q.remove(index);
-            return_list.add(top.getNode());
+            top.getNode().getEffects().applyToState(state);
+            System.out.println(state);
+
+            if (!return_list.contains(top.getNode())) {
+                return_list.add(top.getNode());
+            }
+
+            for (IObtainable goal : goals) {
+                if (!return_list.contains(goal) && goal.isObtained(state)) {
+                    return_list.add(goal);
+                }
+            }
 
             for (IObtainable dependent : top.getDependents()) {
                 KahnInfo k2 = map.get(dependent.getName());
@@ -232,7 +245,7 @@ public class TopologicalSort {
 
                 k2.removeNeighbor(top.getNode());
 
-                if (k2.hasDegreeZero() && !queued.contains(k2.getNode().getName())) {
+                if (k2.hasDegreeZero() || !return_list.contains(k2.getNode())) {
                     q.add(k2);
                     queued.add(k2.getNode().getName());
                 }
