@@ -1,0 +1,18 @@
+# compiled files
+*.class
+*.o
+
+# logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# build folders
+build/
+dist/
