@@ -1,8 +1,11 @@
-import entities.Goal;
+import entities.AchievementGoal;
+import entities.CollectionGoal;
+import entities.Objective;
 import entities.PlayerState;
 import entities.PlayerStateEffect;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -22,127 +25,187 @@ public class Main {
     }
 
     private static ArrayList<IObtainable> constructTestGraph1() {
-        Goal mothwingCloak = new Goal(
-            "Mothwing Cloak",
-            new ArrayList<>(),
-            new PlayerStateEffect()
+        AchievementGoal lumaflyLantern = new AchievementGoal(
+            "Lumafly Lantern",
+            new ArrayList<>(List.of()),
+            PlayerStateEffect.spend_geo(1800)
         );
 
-        Goal dreamNail = new Goal(
+        AchievementGoal dreamNail = new AchievementGoal(
             "Dream Nail",
-            new ArrayList<>(List.of(mothwingCloak)),
+            new ArrayList<>(List.of()),
             new PlayerStateEffect()
         );
 
-        Goal xero = new Goal(
+        AchievementGoal xero = new AchievementGoal(
             "Xero",
-            new ArrayList<>(List.of(dreamNail)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(dreamNail))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal collect500Essence = new Goal(
+        AchievementGoal collect500Essence = new AchievementGoal(
             "Collect 500 essence",
-            new ArrayList<>(List.of(dreamNail, xero)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(dreamNail))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal dreamWielder = new Goal(
+        AchievementGoal dreamWielder = new AchievementGoal(
             "Dream Wielder",
-            new ArrayList<>(List.of(collect500Essence)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(collect500Essence))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal desolateDive = new Goal(
-            "Desolate Dive",
-            new ArrayList<>(),
-            new PlayerStateEffect()
-        );
-
-        Goal descendingDark = new Goal(
-            "Descending Dark",
-            new ArrayList<>(List.of(desolateDive)),
-            new PlayerStateEffect()
-        );
-
-        Goal mantisClaw = new Goal(
-            "Mantis Claw",
-            new ArrayList<>(List.of(mothwingCloak)),
-            new PlayerStateEffect()
-        );
-
-        Goal crystalHeart = new Goal(
-            "Crystal Heart",
-            new ArrayList<>(List.of(mantisClaw)),
-            new PlayerStateEffect()
-        );
-
-        Goal monarchWings = new Goal(
-            "Monarch Wings",
-            new ArrayList<>(List.of(crystalHeart)),
-            new PlayerStateEffect()
-        );
-
-        Goal cityCrest = new Goal(
+        AchievementGoal cityCrest = new AchievementGoal(
             "City Crest",
-            new ArrayList<>(),
+            new ArrayList<>(List.of()),
             new PlayerStateEffect()
         );
 
-        Goal enterCity = new Goal(
+        AchievementGoal enterCity = new AchievementGoal(
             "Enter City of Tears",
-            new ArrayList<>(List.of(cityCrest)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(cityCrest))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal soulMaster = new Goal(
+        AchievementGoal soulMaster = new AchievementGoal(
             "Soul Master",
-            new ArrayList<>(List.of(enterCity)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(enterCity))
+            )),
             new PlayerStateEffect()
         );
 
-        
-        Goal shadeSoul = new Goal(
+        AchievementGoal desolateDive = new AchievementGoal(
+            "Desolate Dive",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(soulMaster))
+            )),
+            new PlayerStateEffect()
+        );
+
+        AchievementGoal descendingDark = new AchievementGoal(
+            "Descending Dark",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(desolateDive))
+            )),
+            new PlayerStateEffect()
+        );
+
+        AchievementGoal crystalHeart = new AchievementGoal(
+            "Crystal Heart",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(enterCity))
+            )),
+            new PlayerStateEffect()
+        );
+
+        AchievementGoal monarchWings = new AchievementGoal(
+            "Monarch Wings",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(crystalHeart))
+            )),
+            new PlayerStateEffect()
+        );
+
+        AchievementGoal shadeSoul = new AchievementGoal(
             "Shade Soul",
-            new ArrayList<>(),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(enterCity))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal abyssShriek = new Goal(
+        AchievementGoal abyssShriek = new AchievementGoal(
             "Abyss Shriek",
-            new ArrayList<>(List.of(shadeSoul)),
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(shadeSoul))
+            )),
             new PlayerStateEffect()
         );
 
-        Goal spend3K = new Goal(
+        AchievementGoal spend3K = new AchievementGoal(
             "Spend 3k geo",
-            new ArrayList<>(),
+            new ArrayList<>(List.of()),
             new PlayerStateEffect(),
-            new PlayerState(3000, 0, 0, 0, 0, 0)
+            new PlayerState(3000, 0, 0)
         );
 
-        Goal fountainVesselFragment = new Goal(
+        AchievementGoal fountainVesselFragment = new AchievementGoal(
             "Fountain Vessel",
-            new ArrayList<>(),
-            new PlayerStateEffect(0, 3000, 0, 0, 0)
+            new ArrayList<>(List.of()),
+            new PlayerStateEffect(0, 3000, 0)
         );
 
-        Goal greengalGrubs = new Goal(
-            "Greenpath Fungal Gubs",
-            new ArrayList<>(),
-            new PlayerStateEffect(6, 0, 0, 0, 0)
+        AchievementGoal greengalGrubs = new AchievementGoal(
+            "Greenpath Fungal Grubs",
+            new ArrayList<>(List.of()),
+            new PlayerStateEffect(6, 0, 0)
         );
 
-        Goal crossroadsCanyonGrubs = new Goal(
-            "Cross Canyon Gubs",
-            new ArrayList<>(List.of(crystalHeart)),
-            new PlayerStateEffect(5, 0, 0, 0, 0)
+        AchievementGoal crossroadsCanyonGrubs = new AchievementGoal(
+            "Cross Canyon Grubs",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(crystalHeart))
+            )),
+            new PlayerStateEffect(5, 0, 0)
         );
 
-        Goal fiveGrubs = new Goal(
+        AchievementGoal fiveGrubs = new AchievementGoal(
             "Five Grubs",
-            new ArrayList<>(),
-            new PlayerStateEffect(0, 0, 0, 0, 0),
-            new PlayerState(0, 0, 5, 0, 0, 0)
+            new ArrayList<>(List.of()),
+            new PlayerStateEffect(0, 0, 0),
+            new PlayerState(0, 0, 5)
+        );
+
+        Objective slyMask1 = new Objective(
+            "Sly Mask 1",
+            new ArrayList<>(List.of()),
+            PlayerStateEffect.spend_geo(120)
+        );
+
+        Objective slyMask2 = new Objective(
+            "Sly Mask 2",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(slyMask1))
+            )),
+            PlayerStateEffect.spend_geo(500)
+        );
+
+        Objective slyMask3 = new Objective(
+            "Sly Mask 3",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(slyMask2))
+            )),
+            PlayerStateEffect.spend_geo(1200)
+        );
+
+        Objective slyMask4 = new Objective(
+            "Sly Mask 4",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(slyMask3))
+            )),
+            PlayerStateEffect.spend_geo(2000)
+        );
+
+        Objective peaksAccess = new Objective(
+            "Peaks Access",
+            new ArrayList<>(List.of(
+                new HashSet<>(List.of(lumaflyLantern)),
+                new HashSet<>(List.of(desolateDive))
+            )),
+            new PlayerStateEffect()
+        );
+
+        CollectionGoal oneMask = new CollectionGoal("Obtain one extra mask", 
+            null, new ArrayList<>(List.of(slyMask1, slyMask2, slyMask3, slyMask4)), 4
         );
 
         ArrayList<IObtainable> goals = new ArrayList<>(List.of(
@@ -152,8 +215,6 @@ public class Main {
             dreamWielder,
             desolateDive,
             descendingDark,
-            mothwingCloak,
-            mantisClaw,
             crystalHeart,
             monarchWings,
             cityCrest,
@@ -165,7 +226,14 @@ public class Main {
             fountainVesselFragment,
             greengalGrubs,
             crossroadsCanyonGrubs,
-            fiveGrubs
+            fiveGrubs,
+            slyMask1,
+            slyMask2,
+            slyMask3,
+            slyMask4,
+            oneMask,
+            lumaflyLantern,
+            peaksAccess
         ));
 
         return goals;

@@ -1,34 +1,32 @@
 package entities;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import interface_adapters.IObtainable;
+
 public class PlayerState {
     public int geo_spent = 0;
     public int essence = 0;
     public int grubs_rescued = 0;
-    public int mask_shard = 0;
-    public int vessel_frag = 0;
-    public int pale_ore = 0;
+
+    public ArrayList<Objective> objectives = new ArrayList<>();
+    public ArrayList<IObtainable> all_obtained = new ArrayList<>();
 
     public PlayerState(){
         
     }
 
-    public PlayerState(int geo_spent, int essence, int grubs_rescued,
-                   int mask_shard, int vessel_frag, int pale_ore) {
+    public PlayerState(int geo_spent, int essence, int grubs_rescued) {
         this.geo_spent = geo_spent;
         this.essence = essence;
         this.grubs_rescued = grubs_rescued;
-        this.mask_shard = mask_shard;
-        this.vessel_frag = vessel_frag;
-        this.pale_ore = pale_ore;
     }
 
     boolean isGreaterThan(PlayerState obtainedAtState) {
         return this.geo_spent >= obtainedAtState.geo_spent &&
                 this.essence >= obtainedAtState.essence &&
-                this.grubs_rescued >= obtainedAtState.grubs_rescued &&
-                this.mask_shard >= obtainedAtState.mask_shard &&
-                this.vessel_frag >= obtainedAtState.vessel_frag &&
-                this.pale_ore >= obtainedAtState.pale_ore;
+                this.grubs_rescued >= obtainedAtState.grubs_rescued;
     }
 
     @Override
@@ -36,10 +34,26 @@ public class PlayerState {
         return "PlayerState{" +
             "geo_spent=" + geo_spent +
             ", essence=" + essence +
-            ", grubs_rescued=" + grubs_rescued +
-            ", mask_shard=" + mask_shard +
-            ", vessel_frag=" + vessel_frag +
-            ", pale_ore=" + pale_ore +
-            '}';
+            ", grubs_rescued=" + grubs_rescued + "}";
+    }
+
+    public ArrayList<Objective> getObjectives() {
+        return objectives;
+    }
+
+    public void obtain(IObtainable o) {
+        if (o instanceof Objective objective) {
+            this.objectives.add(objective);
+        }
+        this.all_obtained.add(o);
+    }
+
+    public boolean hasItems(HashSet<IObtainable> deps) {
+        for (IObtainable dep : deps) {
+            if (!all_obtained.contains(dep)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

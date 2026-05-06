@@ -1,4 +1,5 @@
-import entities.Goal;
+import entities.CollectionGoal;
+import entities.Objective;
 import entities.PlayerState;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
@@ -14,54 +15,6 @@ enum Color {
 public class TopologicalSort {
     static int time = 0;
 
-
-    //implementation of DFS ordering
-    // public ArrayList<Goal> sort(ArrayList<Goal> goals) {
-    //     HashMap<String, ArrayList<String>> map = generateMap(goals);
-    //     HashMap<String, DFSInfo> dfs = generateDFSMap(goals);
-
-    //     ArrayList<Goal> return_list = new ArrayList<>();
-
-    //     //run a topological sort
-    //     time = 0;
-
-    //     for (Goal g : goals) {
-    //         DFSInfo node = dfs.get(g.getName());
-    //         if (node.getColor() == Color.WHITE) {
-    //             // start dfs
-
-    //             int status = dfs_helper(map, dfs, g, return_list);
-    //             if (status == -1) { // cycle detected, no top. ordering possible
-    //                 return null;
-    //             }
-    //         }
-    //     }
-    //     return return_list;
-    // }
-
-    private int dfs_helper(HashMap<String, ArrayList<String>> map, HashMap<String, DFSInfo> dfs, Goal g, ArrayList<Goal> return_list) {
-        time += 1;
-        dfs.get(g.getName()).setColor(Color.GREY);
-        dfs.get(g.getName()).setDiscoverTime(time);
-        
-        for (Goal c : g.getGoalDependencies()) {
-            DFSInfo node = dfs.get(c.getName());
-            if (node.getColor() == Color.WHITE) {
-                if (dfs_helper(map, dfs, c, return_list) == -1) {
-                    return -1;
-                };
-            } else if (node.getColor() == Color.GREY) {
-                return -1;
-            }
-        }
-        
-        time += 1;
-        dfs.get(g.getName()).setColor(Color.BLACK);
-        dfs.get(g.getName()).setFinishTime(time);
-        return_list.add(g);
-        return 1;
-    }
-
     private HashMap<String, ArrayList<String>> generateMap(ArrayList<IObtainable> goals) {
         HashMap<String, ArrayList<String>> map = new HashMap<>();
 
@@ -72,15 +25,17 @@ public class TopologicalSort {
 
         // build edges: dependency -> goal
         for (IObtainable goal : goals) {
-            for (IObtainable dep : goal.getDependencies()) {
-                if (dep instanceof Goal) {
-                    String depName = ((Goal) dep).getName();
+            for (HashSet<IObtainable> deps : goal.getDependencies()) {
+                for (IObtainable dep : deps) {
+                    if (dep instanceof CollectionGoal) {
+                        String depName = ((CollectionGoal) dep).getName();
 
-                    // ensure dependency exists in map
-                    map.putIfAbsent(depName, new ArrayList<>());
+                        // ensure dependency exists in map
+                        map.putIfAbsent(depName, new ArrayList<>());
 
-                    // add edge: dep -> goal
-                    map.get(depName).add(goal.getName());
+                        // add edge: dep -> goal
+                        map.get(depName).add(goal.getName());
+                    }
                 }
             }
         }
@@ -108,14 +63,16 @@ public class TopologicalSort {
         for (IObtainable goal : goals) {
             KahnInfo goalInfo = map.get(goal.getName());
 
-            for (IObtainable dep : goal.getDependencies()) {
-                goalInfo.addNeighbor(dep); // goal depends on dep
+            for (HashSet<IObtainable> deps : goal.getDependencies()) {
+                for (IObtainable dep : deps) {
+                    goalInfo.addNeighbor(dep); // goal depends on dep
 
-                KahnInfo depInfo = map.get(dep.getName());
-                if (depInfo != null) {
-                    depInfo.addDependent(goal); // dep is needed by goal
+                    KahnInfo depInfo = map.get(dep.getName());
+                    if (depInfo != null) {
+                        depInfo.addDependent(goal); // dep is needed by goal
+                    }
                 }
-            }
+            }            
         }
 
         return map;
@@ -198,8 +155,8 @@ public class TopologicalSort {
             neighbors.remove(neighbor);
         }
 
-        public boolean hasDegreeZero() {
-            return neighbors.isEmpty();
+        public boolean canObtain(PlayerState state) {
+            return this.node.canObtain(state);
         }
 
         public IObtainable getNode() {
@@ -211,15 +168,13 @@ public class TopologicalSort {
         ArrayList<KahnInfo> q = new ArrayList<>();
         HashMap<String, KahnInfo> map = generateInMap(goals);
         ArrayList<IObtainable> return_list = new ArrayList<>();
-        HashSet<String> queued = new HashSet<>();
         PlayerState state = new PlayerState();
 
         for (IObtainable g : goals) {
             KahnInfo k = map.get(g.getName());
 
-            if (k.hasDegreeZero()) {
+            if (k.canObtain(state)) {
                 q.add(k);
-                queued.add(g.getName());
             }
         }
 
@@ -227,10 +182,13 @@ public class TopologicalSort {
             int index = (int) (q.size() * Math.random());
             KahnInfo top = q.remove(index);
             top.getNode().getEffects().applyToState(state);
-            System.out.println(state);
 
             if (!return_list.contains(top.getNode())) {
+                // add the node to completed list
                 return_list.add(top.getNode());
+
+                // add the node to the player state
+                state.obtain(top.getNode());
             }
 
             for (IObtainable goal : goals) {
@@ -245,9 +203,8 @@ public class TopologicalSort {
 
                 k2.removeNeighbor(top.getNode());
 
-                if (k2.hasDegreeZero() || !return_list.contains(k2.getNode())) {
+                if (k2.canObtain(state) || !return_list.contains(k2.getNode())) {
                     q.add(k2);
-                    queued.add(k2.getNode().getName());
                 }
             }
         }
