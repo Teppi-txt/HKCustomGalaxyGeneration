@@ -1,9 +1,11 @@
-import entities.AchievementGoal;
-import entities.CollectionGoal;
-import entities.Objective;
-import entities.ObtainOption;
-import entities.PlayerState;
-import entities.PlayerStateEffect;
+package src;
+
+import src.entities.AchievementGoal;
+import src.entities.CollectionGoal;
+import src.entities.Objective;
+import src.entities.ObtainOption;
+import src.entities.PlayerState;
+import src.entities.PlayerStateEffect;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
 import java.util.Collections;

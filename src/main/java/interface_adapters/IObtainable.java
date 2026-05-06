@@ -1,9 +1,9 @@
-package interface_adapters;
-import entities.PlayerState;
-import entities.PlayerStateEffect;
+package src.interface_adapters;
+import src.entities.PlayerState;
+import src.entities.PlayerStateEffect;
 import java.util.ArrayList;
 import java.util.HashSet;
-import entities.ObtainOption;
+import src.entities.ObtainOption;
 
 public interface IObtainable {
     public boolean canObtain(PlayerState state);

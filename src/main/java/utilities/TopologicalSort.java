@@ -1,11 +1,11 @@
+package utilities;
+
 import entities.CollectionGoal;
-import entities.Objective;
 import entities.ObtainOption;
 import entities.PlayerState;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 enum Color {
     WHITE,

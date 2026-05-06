@@ -1,4 +1,4 @@
-package entities;
+package src.entities;
 
 import interface_adapters.IObtainable;
 import java.util.HashSet;
