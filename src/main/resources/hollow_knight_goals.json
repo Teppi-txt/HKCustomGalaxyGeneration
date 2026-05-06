@@ -1,0 +1,2366 @@
+{
+  "schema": {
+    "name": "string",
+    "type": "AchievementGoal | CollectionGoal | Objective | ObjectiveGroup",
+    "options": [
+      {
+        "dependencies": [
+          "string"
+        ],
+        "effect": {
+          "geo": "int negative when spent",
+          "simple_keys": "int negative when used",
+          "pale_ore": "int",
+          "grubs_saved": "int",
+          "tolls": "int",
+          "lifeblood_masks": "int"
+        },
+        "notes": "optional string"
+      }
+    ]
+  },
+  "goals": [
+    {
+      "name": "Abyss Shriek",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Hornet 2",
+            "Howling Wraiths"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "All Grubs: Greenpath (4) + Fungal (2)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "All Grubs: Xroads (5) + Fog Canyon (1)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Break the 420 geo rock in Kingdom's Edge",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Broken Vessel",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Nail 2"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Obtain 2 extra masks"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Buy 6 map pins from Iselda (All but two)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {
+            "geo": -650
+          }
+        },
+        {
+          "dependencies": [
+            "Tram Pass"
+          ],
+          "effect": {
+            "geo": -600
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buy 6 maps",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -480
+          }
+        }
+      ]
+    },
+    {
+      "name": "Buy 8 map pins from Iselda (All)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Tram Pass"
+          ],
+          "effect": {
+            "geo": -930
+          }
+        }
+      ]
+    },
+    {
+      "name": "Collect 1 Arcane Egg",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Shade Cloak"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Lifeblood Heart + Joni's Blessing"
+          ],
+          "effect": {
+            "lifeblood_masks": 15
+          },
+          "notes": "extreme"
+        },
+        {
+          "dependencies": [
+            "Dreamgate"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Collect 3 King's Idols",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Collect 500 essence",
+      "type": "CollectionGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Collector",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Pick up the Love Key"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Colosseum 1",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -100
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complete 4 full dream trees",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Crystal Guardian 1",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Crystal Guardian 2",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Guardian 1",
+            "Monarch Wings"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Crystal Guardian 1"
+          ],
+          "effect": {},
+          "notes": "shade skip"
+        }
+      ]
+    },
+    {
+      "name": "Crystal Heart",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Cyclone Slash",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dash Slash",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -800
+          }
+        }
+      ]
+    },
+    {
+      "name": "Deep Focus + Quick Focus",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          }
+        }
+      ]
+    },
+    {
+      "name": "Defeat Colosseum Zote",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Rescue Zote in Deepnest"
+          ],
+          "effect": {
+            "geo": -100
+          }
+        }
+      ]
+    },
+    {
+      "name": "Descending Dark",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Peaks Access"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Desolate Dive",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Soul Master"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dreamgate",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Wielder"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dream Nail",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dream Wielder",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Collect 500 essence"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dung Defender",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "simple_keys": -1
+          }
+        },
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Elder Hu",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Failed Champion",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "False Knight + Brooding Mawlek",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Flukemarm",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {
+            "simple_keys": -1
+          }
+        },
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Flukenest",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Flukemarm"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Fragile Heart, Greed, and Strength",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -1286
+          }
+        },
+        {
+          "dependencies": [
+            "Defender's Crest"
+          ],
+          "effect": {
+            "unknown": [
+              "x geo spent"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Galien",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Give Flower to Elderbug",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Glowing Womb + Grimmchild",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Goam and Garpede Journal Entries",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Gorb",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Great Slash",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Grubsong",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "grubs_saved": 10
+          }
+        }
+      ]
+    },
+    {
+      "name": "Have 1500 geo in the bank",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -100
+          }
+        }
+      ]
+    },
+    {
+      "name": "Have 2 Pale Ore",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Have 4 Rancid Eggs",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Have 5 Hallownest Seals",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Have 5 Wanderer's Journals",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Heavy Blow + Steady Body",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -470
+          }
+        }
+      ]
+    },
+    {
+      "name": "Herrah",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Hive Knight",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Tram Pass"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Hiveblood",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Hive Knight"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Hornet 2",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Howling Wraiths",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Interact with 5 Cornifer locations",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Isma's Tear",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Dung Defender"
+          ],
+          "effect": {},
+          "notes": "shade skip"
+        }
+      ]
+    },
+    {
+      "name": "Kill 2 Soul Warriors",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          }
+        },
+        {
+          "dependencies": [
+            "Colosseum 1"
+          ],
+          "effect": {
+            "geo": -1350
+          }
+        },
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Crystal Heart"
+          ],
+          "effect": {
+            "simple_keys": -1
+          }
+        },
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {
+            "simple_keys": -2
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kill 4 Mimics",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Colosseum 1"
+          ],
+          "effect": {
+            "geo": -550
+          }
+        },
+        {
+          "dependencies": [
+            "Defeat Colosseum Zote"
+          ],
+          "effect": {
+            "geo": -550
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kill 6 different Stalking Devouts",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Kill Myla",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Kill your shade in Jiji's Hut",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "simple_keys": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lifeblood Heart + Joni's Blessing",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -250
+          }
+        }
+      ]
+    },
+    {
+      "name": "Longnail + MoP",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Mantis Lords"
+          ],
+          "effect": {
+            "geo": -300
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lost Kin",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Broken Vessel"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Lumafly Lantern",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -1800
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lurien",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Watcher Knights"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Mantis Lords",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Markoth",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Shade Cloak"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Marmu",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Mask Shard  in the Hive",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Tram Pass"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Monarch Wings",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Broken Vessel"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Monomon",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Uumuu",
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Uumuu",
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Uumuu",
+            "Sharp Shadow",
+            "Monarch Wings"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Nail 2",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "pale_ore": -1,
+            "geo": -1050
+          }
+        }
+      ]
+    },
+    {
+      "name": "Nail 3",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Have 2 Pale Ore",
+            "Spend 3000 geo"
+          ],
+          "effect": {
+            "pale_ore": -3,
+            "geo": -3050
+          }
+        }
+      ]
+    },
+    {
+      "name": "No Eyes",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Lumafly Lantern"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Nosk",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Obtain 1 extra mask",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Obtain 1 extra soul vessel",
+      "type": "CollectionGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Obtain 2 extra masks",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Obtain 3 extra notches",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Obtain fountain vessel fragment",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Spend 3000 geo"
+          ],
+          "effect": {
+            "geo": -3000
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pale Lurker",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Parry Revek 3 times without dying (Glade of Hope Guard)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Pay for 6 tolls",
+      "type": "CollectionGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -660
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pick up the Love Key",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Monarch Wings"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "notes": "extreme"
+        }
+      ]
+    },
+    {
+      "name": "Quick Slash",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Rescue Bretta + Sly",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Rescue Zote in Deepnest",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Save 15 grubs",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Save 20 grubs",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Save the 3 grubs in Queen's Gardens",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Crystal Heart"
+          ],
+          "effect": {
+            "grubs_saved": 3
+          }
+        },
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Monarch Wings"
+          ],
+          "effect": {
+            "grubs_saved": 3
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save the 3 grubs in Waterways",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Tram Pass",
+            "Crystal Heart"
+          ],
+          "effect": {
+            "grubs_saved": 3
+          }
+        },
+        {
+          "dependencies": [
+            "Tram Pass",
+            "Dung Defender",
+            "Sharp Shadow",
+            "Monarch Wings"
+          ],
+          "effect": {
+            "grubs_saved": 3
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save the 5 grubs in CoT",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {
+            "grubs_saved": 5
+          }
+        },
+        {
+          "dependencies": [
+            "Collector"
+          ],
+          "effect": {
+            "grubs_saved": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save the 5 grubs in Deepnest",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "grubs_saved": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save the 7 grubs in Crystal Peak",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {
+            "grubs_saved": 7
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shade Cloak",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Hornet 2"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Shade Soul",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shape of Unn",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Crystal Heart",
+            "Monarch Wings"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {},
+          "notes": "extreme"
+        },
+        {
+          "dependencies": [
+            "Monarch Wings",
+            "Sharp Shadow"
+          ],
+          "effect": {},
+          "notes": "extreme"
+        }
+      ]
+    },
+    {
+      "name": "Sharp Shadow",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Shade Cloak"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Soul Master",
+      "type": "AchievementGoal",
+      "options": []
+    },
+    {
+      "name": "Soul Tyrant",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Soul Master",
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Spell Twister + Shaman Stone",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -220
+          }
+        }
+      ]
+    },
+    {
+      "name": "Spend 3000 geo",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Spend 4000 geo",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Spend 5000 geo",
+      "type": "CollectionGoal",
+      "options": []
+    },
+    {
+      "name": "Sprintmaster + Dashmaster",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -400
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stag Nest vessel fragment",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Take a bath in all 4 Hot Springs",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "simple_keys": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Talk to Bardoon",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to Emilitia (shortcut out of sewers)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "notes": "extreme"
+        }
+      ]
+    },
+    {
+      "name": "Talk to Hornet at CoT Statue + Herrah",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Hornet 2",
+            "Herrah"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to Lemm with Crest Equipped",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dung Defender"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to Mask Maker",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to Midwife",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to the Fluke Hermit",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Thorns of agony + Baldur Shell + Spore Shroom",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Traitor Lord",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Shade Cloak"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Tram Pass + Visit all 5 Tram Stations",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Tram Pass"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Unlock Deepnest Stag",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -250,
+            "tolls": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unlock Hidden Stag Station",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -300,
+            "tolls": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unlock Queen's Gardens Stag",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access"
+          ],
+          "effect": {
+            "geo": -200,
+            "tolls": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unlock Queen's Stag + King's Stag Stations",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -420,
+            "tolls": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upgrade Grimmchild once",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Use 2 Simple Keys",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -250
+          }
+        },
+        {
+          "dependencies": [
+            "Dung Defender"
+          ],
+          "effect": {
+            "geo": -200
+          }
+        },
+        {
+          "dependencies": [
+            "Obtain 2 extra masks"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Pale Lurker"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Use City Crest + Ride both CoT large elevators",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "False Knight"
+          ],
+          "effect": {
+            "geo": -150
+          }
+        }
+      ]
+    },
+    {
+      "name": "Uumuu",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Monarch Wings"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Sharp Shadow"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Vengefly King + Massive Moss Charger",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Void Tendrils Journal Entry",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Shade Cloak"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Watch Cloth Die",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Traitor Lord"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Watcher Knights",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Weaversong",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Xero",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Buy the QG and Fog Canyon maps",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access"
+          ],
+          "effect": {
+            "geo": -300
+          }
+        }
+      ]
+    },
+    {
+      "name": "Complete the Ancestral Mound Root",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Complete the Greenpath Root",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Queen's Gardens Access",
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Dream Nail Poggy Thorax and Blue Child Joni",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {
+            "simple_keys": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fungal Core Mask Shard",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Monarch Wings"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Give Divine a Charm",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -250
+          }
+        },
+        {
+          "dependencies": [
+            "Dung Defender"
+          ],
+          "effect": {
+            "geo": -200
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hallownest Crown Pale Ore",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "pale_ore": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interact with Cornifer in Waterways",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "simple_keys": -1
+          }
+        },
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Obtain Godtuner",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {
+            "simple_keys": -2
+          }
+        },
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Crystal Heart"
+          ],
+          "effect": {
+            "simple_keys": -1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Open 3 geo chests (not in junk pit)",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Read Bretta's diary",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Save the 2 grubs in Basin",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Monarch Wings"
+          ],
+          "effect": {
+            "grubs_saved": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "Save the 2 grubs in Hive",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Tram Pass",
+            "Desolate Dive"
+          ],
+          "effect": {
+            "grubs_saved": 2
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slash Zote's corpse in Greenpath",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Soul Eater + Soul Catcher",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Talk to Tuk",
+      "type": "AchievementGoal",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "simple_keys": -1
+          }
+        },
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Brooding Mawlek",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Elegant key",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          }
+        }
+      ]
+    },
+    {
+      "name": "Peaks Access",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Lumafly Lantern"
+          ],
+          "effect": {
+            "geo": -50,
+            "tolls": 1
+          }
+        },
+        {
+          "dependencies": [
+            "Desolate Dive"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "slyMask1",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -150
+          }
+        }
+      ]
+    },
+    {
+      "name": "slyMask2",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "slyMask1"
+          ],
+          "effect": {
+            "geo": -500
+          }
+        }
+      ]
+    },
+    {
+      "name": "slyMask3",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "slyMask2",
+            "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          }
+        }
+      ]
+    },
+    {
+      "name": "slyMask4",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "slyMask3"
+          ],
+          "effect": {
+            "geo": -1500
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mawlek Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Brooding Mawlek"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Grubs Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "grubs_saved": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Crossroads Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Queens Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Bretta Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Stone Sanctuary Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "CG2 Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Guardian 2"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Seer Mask Shard",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Collect 500 essence"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Flower Quest Mask",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Desolate Dive",
+            "Queen's Gardens Access"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Nosk Pale Ore",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Nosk"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Seer Pale Ore",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Dream Nail"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Grubfather Pale Ore",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "grubs_saved": 31
+          }
+        }
+      ]
+    },
+    {
+      "name": "Basin Pale Ore",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Colo Pale Ore",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Colosseum 1"
+          ],
+          "effect": {
+            "geo": -550
+          }
+        },
+        {
+          "dependencies": [
+            "Defeat Colosseum Zote"
+          ],
+          "effect": {
+            "geo": -550
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shrumals Notch",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Salubra Notch",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -120
+          }
+        }
+      ]
+    },
+    {
+      "name": "Grimm Notch",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Upgrade Grimmchild once"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Colo Notch",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Colosseum 1"
+          ],
+          "effect": {
+            "geo": -100
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fog Canyon Notch",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Monarch Wings"
+          ],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Tram Pass",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Defender's Crest",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": ["Dung Defender"],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Queen's Gardens Access",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": ["Crystal Heart"],
+          "effect": {}
+        },
+        {
+          "dependencies": ["Isma's Tear"],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "False Knight",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    }
+  ]
+}

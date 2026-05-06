@@ -1,8 +1,7 @@
-package src.entities;
+package entities;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
-import java.util.HashSet;
-    
+
 public class AchievementGoal implements IObtainable{
     private String name;
     private ArrayList<ObtainOption> dependencies;
@@ -34,6 +33,22 @@ public class AchievementGoal implements IObtainable{
             }
         }
         return false;
+    }
+
+    @Override
+    public ObtainOption getSuccessfulOption(PlayerState state) {
+        if (dependencies.isEmpty()) {
+            return null;
+        }
+
+        for (ObtainOption option : dependencies) {
+            if (state.hasItems(option.getDependencies())) {
+                return option;
+            }
+        }
+
+        System.out.println("CANNot OBTAIN");
+        return null;
     }
 
     @Override

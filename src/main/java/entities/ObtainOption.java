@@ -1,4 +1,4 @@
-package src.entities;
+package entities;
 
 import interface_adapters.IObtainable;
 import java.util.HashSet;
@@ -33,5 +33,24 @@ public class ObtainOption {
     // Setter for effect
     public void setEffect(PlayerStateEffect effect) {
         this.effect = effect;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder deps = new StringBuilder();
+
+        if (dependencies != null) {
+            for (IObtainable dep : dependencies) {
+                if (deps.length() > 0) {
+                    deps.append(", ");
+                }
+                deps.append(dep.getName());
+            }
+        }
+
+        return "ObtainOption{" +
+                "dependencies=[" + deps + "]" +
+                ", effect=" + effect +
+                '}';
     }
 }

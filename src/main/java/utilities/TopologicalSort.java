@@ -188,6 +188,8 @@ public class TopologicalSort {
                 // add the node to completed list
                 return_list.add(top.getNode());
 
+                // System.out.println(top.getNode().getName() + ": " + top.getNode().getSuccessfulOption(state));
+
                 // add the node to the player state
                 state.obtain(top.getNode());
             }
@@ -204,7 +206,7 @@ public class TopologicalSort {
 
                 k2.removeNeighbor(top.getNode());
 
-                if (k2.canObtain(state) || !return_list.contains(k2.getNode())) {
+                if (k2.canObtain(state) && !return_list.contains(k2.getNode())) {
                     q.add(k2);
                 }
             }

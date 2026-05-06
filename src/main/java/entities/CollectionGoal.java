@@ -1,8 +1,7 @@
-package src.entities;
+package entities;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
-import java.util.HashSet;
-    
+
 public class CollectionGoal implements IObtainable{
     private String name;
     private PlayerStateEffect effects;
@@ -30,6 +29,11 @@ public class CollectionGoal implements IObtainable{
             }
         }
         return count >= collectionCount;
+    }
+
+    @Override
+    public ObtainOption getSuccessfulOption(PlayerState state) {
+        return null;
     }
 
     @Override
