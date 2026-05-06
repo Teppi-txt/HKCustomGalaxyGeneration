@@ -5,17 +5,17 @@ import java.util.HashSet;
     
 public class AchievementGoal implements IObtainable{
     private String name;
-    private ArrayList<HashSet<IObtainable>> dependencies;
+    private ArrayList<ObtainOption> dependencies;
     private PlayerStateEffect effects;
     private PlayerState obtainedAtState = null;
     
-    public AchievementGoal(String name, ArrayList<HashSet<IObtainable>> dependencies, PlayerStateEffect effects) {
+    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects) {
         this.name = name;
         this.dependencies = dependencies;
         this.effects = effects;
     }
 
-    public AchievementGoal(String name, ArrayList<HashSet<IObtainable>> dependencies, PlayerStateEffect effects, PlayerState obtainedAtState) {
+    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects, PlayerState obtainedAtState) {
         this.name = name;
         this.dependencies = dependencies;
         this.effects = effects;
@@ -28,8 +28,8 @@ public class AchievementGoal implements IObtainable{
             return true;
         }
 
-        for (HashSet<IObtainable> deps : dependencies) {
-            if (state.hasItems(deps)) {
+        for (ObtainOption option : dependencies) {
+            if (state.hasItems(option.getDependencies())) {
                 return true;
             }
         }
@@ -50,7 +50,7 @@ public class AchievementGoal implements IObtainable{
     }
 
     @Override
-    public ArrayList<HashSet<IObtainable>> getDependencies() {
+    public ArrayList<ObtainOption> getDependencies() {
         return this.dependencies;
     }
 

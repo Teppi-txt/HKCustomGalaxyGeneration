@@ -6,19 +6,19 @@ import java.util.HashSet;
 public class Objective implements IObtainable{
 
     private String name;
-    private ArrayList<HashSet<IObtainable>> dependencies;
+    private ArrayList<ObtainOption> dependencies;
     private PlayerStateEffect effects;
     
-    public Objective(String name, ArrayList<HashSet<IObtainable>> dependencies, PlayerStateEffect effects) {
+    public Objective(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects) {
         this.name = name;
         this.dependencies = dependencies;
         this.effects = effects;
     }
 
     public Objective(String name, HashSet<IObtainable> dependencies, PlayerStateEffect effects) {
-    this.name = name;
+        this.name = name;
         this.dependencies = new ArrayList<>();
-        this.dependencies.add(dependencies);
+        this.dependencies.add(new ObtainOption(dependencies, effects));
         this.effects = effects;
     }
 
@@ -29,8 +29,8 @@ public class Objective implements IObtainable{
             return true;
         }
 
-        for (HashSet<IObtainable> deps : dependencies) {
-            if (state.hasItems(deps)) {
+        for (ObtainOption deps : dependencies) {
+            if (state.hasItems(deps.getDependencies())) {
                 return true;
             }
         }
@@ -48,19 +48,10 @@ public class Objective implements IObtainable{
     }
 
     @Override
-    public ArrayList<HashSet<IObtainable>> getDependencies() {
+    public ArrayList<ObtainOption> getDependencies() {
         return this.dependencies;
     }
 
-    public ArrayList<CollectionGoal> getGoalDependencies() {
-        ArrayList<CollectionGoal> goals = new ArrayList<>();
-        for (IObtainable i : this.dependencies.get(0)) {
-            if (i instanceof CollectionGoal) {
-                goals.add((CollectionGoal) i);
-            }
-        }
-        return goals;
-    }
 
     @Override
     public PlayerStateEffect getEffects() {

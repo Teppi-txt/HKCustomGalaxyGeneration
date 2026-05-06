@@ -1,5 +1,6 @@
 import entities.CollectionGoal;
 import entities.Objective;
+import entities.ObtainOption;
 import entities.PlayerState;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ public class TopologicalSort {
 
         // build edges: dependency -> goal
         for (IObtainable goal : goals) {
-            for (HashSet<IObtainable> deps : goal.getDependencies()) {
-                for (IObtainable dep : deps) {
+            for (ObtainOption deps : goal.getDependencies()) {
+                for (IObtainable dep : deps.getDependencies()) {
                     if (dep instanceof CollectionGoal) {
                         String depName = ((CollectionGoal) dep).getName();
 
@@ -63,8 +64,8 @@ public class TopologicalSort {
         for (IObtainable goal : goals) {
             KahnInfo goalInfo = map.get(goal.getName());
 
-            for (HashSet<IObtainable> deps : goal.getDependencies()) {
-                for (IObtainable dep : deps) {
+            for (ObtainOption deps : goal.getDependencies()) {
+                for (IObtainable dep : deps.getDependencies()) {
                     goalInfo.addNeighbor(dep); // goal depends on dep
 
                     KahnInfo depInfo = map.get(dep.getName());

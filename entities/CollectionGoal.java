@@ -38,7 +38,7 @@ public class CollectionGoal implements IObtainable{
     }
 
     @Override
-    public ArrayList<HashSet<IObtainable>> getDependencies() {
+    public ArrayList<ObtainOption> getDependencies() {
         return new ArrayList<>();
     }
 
