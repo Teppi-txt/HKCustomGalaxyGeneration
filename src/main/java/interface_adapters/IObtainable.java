@@ -9,8 +9,6 @@ public interface IObtainable {
     public boolean canObtain(PlayerState state);
     public ArrayList<ObtainOption> getDependencies();
     public String getName();
-    public PlayerStateEffect getEffects();
+    public PlayerStateEffect getMinimalEffect(PlayerState state);
     public boolean isObtained(PlayerState ps);
-
-    public ObtainOption getSuccessfulOption(PlayerState ps);
 }

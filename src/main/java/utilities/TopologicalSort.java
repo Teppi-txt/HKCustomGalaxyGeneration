@@ -182,7 +182,7 @@ public class TopologicalSort {
         while (!q.isEmpty()) {
             int index = (int) (q.size() * Math.random());
             KahnInfo top = q.remove(index);
-            top.getNode().getEffects().applyToState(state);
+            top.getNode().getMinimalEffect(state).applyToState(state);
 
             if (!return_list.contains(top.getNode())) {
                 // add the node to completed list

@@ -2,7 +2,6 @@ package utilities;
 
 import entities.*;
 import interface_adapters.IObtainable;
-import entities.*;
 
 
 import com.google.gson.*;
@@ -30,23 +29,24 @@ public class GoalParser {
                 IObtainable goal;
 
                 if (type.equals("CollectionGoal")) {
+                    int count = 0;
+                    if (obj.has("count")) {
+                        count = obj.get("count").getAsInt();
+                    }
                     goal = new CollectionGoal(
                             name,
-                            new PlayerStateEffect(),
                             new ArrayList<>(),
-                            0
+                            count
                     );
                 } else if (type.equals("Objective")) {
                     goal = new Objective(
                             name,
-                            new ArrayList<>(),
-                            new PlayerStateEffect()
+                            new ArrayList<>()
                     );
                 } else {
                     goal = new AchievementGoal(
                             name,
-                            new ArrayList<>(),
-                            new PlayerStateEffect()
+                            new ArrayList<>()
                     );
                 }
 
@@ -54,42 +54,74 @@ public class GoalParser {
                 result.add(goal);
             }
 
-            // Second pass: fill dependencies/effects
+            // Second pass: fill dependencies/options
             for (JsonElement element : jsonGoals) {
+
                 JsonObject obj = element.getAsJsonObject();
 
                 String name = obj.get("name").getAsString();
+
                 IObtainable goal = byName.get(name);
 
+                if (!obj.has("options")) {
+                    continue;
+                }
+
+                // CollectionGoal special handling
+                if (goal instanceof CollectionGoal collectionGoal) {
+
+                    for (JsonElement optionElement : obj.getAsJsonArray("options")) {
+
+                        String dependencyName = optionElement.getAsString();
+
+                        IObtainable dependency = byName.get(dependencyName);
+
+                        if (dependency == null) {
+                            throw new RuntimeException(
+                                    "Unknown collection dependency: " + dependencyName
+                            );
+                        }
+
+                        collectionGoal.getCollectionItems().add(dependency);
+                    }
+
+                    continue;
+                }
+
+                // Normal ObtainOption handling
                 ArrayList<ObtainOption> options = goal.getDependencies();
 
-                if (!obj.has("options")) continue;
-
                 for (JsonElement optionElement : obj.getAsJsonArray("options")) {
+
                     JsonObject optionObj = optionElement.getAsJsonObject();
 
-                    HashSet<IObtainable> deps = new HashSet<>();
+                    HashSet<IObtainable> dependencies = new HashSet<>();
 
                     if (optionObj.has("dependencies")) {
-                        for (JsonElement depElement : optionObj.getAsJsonArray("dependencies")) {
+
+                        for (JsonElement depElement :
+                                optionObj.getAsJsonArray("dependencies")) {
+
                             String depName = depElement.getAsString();
 
-                            IObtainable dep = byName.get(depName);
+                            IObtainable dependency = byName.get(depName);
 
-                            if (dep == null) {
-                                throw new RuntimeException("Unknown dependency: " + depName);
+                            if (dependency == null) {
+                                throw new RuntimeException(
+                                        "Unknown dependency: " + depName
+                                );
                             }
 
-                            deps.add(dep);
+                            dependencies.add(dependency);
                         }
                     }
 
-                    PlayerStateEffect effect = parseEffect(optionObj.getAsJsonObject("effect"));
+                    PlayerStateEffect effect =
+                            parseEffect(optionObj.getAsJsonObject("effect"));
 
-                    options.add(new ObtainOption(deps, effect));
+                    options.add(new ObtainOption(dependencies, effect));
                 }
             }
-
             return result;
 
         } catch (Exception e) {

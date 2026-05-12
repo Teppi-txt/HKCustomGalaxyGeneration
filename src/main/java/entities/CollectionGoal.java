@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class CollectionGoal implements IObtainable{
     private String name;
-    private PlayerStateEffect effects;
-    private ArrayList<Objective> collectionItems;
+
+    private ArrayList<IObtainable> collectionItems;
+
     private int collectionCount;
     
-    public CollectionGoal(String name, PlayerStateEffect effects, ArrayList<Objective> items, int count) {
+    public CollectionGoal(String name, ArrayList<IObtainable> items, int count) {
         this.name = name;
-        this.effects = effects;
         this.collectionItems = items;
         this.collectionCount = count;
     }
@@ -23,17 +23,12 @@ public class CollectionGoal implements IObtainable{
     @Override
     public boolean isObtained(PlayerState state) {
         int count = 0;
-        for (Objective objective : state.getObjectives()) {
+        for (IObtainable objective : state.getObjectives()) {
             if (collectionItems.contains(objective)) {
                 count += 1;
             }
         }
         return count >= collectionCount;
-    }
-
-    @Override
-    public ObtainOption getSuccessfulOption(PlayerState state) {
-        return null;
     }
 
     @Override
@@ -46,22 +41,24 @@ public class CollectionGoal implements IObtainable{
         return new ArrayList<>();
     }
 
-    // public ArrayList<AchievementGoal> getGoalDependencies() {
-    //     ArrayList<AchievementGoal> goals = new ArrayList<>();
-    //     for (IObtainable i : this.dependencies) {
-    //         if (i instanceof AchievementGoal achievementGoal) {
-    //             goals.add(achievementGoal);
-    //         }
-    //     }
-    //     return goals;
-    // }
-
     @Override
-    public PlayerStateEffect getEffects() {
-        return this.effects;
+    public PlayerStateEffect getMinimalEffect(PlayerState state) {
+        return new PlayerStateEffect();
     }
 
-	// public void addPrerequesite(IObtainable item) {
-	// 	this.dependencies.add(item);
-	// }
+    public void setCollectionCount(int collectionCount) {
+        this.collectionCount = collectionCount;
+    }
+
+    public int getCollectionCount() {
+        return collectionCount;
+    }
+
+    public ArrayList<IObtainable> getCollectionItems() {
+        return collectionItems;
+    }
+
+    public void setCollectionItems(ArrayList<IObtainable> collectionItems) {
+        this.collectionItems = collectionItems;
+    }
 }

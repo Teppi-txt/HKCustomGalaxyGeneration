@@ -7,19 +7,15 @@ public class Objective implements IObtainable{
 
     private String name;
     private ArrayList<ObtainOption> dependencies;
-    private PlayerStateEffect effects;
-    
-    public Objective(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects) {
+    public Objective(String name, ArrayList<ObtainOption> dependencies) {
         this.name = name;
         this.dependencies = dependencies;
-        this.effects = effects;
     }
 
     public Objective(String name, HashSet<IObtainable> dependencies, PlayerStateEffect effects) {
         this.name = name;
         this.dependencies = new ArrayList<>();
         this.dependencies.add(new ObtainOption(dependencies, effects));
-        this.effects = effects;
     }
 
 
@@ -38,20 +34,6 @@ public class Objective implements IObtainable{
     }
 
     @Override
-    public ObtainOption getSuccessfulOption(PlayerState state) {
-        if (dependencies.isEmpty()) {
-            return null;
-        }
-
-        for (ObtainOption option : dependencies) {
-            if (state.hasItems(option.getDependencies())) {
-                return option;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public boolean isObtained(PlayerState state) {
         return false;
     }
@@ -66,9 +48,19 @@ public class Objective implements IObtainable{
         return this.dependencies;
     }
 
-
     @Override
-    public PlayerStateEffect getEffects() {
-        return this.effects;
+    public PlayerStateEffect getMinimalEffect(PlayerState state) {
+        PlayerStateEffect effect = new PlayerStateEffect();
+
+        if (dependencies.isEmpty()) {
+            return effect;
+        }
+
+        for (ObtainOption option : dependencies) {
+            if (state.hasItems(option.getDependencies())) {
+                effect = PlayerStateEffect.getMinimal(option.getEffect(), effect);
+            }
+        }
+        return effect;
     }
 }

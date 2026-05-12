@@ -38,7 +38,7 @@ public class Main {
 
     public static void main(String[] args) {
         ArrayList<IObtainable> goals = GoalParser.parseGoals("src/main/resources/hollow_knight_goals.json");
-        BoardGenerator.generateBoardLinear(goals);
+        BoardGenerator.generateBoardRobin(goals);
 //        TopologicalSort ts = new  TopologicalSort();
 //        printAll(ts.sort_and_reduce(goals));
     }

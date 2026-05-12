@@ -132,7 +132,8 @@
         {
           "dependencies": [
             "Dream Nail",
-            "Tram Pass"
+            "Tram Pass",
+            "Buy 6 map pins from Iselda (All but two)"
           ],
           "effect": {
             "geo": -930
@@ -179,7 +180,7 @@
     },
     {
       "name": "Collect 500 essence",
-      "type": "CollectionGoal",
+      "type": "AchievementGoal",
       "options": [
         {
           "dependencies": [
@@ -206,7 +207,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Defeat Colosseum Zote"],
           "effect": {
             "geo": -100
           }
@@ -423,7 +424,8 @@
     {
       "name": "False Knight + Brooding Mawlek",
       "type": "CollectionGoal",
-      "options": []
+      "options": ["False Knight", "Brooding Mawlek"],
+      "count": 2
     },
     {
       "name": "Flukemarm",
@@ -578,7 +580,8 @@
     {
       "name": "Have 2 Pale Ore",
       "type": "CollectionGoal",
-      "options": []
+      "options": ["Basin Pale Ore", "Grubfather Pale Ore", "Nosk Pale Ore", "Seer Pale Ore", "Colo Pale Ore", "Hallownest Crown Pale Ore"],
+      "count": 2
     },
     {
       "name": "Have 4 Rancid Eggs",
@@ -1019,11 +1022,29 @@
     {
       "name": "Obtain 1 extra mask",
       "type": "CollectionGoal",
-      "options": []
+      "options": [
+        "Crossroads Mask",
+        "Obtain 1 extra mask",
+        "Obtain 2 extra masks",
+        "Stone Sanctuary Mask",
+        "Bretta Mask",
+        "Fungal Core Mask Shard",
+        "Grubs Mask",
+        "slyMask1",
+        "slyMask2",
+        "Flower Quest Mask",
+        "Mask Shard  in the Hive",
+        "Queens Mask",
+        "slyMask3",
+        "CG2 Mask",
+        "Mawlek Mask",
+        "slyMask4"
+      ],
+      "count": 4
     },
     {
       "name": "Obtain 1 extra soul vessel",
-      "type": "CollectionGoal",
+      "type": "AchievementGoal",
       "options": [
         {
           "dependencies": [],
@@ -1034,12 +1055,38 @@
     {
       "name": "Obtain 2 extra masks",
       "type": "CollectionGoal",
-      "options": []
+      "options": [
+        "Crossroads Mask",
+        "Obtain 1 extra mask",
+        "Obtain 2 extra masks",
+        "Stone Sanctuary Mask",
+        "Bretta Mask",
+        "Fungal Core Mask Shard",
+        "Grubs Mask",
+        "slyMask1",
+        "slyMask2",
+        "Flower Quest Mask",
+        "Mask Shard  in the Hive",
+        "Queens Mask",
+        "slyMask3",
+        "CG2 Mask",
+        "Mawlek Mask",
+        "slyMask4"
+      ],
+      "count": 8
     },
     {
       "name": "Obtain 3 extra notches",
       "type": "CollectionGoal",
-      "options": []
+      "options": [
+        "Obtain 3 extra notches",
+        "Salubra Notch",
+        "Fog Canyon Notch",
+        "Shrumals Notch",
+        "Colo Notch",
+        "Grimm Notch"
+      ],
+      "count": 3
     },
     {
       "name": "Obtain fountain vessel fragment",
@@ -1079,7 +1126,7 @@
     },
     {
       "name": "Pay for 6 tolls",
-      "type": "CollectionGoal",
+      "type": "AchievementGoal",
       "options": [
         {
           "dependencies": [],

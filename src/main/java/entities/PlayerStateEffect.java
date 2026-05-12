@@ -30,6 +30,17 @@ public class PlayerStateEffect {
         state.essence += this.essence_collected;
     }
 
+    public static PlayerStateEffect getMinimal(PlayerStateEffect state, PlayerStateEffect state2) {
+        if (state.geo_spent < state2.geo_spent) {
+            return state;
+        } else if (state.essence_collected < state2.essence_collected) {
+            return state;
+        } else if (state.grubs_collected < state2.grubs_collected) {
+            return state;
+        }
+        return state2;
+    }
+
     public static PlayerStateEffect spend_geo(int i) {
         return new PlayerStateEffect(0, i, 0);
     }

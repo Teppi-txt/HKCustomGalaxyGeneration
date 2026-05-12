@@ -5,19 +5,16 @@ import java.util.ArrayList;
 public class AchievementGoal implements IObtainable{
     private String name;
     private ArrayList<ObtainOption> dependencies;
-    private PlayerStateEffect effects;
     private PlayerState obtainedAtState = null;
     
-    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects) {
+    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies) {
         this.name = name;
         this.dependencies = dependencies;
-        this.effects = effects;
     }
 
-    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies, PlayerStateEffect effects, PlayerState obtainedAtState) {
+    public AchievementGoal(String name, ArrayList<ObtainOption> dependencies, PlayerState obtainedAtState) {
         this.name = name;
         this.dependencies = dependencies;
-        this.effects = effects;
         this.obtainedAtState = obtainedAtState;
     }
 
@@ -36,19 +33,19 @@ public class AchievementGoal implements IObtainable{
     }
 
     @Override
-    public ObtainOption getSuccessfulOption(PlayerState state) {
+    public PlayerStateEffect getMinimalEffect(PlayerState state) {
+        PlayerStateEffect effect = new PlayerStateEffect();
+
         if (dependencies.isEmpty()) {
-            return null;
+            return effect;
         }
 
         for (ObtainOption option : dependencies) {
             if (state.hasItems(option.getDependencies())) {
-                return option;
+                effect = PlayerStateEffect.getMinimal(option.getEffect(), effect);
             }
         }
-
-        System.out.println("CANNot OBTAIN");
-        return null;
+        return effect;
     }
 
     @Override
@@ -69,22 +66,4 @@ public class AchievementGoal implements IObtainable{
         return this.dependencies;
     }
 
-    // public ArrayList<CollectionGoal> getGoalDependencies() {
-    //     ArrayList<CollectionGoal> goals = new ArrayList<>();
-    //     for (IObtainable i : this.dependencies) {
-    //         if (i instanceof CollectionGoal) {
-    //             goals.add((CollectionGoal) i);
-    //         }
-    //     }
-    //     return goals;
-    // }
-
-    @Override
-    public PlayerStateEffect getEffects() {
-        return this.effects;
-    }
-
-	// public void addPrerequesite(IObtainable item) {
-	// 	this.dependencies.add(item);
-	// }
 }
