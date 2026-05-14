@@ -23,6 +23,8 @@ public class MilestoneGoal implements IObtainable{
             return state.grubs_rescued >= milestone;
         } else if (Objects.equals(milestoneType, "geo")) {
             return state.geo_spent >= milestone;
+        } else if (Objects.equals(milestoneType, "tolls")) {
+            return state.tolls_unlocked >= milestone;
         }
         return false;
     }

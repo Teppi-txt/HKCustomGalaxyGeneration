@@ -9,6 +9,7 @@ public class PlayerState {
     public int geo_spent = 0;
     public int essence = 0;
     public int grubs_rescued = 0;
+    public int tolls_unlocked = 0;
 
     public ArrayList<Objective> objectives = new ArrayList<>();
     public ArrayList<IObtainable> all_obtained = new ArrayList<>();
@@ -17,16 +18,11 @@ public class PlayerState {
         
     }
 
-    public PlayerState(int geo_spent, int essence, int grubs_rescued) {
+    public PlayerState(int geo_spent, int essence, int grubs_rescued, int tolls_unlocked) {
         this.geo_spent = geo_spent;
         this.essence = essence;
         this.grubs_rescued = grubs_rescued;
-    }
-
-    boolean isGreaterThan(PlayerState obtainedAtState) {
-        return this.geo_spent >= obtainedAtState.geo_spent &&
-                this.essence >= obtainedAtState.essence &&
-                this.grubs_rescued >= obtainedAtState.grubs_rescued;
+        this.tolls_unlocked = tolls_unlocked;
     }
 
     @Override

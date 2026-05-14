@@ -5,15 +5,17 @@ public class PlayerStateEffect {
     int grubs_collected = 0;
     int geo_spent = 0;
     int essence_collected = 0;
+    int tolls_collected = 0;
 
     public PlayerStateEffect() {
 
     }
 
-    public PlayerStateEffect(int grubs_collected, int geo_spent, int essence_collected) {
+    public PlayerStateEffect(int grubs_collected, int geo_spent, int essence_collected, int tolls_collected) {
         this.grubs_collected = grubs_collected;
         this.geo_spent = geo_spent;
         this.essence_collected = essence_collected;
+        this.tolls_collected = tolls_collected;
     }
 
     public void setGrubsCollected(int grubs_collected) {
@@ -46,14 +48,16 @@ public class PlayerStateEffect {
     }
 
     public static PlayerStateEffect spend_geo(int i) {
-        return new PlayerStateEffect(0, i, 0);
+        return new PlayerStateEffect(0, i, 0, 0);
     }
 
     public static PlayerStateEffect save_grubs(int i) {
-        return new PlayerStateEffect(i, 0, 0);
+        return new PlayerStateEffect(i, 0, 0, 0);
     }
 
     public static PlayerStateEffect collect_essence(int i) {
-        return new PlayerStateEffect(0, 0, i);
+        return new PlayerStateEffect(0, 0, i, 0);
     }
+
+    public static PlayerStateEffect tolls_collected(int i) { return new PlayerStateEffect(0, 0, 0, i); }
 }

@@ -1,9 +1,6 @@
 package utilities;
 
-import entities.AchievementGoal;
-import entities.CollectionGoal;
-import entities.Objective;
-import entities.ObtainOption;
+import entities.*;
 import interface_adapters.IObtainable;
 
 import java.util.*;
@@ -40,7 +37,7 @@ public class GoalUtility {
         List<Integer> validIndices = new ArrayList<>();
 
         for (int i = 0; i < allItems.size(); i++) {
-            if (!(allItems.get(i) instanceof Objective)) {
+            if (!(allItems.get(i) instanceof Objective) && !(allItems.get(i) instanceof MilestoneGoal)) {
                 validIndices.add(i);
             }
         }

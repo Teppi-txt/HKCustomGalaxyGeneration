@@ -1,6 +1,8 @@
 import entities.*;
 import utilities.*;
 import interface_adapters.IObtainable;
+import view.GeneratorUI;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,10 +35,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        ArrayList<IObtainable> goals = GoalParser.parseGoals("src/main/resources/hollow_knight_goals.json");
-        Board board = BoardGenerator.generateBoardRobin(goals, 127);
-        System.out.println(board.generateBoardJSON());
-        //printAll(goals);
+
     }
 }
 

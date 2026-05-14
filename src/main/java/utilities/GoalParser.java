@@ -43,11 +43,24 @@ public class GoalParser {
                             name,
                             new ArrayList<>()
                     );
-                } else {
+                } else if (type.equals("AchievementGoal")){
                     goal = new AchievementGoal(
                             name,
                             new ArrayList<>()
                     );
+                } else if (type.equals("MilestoneGoal")) {
+                    int count = 0;
+                    if (obj.has("count")) {
+                        count = obj.get("count").getAsInt();
+                    }
+
+                    String objective = null;
+                    if (obj.has("objective")) {
+                        objective = String.valueOf(obj.get("objective"));
+                    }
+                    goal = new MilestoneGoal(name, objective, count);
+                } else {
+                    goal = null;
                 }
 
                 byName.put(name, goal);
@@ -85,6 +98,11 @@ public class GoalParser {
                         collectionGoal.getCollectionItems().add(dependency);
                     }
 
+                    continue;
+                }
+
+                // MilestoneGoal special handling
+                if (goal instanceof MilestoneGoal) {
                     continue;
                 }
 
@@ -137,8 +155,9 @@ public class GoalParser {
         int grubs = getInt(effectObj, "grubs_saved");
         int geo = getInt(effectObj, "geo");
         int essence = getInt(effectObj, "essence");
+        int tolls = getInt(effectObj, "tolls");
 
-        return new PlayerStateEffect(grubs, Math.abs(geo), essence);
+        return new PlayerStateEffect(grubs, Math.abs(geo), essence, tolls);
     }
 
     private static int getInt(JsonObject obj, String key) {

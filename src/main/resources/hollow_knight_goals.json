@@ -1129,15 +1129,9 @@
     },
     {
       "name": "Pay for 6 tolls",
-      "type": "AchievementGoal",
-      "options": [
-        {
-          "dependencies": [],
-          "effect": {
-            "geo": -660
-          }
-        }
-      ]
+      "type": "MilestoneGoal",
+      "objective": "tolls",
+      "amount": 6
     },
     {
       "name": "Pick up the Love Key",
@@ -1206,12 +1200,14 @@
     {
       "name": "Save 15 grubs",
       "type": "MilestoneGoal",
-      "options": []
+      "objective": "grubs",
+      "amount": 15
     },
     {
       "name": "Save 20 grubs",
       "type": "MilestoneGoal",
-      "options": []
+      "objective": "grubs",
+      "amount": 20
     },
     {
       "name": "Save the 3 grubs in Queen's Gardens",
@@ -1420,17 +1416,20 @@
     {
       "name": "Spend 3000 geo",
       "type": "MilestoneGoal",
-      "options": []
+      "objective": "geo",
+      "amount": 3000
     },
     {
       "name": "Spend 4000 geo",
       "type": "MilestoneGoal",
-      "options": []
+      "objective": "geo",
+      "amount": 5000
     },
     {
       "name": "Spend 5000 geo",
       "type": "MilestoneGoal",
-      "options": []
+      "objective": "geo",
+      "amount": 5000
     },
     {
       "name": "Sprintmaster + Dashmaster",
