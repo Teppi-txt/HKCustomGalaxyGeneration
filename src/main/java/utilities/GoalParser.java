@@ -6,12 +6,16 @@ import interface_adapters.IObtainable;
 
 import com.google.gson.*;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class GoalParser {
 
-    public static ArrayList<IObtainable> parseGoals(String filePath) {
-        try (FileReader reader = new FileReader(filePath)) {
+    public static ArrayList<IObtainable> parseGoals(InputStream inputStream) {
+        try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);) {
             JsonParser parser = new JsonParser();
             JsonObject object = parser.parse(reader).getAsJsonObject();
             JsonArray jsonGoals = object.getAsJsonArray("goals");

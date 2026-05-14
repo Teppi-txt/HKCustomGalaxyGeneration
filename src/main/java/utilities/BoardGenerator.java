@@ -35,7 +35,7 @@ public class BoardGenerator {
         // artificially inject geo / grub goals
         // blomsom reference
         boolean possibilityOfGeocitation = RANDOM.nextDouble() < 0.2;
-        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < 1;
+        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < 0.2;
 
         if (possibilityOfGrubcipitation) {
             injectGrubs(board, getGoalByName(goals, "Save 15 grubs"), getGoalByName(goals, "Save 20 grubs"));

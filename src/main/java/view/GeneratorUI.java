@@ -11,6 +11,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class GeneratorUI extends JFrame {
@@ -27,6 +28,11 @@ public class GeneratorUI extends JFrame {
 
     public GeneratorUI() {
         super("Galaxy Board Generator");
+
+        // not implemented
+        optionOne.setEnabled(false);
+        optionTwo.setEnabled(false);
+        optionThree.setEnabled(false);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(900, 650);
@@ -109,7 +115,15 @@ public class GeneratorUI extends JFrame {
         boolean geoLimitation = optionTwo.isSelected();
         boolean distributeMajors = optionThree.isSelected();
 
-        ArrayList<IObtainable> goals = GoalParser.parseGoals("src/main/resources/hollow_knight_goals.json");
+        InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream("hollow_knight_goals.json");
+
+        if (inputStream == null) {
+            throw new RuntimeException("Resource not found");
+        }
+
+        ArrayList<IObtainable> goals = GoalParser.parseGoals(inputStream);
         Board board = BoardGenerator.generateBoardRobin(goals, Integer.parseInt(seed));
 
         resultArea.setText( board.generateBoardJSON() );
