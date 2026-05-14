@@ -9,25 +9,22 @@ import java.util.Set;
 
 
 public class Main {
-
-    public static void printGoals(List<IObtainable> goals) {
-        for (IObtainable goal : goals) {
-            if (!(goal instanceof Objective g)) {
-                System.out.println(goal.getName());
-            }
-        }
-    }
-
     public static void printAll(List<IObtainable> goals) {
         for (IObtainable goal : goals) {
             if (goal instanceof AchievementGoal) {
-                System.out.println("\u001B[31m" + goal.getName() + "\u001B[0m"); // Red
+                System.out.println("\u001B[31m" + goal.getName() +  "\u001B[0m"); // Red
+                if (goal.getDependencies().size() > 0) {
+                    System.out.println(goal.getDependencies().getFirst().getEffect().getGrubsCollected());
+                }
             }
             else if (goal instanceof CollectionGoal) {
                 System.out.println("\u001B[32m" + goal.getName() + "\u001B[0m"); // Green
             }
             else if (goal instanceof Objective) {
                 System.out.println("\u001B[34m" + goal.getName() + "\u001B[0m"); // Blue
+                if (goal.getDependencies().size() > 0) {
+                    System.out.println(goal.getDependencies().getFirst().getEffect().getGrubsCollected());
+                }
             }
             else {
                 System.out.println(goal.getName());
@@ -35,12 +32,11 @@ public class Main {
         }
     }
 
-
     public static void main(String[] args) {
         ArrayList<IObtainable> goals = GoalParser.parseGoals("src/main/resources/hollow_knight_goals.json");
-        BoardGenerator.generateBoardRobin(goals);
-//        TopologicalSort ts = new  TopologicalSort();
-//        printAll(ts.sort_and_reduce(goals));
+        Board board = BoardGenerator.generateBoardRobin(goals, 127);
+        System.out.println(board.generateBoardJSON());
+        //printAll(goals);
     }
 }
 

@@ -39,7 +39,9 @@
       "options": [
         {
           "dependencies": [],
-          "effect": {}
+          "effect": {
+            "grubs_saved": 6
+          }
         }
       ]
     },
@@ -51,7 +53,9 @@
           "dependencies": [
             "Crystal Heart"
           ],
-          "effect": {}
+          "effect": {
+            "grubs_saved": 6
+          }
         }
       ]
     },
@@ -560,7 +564,6 @@
         {
           "dependencies": [],
           "effect": {
-            "grubs_saved": 10
           }
         }
       ]
@@ -1202,12 +1205,12 @@
     },
     {
       "name": "Save 15 grubs",
-      "type": "CollectionGoal",
+      "type": "MilestoneGoal",
       "options": []
     },
     {
       "name": "Save 20 grubs",
-      "type": "CollectionGoal",
+      "type": "MilestoneGoal",
       "options": []
     },
     {
@@ -1326,10 +1329,9 @@
       "options": [
         {
           "dependencies": [
-            "Peaks Access"
+            "Elegant key"
           ],
           "effect": {
-            "geo": -800
           }
         }
       ]
@@ -1383,7 +1385,12 @@
     {
       "name": "Soul Master",
       "type": "AchievementGoal",
-      "options": []
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
     },
     {
       "name": "Soul Tyrant",
@@ -1412,17 +1419,17 @@
     },
     {
       "name": "Spend 3000 geo",
-      "type": "CollectionGoal",
+      "type": "MilestoneGoal",
       "options": []
     },
     {
       "name": "Spend 4000 geo",
-      "type": "CollectionGoal",
+      "type": "MilestoneGoal",
       "options": []
     },
     {
       "name": "Spend 5000 geo",
-      "type": "CollectionGoal",
+      "type": "MilestoneGoal",
       "options": []
     },
     {
@@ -2143,7 +2150,6 @@
         {
           "dependencies": [],
           "effect": {
-            "grubs_saved": 5
           }
         }
       ]

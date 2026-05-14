@@ -20,6 +20,10 @@ public class PlayerStateEffect {
         this.grubs_collected = grubs_collected;
     }
 
+    public int getGrubsCollected() {
+        return this.grubs_collected;
+    }
+
     public void setGeoSpent(int geo_spent) {
         this.geo_spent = geo_spent;
     }

@@ -1,10 +1,14 @@
 package utilities;
 
+import entities.AchievementGoal;
+import entities.CollectionGoal;
 import entities.Objective;
 import entities.ObtainOption;
 import interface_adapters.IObtainable;
 
 import java.util.*;
+
+import static utilities.BoardGenerator.RANDOM;
 
 public class GoalUtility {
     public static ArrayList<IObtainable> selectRandomGoals(List<IObtainable> allItems, int count) {
@@ -41,23 +45,38 @@ public class GoalUtility {
             }
         }
 
-        Collections.shuffle(validIndices);
-        return allItems.get(validIndices.get(0));
+        return allItems.get(validIndices.get(RANDOM.nextInt(validIndices.size())));
     }
 
     public static IObtainable selectMostImportantGoal(List<IObtainable> allItems) {
         IObtainable result = null;
-        int d_number = 0;
+        int dNumber = 0;
         for (int i = 0; i < allItems.size(); i++) {
-            if (allItems.get(i) instanceof Objective) {
+            IObtainable currentGoal = allItems.get(i);
+            int goalImportance = getDependentsCount(allItems, currentGoal) + getDependenciesCount(currentGoal);
+            if (currentGoal instanceof Objective) {
                 continue;
             }
-            if (result == null) {
-                result = allItems.get(i);
-                d_number = getDependentsCount(allItems, allItems.get(i));
-            } else if (getDependentsCount(allItems, allItems.get(i)) > d_number) {
-                result = allItems.get(i);
-                d_number = getDependentsCount(allItems, allItems.get(i));
+            if (result == null || goalImportance > dNumber) {
+                result = currentGoal;
+                dNumber = goalImportance;
+            }
+        }
+        return result;
+    }
+
+    public static IObtainable selectLeastImportantGoal(List<IObtainable> allItems) {
+        IObtainable result = null;
+        int dNumber = 0;
+        for (int i = 0; i < allItems.size(); i++) {
+            IObtainable currentGoal = allItems.get(i);
+            int goalImportance = getDependentsCount(allItems, currentGoal) + getDependenciesCount(currentGoal);
+            if (currentGoal instanceof Objective) {
+                continue;
+            }
+            if (result == null || goalImportance < dNumber) {
+                result = currentGoal;
+                dNumber = goalImportance;
             }
         }
         return result;
@@ -83,5 +102,74 @@ public class GoalUtility {
             }
         }
         return count;
+    }
+
+    private static int getDependenciesCount(IObtainable i) {
+        int count = 0;
+
+        for (ObtainOption o : i.getDependencies()) {
+            count += o.getDependencies().size();
+        }
+        return count;
+    }
+
+    public static List<IObtainable> deepCopyGoals(List<IObtainable> goals) {
+        Map<String, IObtainable> byName = new HashMap<>();
+        ArrayList<IObtainable> result = new ArrayList<>();
+
+        // first pass, just the new goal objects
+        for (IObtainable goal : goals) {
+            IObtainable newGoal;
+
+            if (goal instanceof CollectionGoal collectionGoal) {
+                newGoal = new CollectionGoal(
+                        collectionGoal.getName(),
+                        new ArrayList<>(),
+                        collectionGoal.getCollectionCount()
+                );
+            } else if (goal instanceof Objective) {
+                newGoal = new Objective(
+                        goal.getName(),
+                        new ArrayList<>()
+                );
+            } else {
+                newGoal = new AchievementGoal(
+                        goal.getName(),
+                        new ArrayList<>()
+                );
+            }
+
+            byName.put(goal.getName(), newGoal);
+            result.add(newGoal);
+        }
+
+        // second pass, new dependencies
+        for (IObtainable goal : goals) {
+            if (goal instanceof CollectionGoal collectionGoal) {
+                for (IObtainable i : collectionGoal.getCollectionItems()) {
+                    // terrible terrible code
+                    ((CollectionGoal) byName.get(goal.getName())).getCollectionItems().add(byName.get(i.getName()));
+                }
+            } else {
+                for (ObtainOption o : goal.getDependencies()) {
+                    HashSet<IObtainable> set = new HashSet<>();
+                    for (IObtainable dependency : o.getDependencies()) {
+                        set.add(byName.get(dependency.getName()));
+                    }
+
+                    byName.get(goal.getName()).getDependencies().add(new ObtainOption(set, o.getEffect()));
+                }
+            }
+        }
+        return result;
+    }
+
+    public static IObtainable getGoalByName(List<IObtainable> goals, String s) {
+        for (IObtainable goal : goals) {
+            if (goal.getName().equals(s)) {
+                return goal;
+            }
+        }
+        return null;
     }
 }
