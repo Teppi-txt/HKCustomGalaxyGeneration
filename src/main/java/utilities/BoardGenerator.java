@@ -11,11 +11,24 @@ public class BoardGenerator {
     // private static final Logger LOGGER = Logger.getLogger(BoardGenerator.class.getName());
 
     public static final Random RANDOM = new Random();
+    public static double GEO_LIMIT_CHANCE = -1.0;
+
+    public static final String[] MAJORS = {"Monarch Wings", "Crystal Dash", "Lumafly Lantern", "Desolate Dive",
+            "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths", "Descending Dark", "Shade Cloak"};
+
+    public static final double INCREASED_MAJOR_CHANCE = 0.15;
+    public static boolean INCREASE_MAJOR_CHANCE = false;
 
     private static void printPlayerGoals(String playerName, ArrayList<IObtainable> goals, String color) { final String RESET = "\u001B[0m"; System.out.println(color + "=== " + playerName + " ===" + RESET); for (IObtainable goal : goals) { System.out.println(color + "- " + goal.getName() + RESET); } System.out.println(); }
 
     public static Board generateBoardRobin(List<IObtainable> goals, int seed) {
         RANDOM.setSeed(seed);
+
+        if (GEO_LIMIT_CHANCE == -1.0) {
+            GEO_LIMIT_CHANCE = (double) 3 / goals.size();
+        }
+
+        // guess what list implementation i like the most
         ArrayList<IObtainable> newGoals = (ArrayList<IObtainable>) deepCopyGoals(goals);
         ArrayList<IObtainable> p1 = new ArrayList<>();
         ArrayList<IObtainable> p2 = new ArrayList<>();
@@ -23,7 +36,6 @@ public class BoardGenerator {
         ArrayList<IObtainable> p4 = new ArrayList<>();
         ArrayList<ArrayList<IObtainable>> board = new ArrayList<>(List.of(p1, p2, p3, p4));
         ArrayList<IObtainable> usedGoals = new ArrayList<>();
-        ArrayList<IObtainable> centerSquareTheory = new ArrayList<>();
 
         for (int round = 0; round < 6; round++) {
             pickGoal(newGoals,  p1, usedGoals);
@@ -32,17 +44,166 @@ public class BoardGenerator {
             pickGoal(newGoals,  p4, usedGoals);
         }
 
+        // by gori
+        ArrayList<IObtainable> centerSquareTheory = new ArrayList<>();
+
         // artificially inject geo / grub goals
         // blomsom reference
-        boolean possibilityOfGeocitation = RANDOM.nextDouble() < 0.2;
-        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < 0.2;
+        boolean possibilityOfGeocitation = RANDOM.nextDouble() < GEO_LIMIT_CHANCE;
+        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < (double) 2 / goals.size();
+        boolean possibilityOfTollicitation = RANDOM.nextDouble() < (double) 1 / goals.size();
+
+        if (possibilityOfGeocitation) {
+            reduceInflation(board, getGoalByName(goals, "Spend 3000 geo"),
+                                   getGoalByName(goals, "Spend 4000 geo"),
+                                   getGoalByName(goals, "Spend 5000 geo"));
+        }
 
         if (possibilityOfGrubcipitation) {
-            injectGrubs(board, getGoalByName(goals, "Save 15 grubs"), getGoalByName(goals, "Save 20 grubs"));
+            injectGrubs(board, getGoalByName(goals, "Save 15 grubs"),
+                               getGoalByName(goals, "Save 20 grubs"));
+        }
+
+        if (possibilityOfTollicitation) {
+            depositTolls(board, getGoalByName(goals, "Pay for 6 tolls"));
         }
 
         pickGoal(newGoals, centerSquareTheory, usedGoals);
         return new Board(board, centerSquareTheory.getFirst());
+    }
+    private static void reduceInflation(ArrayList<ArrayList<IObtainable>> board,
+                                        IObtainable threeK,
+                                        IObtainable fourK,
+                                        IObtainable fiveK) {
+        IObtainable[] geoGoals = { threeK, fourK, fiveK };
+        int[] bounds = { 3000, 4000, 5000 };
+
+        for (int i = 0; i < bounds.length; i++) {
+            int bound = bounds[i];
+            IObtainable geoGoal = geoGoals[i];
+
+            ArrayList<ArrayList<IObtainable>> below = new ArrayList<>();
+            ArrayList<IObtainable> targetPlayer = null;
+
+            for (ArrayList<IObtainable> player : board) {
+                int geo = getMaximalSpentGeo(player);
+
+                if (geo < bound) {
+                    below.add(player);
+                } else if (targetPlayer == null) {
+                    targetPlayer = player;
+                } else {
+                    // more than one player above this bound, so this goal is illegal
+                    targetPlayer = null;
+                    break;
+                }
+            }
+
+            // all players below geo bound
+            if (below.size() == board.size()) {
+                targetPlayer = below.get(RANDOM.nextInt(below.size()));
+            }
+
+            // only one below geo bound
+            if (targetPlayer != null) {
+                ArrayList<IObtainable> goalPool = getGoalsBeforeGeoLimit(targetPlayer, bound);
+                IObtainable leastImportantGoal = selectLeastImportantGoal(goalPool);
+                targetPlayer.set(targetPlayer.indexOf(leastImportantGoal), geoGoal);
+
+                System.out.println("Replacing " + leastImportantGoal.getName()
+                        + " with " + (bound / 1000) + "k");
+
+                return;
+            }
+
+            // illegal bound
+        }
+    }
+
+    private static ArrayList<IObtainable> getGoalsBeforeGeoLimit(ArrayList<IObtainable> player, int limit) {
+        ArrayList<IObtainable> currentPool = new ArrayList<>();
+        for (IObtainable goal : player) {
+            currentPool.add(goal);
+            ArrayList<IObtainable> graph = TopologicalSort.constructOrderingGraph(currentPool, new ArrayList<>());
+            // loop through the graph, always pick the most toll expensive option
+            int max = 0;
+            for (IObtainable g : graph) {
+                int maxInOptions = 0;
+                for (ObtainOption option : g.getDependencies()) {
+                    if (option.getEffect().getGeoSpent() >= maxInOptions) {
+                        maxInOptions = option.getEffect().getGeoSpent();
+                    }
+                }
+                max += maxInOptions;
+            }
+            if (max > limit) {
+                return currentPool;
+            }
+        }
+        return player;
+    }
+
+    private static int getMaximalSpentGeo(ArrayList<IObtainable> player) {
+        ArrayList<IObtainable> graph = TopologicalSort.constructOrderingGraph(player, new ArrayList<>());
+        // loop through the graph, always pick the most toll expensive option
+        int max = 0;
+        for (IObtainable goal : graph) {
+            int maxInOptions = 0;
+            for (ObtainOption option : goal.getDependencies()) {
+                if (option.getEffect().getGeoSpent() >= maxInOptions) {
+                    maxInOptions = option.getEffect().getGeoSpent();
+                }
+            }
+            max += maxInOptions;
+            if (maxInOptions > 0) {
+                System.out.println(goal.getName() + " " + maxInOptions);
+            }
+        }
+        return max;
+    }
+
+    private static void depositTolls(ArrayList<ArrayList<IObtainable>> board, IObtainable sixTolls) {
+        ArrayList<ArrayList<IObtainable>> available = new ArrayList<>();
+        ArrayList<IObtainable> targetPlayer = null;
+        for (ArrayList<IObtainable> player : board) {
+            int tolls = getMaximalTollCount(player);
+
+            if (tolls < 6) {
+                available.add(player);
+            } else if (targetPlayer == null) {
+                targetPlayer = player;
+            } else {
+                return;
+            }
+        }
+
+        // all players can have 6 tolls
+        if (available.size() == board.size()) {
+            targetPlayer = available.get(RANDOM.nextInt(available.size()));
+        }
+
+        IObtainable leastImportantGoal = selectLeastImportantGoal(targetPlayer);
+        targetPlayer.set(targetPlayer.indexOf(leastImportantGoal), sixTolls);
+        System.out.println("Replacing " + leastImportantGoal.getName() + " with 6 tolls");
+    }
+
+    private static int getMaximalTollCount(ArrayList<IObtainable> player) {
+        ArrayList<IObtainable> graph = TopologicalSort.constructOrderingGraph(player, new ArrayList<>());
+        // loop through the graph, always pick the most toll expensive option
+        int max = 0;
+        for (IObtainable goal : graph) {
+            int maxInOptions = 0;
+            for (ObtainOption option : goal.getDependencies()) {
+                if (option.getEffect().getTolls() >= maxInOptions) {
+                    maxInOptions = option.getEffect().getTolls();
+                }
+            }
+            max += maxInOptions;
+            if (maxInOptions > 0) {
+                System.out.println(goal.getName() + " " + maxInOptions);
+            }
+        }
+        return max;
     }
 
     private static void injectGrubs(ArrayList<ArrayList<IObtainable>> board, IObtainable grub15, IObtainable grub20) {
@@ -88,7 +249,14 @@ public class BoardGenerator {
 
     private static void pickGoal(List<IObtainable> pool, List<IObtainable> playerGoals,
                                  List<IObtainable> usedGoals) {
+
         IObtainable goal = GoalUtility.selectRandomGoal(pool);
+        if (INCREASE_MAJOR_CHANCE && RANDOM.nextDouble() < INCREASED_MAJOR_CHANCE) {
+            ArrayList<IObtainable> majors = getGoals(pool, MAJORS);
+            if (!majors.isEmpty()) {
+                goal = majors.get(RANDOM.nextInt(majors.size()));
+            }
+        }
         playerGoals.add(goal);
         deepRemove(pool, goal);
         for (IObtainable usedGoal : usedGoals) {
@@ -96,6 +264,20 @@ public class BoardGenerator {
         }
 
         usedGoals.add(goal);
+        System.out.println(goal.getName() + (goal instanceof MilestoneGoal));
+    }
+
+    private static ArrayList<IObtainable> getGoals(List<IObtainable> pool, String[] majors) {
+        ArrayList<IObtainable> returnList = new ArrayList<>();
+        for (String major : majors) {
+            IObtainable goal = getGoalByName(pool, major);
+            if (goal == null) {
+                continue;
+            } else {
+                returnList.add(goal);
+            }
+        }
+        return returnList;
     }
 
     /**

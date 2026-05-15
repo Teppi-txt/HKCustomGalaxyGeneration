@@ -26,6 +26,10 @@ public class PlayerStateEffect {
         return this.grubs_collected;
     }
 
+    public int getGeoSpent() {
+        return this.geo_spent;
+    }
+
     public void setGeoSpent(int geo_spent) {
         this.geo_spent = geo_spent;
     }
@@ -45,6 +49,10 @@ public class PlayerStateEffect {
             return state;
         }
         return state2;
+    }
+
+    public int getTolls() {
+        return this.tolls_collected;
     }
 
     public static PlayerStateEffect spend_geo(int i) {

@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class GeneratorUI extends JFrame {
-    private final JTextField seedField = new JTextField(15);
+    private final JTextField seedField = new JTextField("0", 15);
     private final JSpinner playerCountSpinner = new JSpinner(
             new SpinnerNumberModel(1, 1, 8, 1)
     );
@@ -29,14 +29,11 @@ public class GeneratorUI extends JFrame {
     public GeneratorUI() {
         super("Galaxy Board Generator");
 
-        // not implemented
-        optionOne.setEnabled(false);
-        optionTwo.setEnabled(false);
-        optionThree.setEnabled(false);
-
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(900, 650);
         setLocationRelativeTo(null);
+
+        optionThree.setEnabled(false);
 
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBorder(BorderFactory.createTitledBorder("Settings"));
@@ -111,9 +108,23 @@ public class GeneratorUI extends JFrame {
     private void generateResult() {
         String seed = seedField.getText();
         int playerCount = (int) playerCountSpinner.getValue();
+
+        if (playerCount == 1 || playerCount == 2 || playerCount == 4) {
+            playerCountSpinner.setBackground(Color.GRAY);
+        } else {
+            playerCountSpinner.setBackground(Color.RED);
+        }
         boolean majorChance = optionOne.isSelected();
         boolean geoLimitation = optionTwo.isSelected();
         boolean distributeMajors = optionThree.isSelected();
+
+        if (geoLimitation) {
+            BoardGenerator.GEO_LIMIT_CHANCE = 1;
+        } else {
+            BoardGenerator.GEO_LIMIT_CHANCE = -1;
+        }
+
+        BoardGenerator.INCREASE_MAJOR_CHANCE = majorChance;
 
         InputStream inputStream = getClass()
                 .getClassLoader()

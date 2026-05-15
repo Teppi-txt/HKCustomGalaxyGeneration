@@ -37,9 +37,10 @@ public class GoalUtility {
         List<Integer> validIndices = new ArrayList<>();
 
         for (int i = 0; i < allItems.size(); i++) {
-            if (!(allItems.get(i) instanceof Objective) && !(allItems.get(i) instanceof MilestoneGoal)) {
-                validIndices.add(i);
+            if (allItems.get(i) instanceof Objective || allItems.get(i) instanceof MilestoneGoal) {
+                continue;
             }
+            validIndices.add(i);
         }
 
         return allItems.get(validIndices.get(RANDOM.nextInt(validIndices.size())));
@@ -68,7 +69,7 @@ public class GoalUtility {
         for (int i = 0; i < allItems.size(); i++) {
             IObtainable currentGoal = allItems.get(i);
             int goalImportance = getDependentsCount(allItems, currentGoal) + getDependenciesCount(currentGoal);
-            if (currentGoal instanceof Objective) {
+            if (currentGoal instanceof Objective || currentGoal instanceof MilestoneGoal) {
                 continue;
             }
             if (result == null || goalImportance < dNumber) {
@@ -129,12 +130,15 @@ public class GoalUtility {
                         goal.getName(),
                         new ArrayList<>()
                 );
-            } else {
+            } else if (goal instanceof  AchievementGoal){
                 newGoal = new AchievementGoal(
                         goal.getName(),
                         new ArrayList<>()
                 );
+            } else {
+                newGoal = goal;
             }
+
 
             byName.put(goal.getName(), newGoal);
             result.add(newGoal);

@@ -622,7 +622,7 @@
       "options": [
         {
           "dependencies": [
-            "Peaks Access"
+            "Sly", "Peaks Access"
           ],
           "effect": {
             "geo": -470
@@ -721,10 +721,9 @@
       "options": [
         {
           "dependencies": [
-            "Peaks Access"
+            "Elegant key", "Peaks Access"
           ],
           "effect": {
-            "geo": -800
           }
         },
         {
@@ -860,7 +859,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Sly"],
           "effect": {
             "geo": -1800
           }
@@ -1179,13 +1178,9 @@
     },
     {
       "name": "Rescue Bretta + Sly",
-      "type": "AchievementGoal",
-      "options": [
-        {
-          "dependencies": [],
-          "effect": {}
-        }
-      ]
+      "type": "CollectionGoal",
+      "options": ["Bretta", "Sly"],
+      "count": 2
     },
     {
       "name": "Rescue Zote in Deepnest",
@@ -1437,7 +1432,7 @@
       "options": [
         {
           "dependencies": [
-            "Peaks Access"
+            "Peaks Access", "Sly"
           ],
           "effect": {
             "geo": -400
@@ -1700,7 +1695,8 @@
             "False Knight"
           ],
           "effect": {
-            "geo": -150
+            "geo": -150,
+            "tolls": 1
           }
         }
       ]
@@ -1954,7 +1950,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Bretta"],
           "effect": {}
         }
       ]
@@ -2046,7 +2042,7 @@
       "options": [
         {
           "dependencies": [
-            "Peaks Access"
+            "Peaks Access", "Sly"
           ],
           "effect": {
             "geo": -800
@@ -2080,7 +2076,7 @@
       "type": "Objective",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Sly"],
           "effect": {
             "geo": -150
           }
@@ -2178,7 +2174,7 @@
       "type": "Objective",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Bretta"],
           "effect": {}
         }
       ]
@@ -2406,6 +2402,36 @@
     },
     {
       "name": "False Knight",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "False Knight",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Bretta",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "Sly",
       "type": "Objective",
       "options": [
         {
