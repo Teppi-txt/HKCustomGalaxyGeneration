@@ -12,9 +12,9 @@ public class Board {
 
     public static Map<String, List<Integer>> glackyIndices = Map.of(
             "player1", List.of(0, 1, 2, 3, 8, 13),
-            "player2", List.of(4, 9, 14, 17, 18, 19),
-            "player3", List.of(5, 6, 7, 10, 15, 20),
-            "player4", List.of(11, 16, 21, 22, 23, 24),
+            "player2", List.of(4, 9, 14, 19, 18, 17),
+            "player3", List.of(24, 23, 22, 21, 16, 11),
+            "player4", List.of(20, 15, 10, 5, 6, 7),
             "neutral", List.of(12)
     );
 

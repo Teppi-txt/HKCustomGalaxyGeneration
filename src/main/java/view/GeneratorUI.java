@@ -12,22 +12,30 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class GeneratorUI extends JFrame {
     private final JTextField seedField = new JTextField("0", 15);
     private final JSpinner playerCountSpinner = new JSpinner(
-            new SpinnerNumberModel(1, 1, 8, 1)
+            new SpinnerNumberModel(4, 1, 8, 1)
     );
 
     private final JCheckBox optionOne = new JCheckBox("Increase major ability chance");
     private final JCheckBox optionTwo = new JCheckBox("Force geo limitations");
-    private final JCheckBox optionThree = new JCheckBox("Balance ability distribution");
+    private final JCheckBox optionThree = new JCheckBox("Force \"fun\" middle square");
+    private final JCheckBox optionFour = new JCheckBox("Prevent lines requiring multiple saves");
 
     private final JTextArea resultArea = new JTextArea();
 
     public GeneratorUI() {
         super("Galaxy Board Generator");
+
+        URL iconStream = getClass()
+                .getClassLoader()
+                .getResource("galaxy_icon.png");
+        ImageIcon icon = new ImageIcon(iconStream);
+        this.setIconImage(icon.getImage());
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(900, 650);
@@ -70,12 +78,15 @@ public class GeneratorUI extends JFrame {
         gbc.gridy = 4;
         inputPanel.add(optionThree, gbc);
 
+        gbc.gridy = 5;
+        inputPanel.add(optionFour, gbc);
+
         JButton generateButton = new JButton("Generate");
         gbc.gridy = 6;
         gbc.fill = GridBagConstraints.NONE;
         inputPanel.add(generateButton, gbc);
 
-        JTextArea credits = new JTextArea("Special thanks to choombert and python for help with generation logic.");
+        JTextArea credits = new JTextArea("Special thanks to choombert and python for help with generation logic, and wunder for rigorous testing :)");
         credits.setEditable(false);
         credits.setLineWrap(true);
         credits.setColumns(15);
@@ -106,7 +117,14 @@ public class GeneratorUI extends JFrame {
     }
 
     private void generateResult() {
-        String seed = seedField.getText();
+        int seed = 0;
+
+        try{
+            seed = Integer.parseInt(seedField.getText());
+        } catch (NumberFormatException e) {
+            seed = seedField.getText().hashCode();
+        }
+
         int playerCount = (int) playerCountSpinner.getValue();
 
         if (playerCount == 1 || playerCount == 2 || playerCount == 4) {
@@ -117,6 +135,7 @@ public class GeneratorUI extends JFrame {
         boolean majorChance = optionOne.isSelected();
         boolean geoLimitation = optionTwo.isSelected();
         boolean distributeMajors = optionThree.isSelected();
+        boolean preventMultipleSaves = optionFour.isSelected();
 
         if (geoLimitation) {
             BoardGenerator.GEO_LIMIT_CHANCE = 1;
@@ -125,6 +144,7 @@ public class GeneratorUI extends JFrame {
         }
 
         BoardGenerator.INCREASE_MAJOR_CHANCE = majorChance;
+        BoardGenerator.PREVENT_MULTIPLE_SAVES = preventMultipleSaves;
 
         InputStream inputStream = getClass()
                 .getClassLoader()
@@ -135,7 +155,7 @@ public class GeneratorUI extends JFrame {
         }
 
         ArrayList<IObtainable> goals = GoalParser.parseGoals(inputStream);
-        Board board = BoardGenerator.generateBoardRobin(goals, Integer.parseInt(seed));
+        Board board = BoardGenerator.generateBoardRobin(goals, seed);
 
         resultArea.setText( board.generateBoardJSON() );
     }

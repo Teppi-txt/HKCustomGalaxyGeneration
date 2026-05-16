@@ -111,6 +111,33 @@ public class GoalUtility {
         return count;
     }
 
+    static boolean needsMultipleSaves(List<IObtainable> playerGoals, IObtainable goal) {
+        // hardcoded for now
+        final Set<String> zoteAliveGoals = Set.of(
+                "Defeat Colosseum Zote",
+                "Rescue Zote in Deepnest",
+                "Vengefly King + Massive Moss Charger"
+        );
+
+        if (Objects.equals(goal.getName(), "Slash Zote's corpse in Greenpath")) {
+            for (IObtainable i : playerGoals) {
+                if (zoteAliveGoals.contains(i.getName())) {
+                    return true;
+                }
+            }
+        }
+
+        if (zoteAliveGoals.contains(goal.getName())) {
+            for (IObtainable i : playerGoals) {
+                if (i.getName() == "Slash Zote's corpse in Greenpath") {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static List<IObtainable> deepCopyGoals(List<IObtainable> goals) {
         Map<String, IObtainable> byName = new HashMap<>();
         ArrayList<IObtainable> result = new ArrayList<>();

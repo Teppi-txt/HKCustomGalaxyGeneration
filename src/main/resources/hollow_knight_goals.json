@@ -1095,9 +1095,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [
-            "Spend 3000 geo"
-          ],
+          "dependencies": [],
           "effect": {
             "geo": -3000
           }
@@ -1867,14 +1865,17 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": [
+            "Dream Nail"
+          ],
           "effect": {
             "geo": -250
           }
         },
         {
           "dependencies": [
-            "Dung Defender"
+            "Dung Defender",
+            "Dream Nail"
           ],
           "effect": {
             "geo": -200

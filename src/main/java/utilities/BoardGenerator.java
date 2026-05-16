@@ -8,18 +8,26 @@ import java.util.*;
 import static utilities.GoalUtility.*;
 
 public class BoardGenerator {
-    // private static final Logger LOGGER = Logger.getLogger(BoardGenerator.class.getName());
-
     public static final Random RANDOM = new Random();
+    public static boolean PREVENT_MULTIPLE_SAVES = true;
     public static double GEO_LIMIT_CHANCE = -1.0;
 
-    public static final String[] MAJORS = {"Monarch Wings", "Crystal Dash", "Lumafly Lantern", "Desolate Dive",
-            "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths", "Descending Dark", "Shade Cloak"};
+    public static final String[] MAJORS = {
+            "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
+            "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths",
+            "Descending Dark", "Shade Cloak"};
 
     public static final double INCREASED_MAJOR_CHANCE = 0.15;
     public static boolean INCREASE_MAJOR_CHANCE = false;
 
-    private static void printPlayerGoals(String playerName, ArrayList<IObtainable> goals, String color) { final String RESET = "\u001B[0m"; System.out.println(color + "=== " + playerName + " ===" + RESET); for (IObtainable goal : goals) { System.out.println(color + "- " + goal.getName() + RESET); } System.out.println(); }
+    private static void printPlayerGoals(String playerName, ArrayList<IObtainable> goals, String color) {
+        final String RESET = "\u001B[0m";
+        System.out.println(color + "=== " + playerName + " ===" + RESET);
+        for (IObtainable goal : goals) {
+            System.out.println(color + "- " + goal.getName() + RESET);
+        }
+        System.out.println();
+    }
 
     public static Board generateBoardRobin(List<IObtainable> goals, int seed) {
         RANDOM.setSeed(seed);
@@ -69,6 +77,10 @@ public class BoardGenerator {
         }
 
         pickGoal(newGoals, centerSquareTheory, usedGoals);
+        printPlayerGoals("player1", p1, "");
+        printPlayerGoals("player2", p2, "");
+        printPlayerGoals("player3", p3, "");
+        printPlayerGoals("player4", p4, "");
         return new Board(board, centerSquareTheory.getFirst());
     }
     private static void reduceInflation(ArrayList<ArrayList<IObtainable>> board,
@@ -107,6 +119,12 @@ public class BoardGenerator {
             // only one below geo bound
             if (targetPlayer != null) {
                 ArrayList<IObtainable> goalPool = getGoalsBeforeGeoLimit(targetPlayer, bound);
+                printPlayerGoals("before geo", goalPool, "");
+
+                if (goalPool.isEmpty()) {
+                    return; // give up
+                }
+
                 IObtainable leastImportantGoal = selectLeastImportantGoal(goalPool);
                 targetPlayer.set(targetPlayer.indexOf(leastImportantGoal), geoGoal);
 
@@ -124,19 +142,8 @@ public class BoardGenerator {
         ArrayList<IObtainable> currentPool = new ArrayList<>();
         for (IObtainable goal : player) {
             currentPool.add(goal);
-            ArrayList<IObtainable> graph = TopologicalSort.constructOrderingGraph(currentPool, new ArrayList<>());
-            // loop through the graph, always pick the most toll expensive option
-            int max = 0;
-            for (IObtainable g : graph) {
-                int maxInOptions = 0;
-                for (ObtainOption option : g.getDependencies()) {
-                    if (option.getEffect().getGeoSpent() >= maxInOptions) {
-                        maxInOptions = option.getEffect().getGeoSpent();
-                    }
-                }
-                max += maxInOptions;
-            }
-            if (max > limit) {
+            if (getMaximalSpentGeo(currentPool) > limit) {
+                currentPool.remove(goal);
                 return currentPool;
             }
         }
@@ -145,7 +152,7 @@ public class BoardGenerator {
 
     private static int getMaximalSpentGeo(ArrayList<IObtainable> player) {
         ArrayList<IObtainable> graph = TopologicalSort.constructOrderingGraph(player, new ArrayList<>());
-        // loop through the graph, always pick the most toll expensive option
+        // loop through the graph, always pick the most expensive option
         int max = 0;
         for (IObtainable goal : graph) {
             int maxInOptions = 0;
@@ -155,9 +162,6 @@ public class BoardGenerator {
                 }
             }
             max += maxInOptions;
-            if (maxInOptions > 0) {
-                System.out.println(goal.getName() + " " + maxInOptions);
-            }
         }
         return max;
     }
@@ -199,9 +203,6 @@ public class BoardGenerator {
                 }
             }
             max += maxInOptions;
-            if (maxInOptions > 0) {
-                System.out.println(goal.getName() + " " + maxInOptions);
-            }
         }
         return max;
     }
@@ -251,6 +252,14 @@ public class BoardGenerator {
                                  List<IObtainable> usedGoals) {
 
         IObtainable goal = GoalUtility.selectRandomGoal(pool);
+        int limit = 50;
+        System.out.println(needsMultipleSaves(usedGoals, goal));
+        while (PREVENT_MULTIPLE_SAVES && needsMultipleSaves(usedGoals, goal) && limit > 0) {
+            goal = GoalUtility.selectRandomGoal(pool);
+
+            limit -= 1; // prevent inf. loop
+        }
+
         if (INCREASE_MAJOR_CHANCE && RANDOM.nextDouble() < INCREASED_MAJOR_CHANCE) {
             ArrayList<IObtainable> majors = getGoals(pool, MAJORS);
             if (!majors.isEmpty()) {
@@ -264,7 +273,6 @@ public class BoardGenerator {
         }
 
         usedGoals.add(goal);
-        System.out.println(goal.getName() + (goal instanceof MilestoneGoal));
     }
 
     private static ArrayList<IObtainable> getGoals(List<IObtainable> pool, String[] majors) {
@@ -296,21 +304,33 @@ public class BoardGenerator {
      */
     private static void removeAllDependencies(List<IObtainable> newPool, IObtainable i) {
 
-        //System.out.println("\n[Backwards Step] Checking dependencies for: " + i.getName() + ".");
+        System.out.println("\n[Backwards Step] Checking dependencies for: " + i.getName() + ".");
 
         ArrayList<IObtainable> toBeRemoved = new ArrayList<>();
 
+        // case 1: only one way to obtain i, so all those goals cannot be in the pool
         if (i.getDependencies().size() == 1) {
-
-            //System.out.println("only one obtain option exists.");
+            System.out.println("only one obtain option exists.");
             toBeRemoved.addAll(i.getDependencies().get(0).getDependencies());
+
         }
+
+        //case 2: multiple ways, but all those ways have one shared goal
+        if (i.getDependencies().size() > 1) {
+            Set<IObtainable> shared = new HashSet<>(i.getDependencies().get(0).getDependencies());
+
+            for (ObtainOption option : i.getDependencies()) {
+                shared.retainAll(option.getDependencies());
+            }
+            toBeRemoved.addAll(shared);
+        }
+
 
         for (IObtainable removed : toBeRemoved) {
             if (removed instanceof Objective) {
                 continue;
             }
-            //System.out.println("- " + removed.getName());
+            System.out.println("- " + removed.getName());
             newPool.remove(removed);
             removeAllDependencies(newPool, removed);
         }
@@ -333,7 +353,7 @@ public class BoardGenerator {
 
                 if (option.getDependencies().contains(i)) {
 
-                    //System.out.println("[Forward Trace] " + goal.getName() + " lost an option because it depended on: " + i.getName());
+                    System.out.println("[Forward Trace] " + goal.getName() + " lost an option because it depended on: " + i.getName());
 
                     iterator.remove();
 
@@ -346,10 +366,10 @@ public class BoardGenerator {
 
         for (IObtainable removed : toBeRemoved) {
             if (removed instanceof Objective) {
-                //System.out.println("[NOT REMOVED OBJECTIVE] " + removed.getName());
+                System.out.println("[NOT REMOVED OBJECTIVE] " + removed.getName());
                 continue;
             }
-            //System.out.println("[REMOVED DEPENDENCY] " + removed.getName());
+            System.out.println("[REMOVED DEPENDENCY] " + removed.getName());
             newPool.remove(removed);
             removeAllDependents(newPool, removed);
         }
