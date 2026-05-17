@@ -3,7 +3,6 @@ package entities;
 import interface_adapters.IObtainable;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MilestoneGoal implements IObtainable{

@@ -157,12 +157,12 @@
         },
         {
           "dependencies": [
-            "Lifeblood Heart + Joni's Blessing"
+            "Lifeblood Heart + Joni's Blessing", "Crystal Heart"
           ],
           "effect": {}
         },
         {
-          "dependencies": [],
+          "dependencies": ["Crystal Heart"],
           "effect": {},
           "notes": "extreme"
         },

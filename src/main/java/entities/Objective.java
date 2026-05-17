@@ -1,7 +1,6 @@
 package entities;
 import interface_adapters.IObtainable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Objective implements IObtainable{

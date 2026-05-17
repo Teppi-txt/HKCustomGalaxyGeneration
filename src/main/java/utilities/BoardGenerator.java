@@ -29,7 +29,7 @@ public class BoardGenerator {
         System.out.println();
     }
 
-    public static Board generateBoardRobin(List<IObtainable> goals, int seed) {
+    public static Board generateBoardRobin(List<IObtainable> goals, int seed, String customCenter) {
         RANDOM.setSeed(seed);
 
         if (GEO_LIMIT_CHANCE == -1.0) {
@@ -38,6 +38,16 @@ public class BoardGenerator {
 
         // guess what list implementation i like the most
         ArrayList<IObtainable> newGoals = (ArrayList<IObtainable>) deepCopyGoals(goals);
+
+        // by gori
+        ArrayList<IObtainable> centerSquareTheory = new ArrayList<>();
+
+        if (customCenter != null) {
+            IObtainable centerGoal = getGoalByName(newGoals, customCenter);
+            removeAllDependents(newGoals, centerGoal);
+            newGoals.remove(centerGoal);
+            centerSquareTheory.add(centerGoal);
+        }
 
         ArrayList<IObtainable> p1 = new ArrayList<>();
         ArrayList<IObtainable> p2 = new ArrayList<>();
@@ -58,9 +68,6 @@ public class BoardGenerator {
             pickGoal(newGoals,  p3, usedGoals);
             pickGoal(newGoals,  p4, usedGoals);
         }
-
-        // by gori
-        ArrayList<IObtainable> centerSquareTheory = new ArrayList<>();
 
         // artificially inject geo / grub goals
         // blomsom reference
@@ -83,7 +90,11 @@ public class BoardGenerator {
             depositTolls(board, getGoalByName(goals, "Pay for 6 tolls"));
         }
 
-        pickGoal(newGoals, centerSquareTheory, usedGoals);
+        // do the center AFTEr
+        if (customCenter == null) {
+            pickGoal(newGoals, centerSquareTheory, usedGoals);
+        }
+
         printPlayerGoals("player1", p1, "");
         printPlayerGoals("player2", p2, "");
         printPlayerGoals("player3", p3, "");

@@ -1,6 +1,7 @@
 package view;
 
 import entities.Board;
+import entities.Objective;
 import entities.SkipSettings;
 import interface_adapters.IObtainable;
 import utilities.BoardGenerator;
@@ -28,17 +29,33 @@ public class GeneratorUI extends JFrame {
 
     private final JCheckBox optionOne = new JCheckBox("Increase major ability chance");
     private final JCheckBox optionTwo = new JCheckBox("Force geo limitations");
-    private final JCheckBox optionThree = new JCheckBox("Force \"fun\" middle square");
+
+    private final JCheckBox optionThree = new JCheckBox("Use custom center square");
+    private final JComboBox<String> centerSquareDropdown = new JComboBox<>();
+
     private final JCheckBox optionFour = new JCheckBox("Prevent lines requiring multiple saves");
 
     private final JCheckBox darkroomsOn = new JCheckBox("Darkrooms");
     private final JCheckBox hardSkips = new JCheckBox("Hard Skips");
     private final JCheckBox extremeSkips = new JCheckBox("Extreme Skips");
 
+    ArrayList<IObtainable> goals;
+
     private final JTextArea resultArea = new JTextArea();
 
     public GeneratorUI() {
         super("Galaxy Board Generator");
+
+        InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream("hollow_knight_goals.json");
+
+        if (inputStream == null) {
+            throw new RuntimeException("Resource not found");
+        }
+        goals = GoalParser.parseGoals(inputStream, getSettings());
+
+        refreshCenterSquareDropdown(goals);
 
         setIcon();
         configureWindow();
@@ -56,6 +73,7 @@ public class GeneratorUI extends JFrame {
         resultArea.addMouseListener(new CopyListener());
     }
 
+
     private void setIcon() {
         URL iconStream = getClass()
                 .getClassLoader()
@@ -70,7 +88,21 @@ public class GeneratorUI extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(950, 700);
         setLocationRelativeTo(null);
-        optionThree.setEnabled(false);
+    }
+
+    private JPanel createCenterSquarePanel() {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+
+        centerSquareDropdown.setEnabled(false);
+
+        optionThree.addActionListener(e ->
+                centerSquareDropdown.setEnabled(optionThree.isSelected())
+        );
+
+        panel.add(optionThree, BorderLayout.NORTH);
+        panel.add(centerSquareDropdown, BorderLayout.CENTER);
+
+        return panel;
     }
 
     private JPanel createLeftPanel(JButton generateButton) {
@@ -126,7 +158,7 @@ public class GeneratorUI extends JFrame {
 
         addFullWidth(inputPanel, optionOne, gbc, 2);
         addFullWidth(inputPanel, optionTwo, gbc, 3);
-        addFullWidth(inputPanel, optionThree, gbc, 4);
+        addFullWidth(inputPanel, createCenterSquarePanel(), gbc, 4);
         addFullWidth(inputPanel, optionFour, gbc, 5);
 
         return inputPanel;
@@ -247,9 +279,7 @@ public class GeneratorUI extends JFrame {
     private void generateResult() {
         int seed = getSeed();
         int playerCount = (int) playerCountSpinner.getValue();
-
-        updatePlayerCountColor(playerCount);
-        applyGeneratorSettings();
+        String customCenter = null;
 
         InputStream inputStream = getClass()
                 .getClassLoader()
@@ -259,15 +289,42 @@ public class GeneratorUI extends JFrame {
             throw new RuntimeException("Resource not found");
         }
 
-        ArrayList<IObtainable> goals = GoalParser.parseGoals(inputStream, getSettings());
+        // do it again, with the new settings
+        goals = GoalParser.parseGoals(inputStream, getSettings());
+
+
+        updatePlayerCountColor(playerCount);
+        applyGeneratorSettings();
+
+        if (optionThree.isSelected()) {
+            customCenter = (String) centerSquareDropdown.getSelectedItem();
+        }
+
         Board board;
         if (playerCount == 1) {
             board = BoardGenerator.generateRGO(goals, seed);
         } else {
-            board = BoardGenerator.generateBoardRobin(goals, seed);
+            board = BoardGenerator.generateBoardRobin(goals, seed, customCenter);
         }
 
         resultArea.setText(board.generateBoardJSON());
+    }
+
+    private void refreshCenterSquareDropdown(ArrayList<IObtainable> goals) {
+        Object selected = centerSquareDropdown.getSelectedItem();
+
+        centerSquareDropdown.removeAllItems();
+
+        for (IObtainable goal : goals) {
+            if (goal instanceof Objective) {
+                continue;
+            }
+            centerSquareDropdown.addItem(goal.getName());
+        }
+
+        if (selected != null) {
+            centerSquareDropdown.setSelectedItem(selected);
+        }
     }
 
     private SkipSettings getSettings() {
