@@ -14,7 +14,9 @@ import java.util.*;
 
 public class GoalParser {
 
-    public static ArrayList<IObtainable> parseGoals(InputStream inputStream) {
+    private static final Set<String> LANTERN_REQUIRED = new HashSet<>(Arrays.asList("No Eyes", "Peaks Access"));
+
+    public static ArrayList<IObtainable> parseGoals(InputStream inputStream, SkipSettings settings) {
         try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);) {
             JsonParser parser = new JsonParser();
             JsonObject object = parser.parse(reader).getAsJsonObject();
@@ -73,11 +75,8 @@ public class GoalParser {
 
             // Second pass: fill dependencies/options
             for (JsonElement element : jsonGoals) {
-
                 JsonObject obj = element.getAsJsonObject();
-
                 String name = obj.get("name").getAsString();
-
                 IObtainable goal = byName.get(name);
 
                 if (!obj.has("options")) {
@@ -85,23 +84,17 @@ public class GoalParser {
                 }
 
                 // CollectionGoal special handling
-                if (goal instanceof CollectionGoal collectionGoal) {
-
+                if (goal instanceof CollectionGoal) {
                     for (JsonElement optionElement : obj.getAsJsonArray("options")) {
-
                         String dependencyName = optionElement.getAsString();
-
                         IObtainable dependency = byName.get(dependencyName);
-
                         if (dependency == null) {
                             throw new RuntimeException(
                                     "Unknown collection dependency: " + dependencyName
                             );
                         }
-
-                        collectionGoal.getCollectionItems().add(dependency);
+                        ((CollectionGoal) goal).getCollectionItems().add(dependency);
                     }
-
                     continue;
                 }
 
@@ -114,40 +107,53 @@ public class GoalParser {
                 ArrayList<ObtainOption> options = goal.getDependencies();
 
                 for (JsonElement optionElement : obj.getAsJsonArray("options")) {
-
                     JsonObject optionObj = optionElement.getAsJsonObject();
-
                     HashSet<IObtainable> dependencies = new HashSet<>();
 
+                    if (optionObj.has("notes")) {
+                        String note = optionObj.get("notes").getAsString();
+                        if (!settings.getSettings().contains(note)) {
+                            continue; //dont process
+                        }
+                    }
+
                     if (optionObj.has("dependencies")) {
-
-                        for (JsonElement depElement :
-                                optionObj.getAsJsonArray("dependencies")) {
-
+                        for (JsonElement depElement : optionObj.getAsJsonArray("dependencies")) {
                             String depName = depElement.getAsString();
-
                             IObtainable dependency = byName.get(depName);
-
                             if (dependency == null) {
                                 throw new RuntimeException(
                                         "Unknown dependency: " + depName
                                 );
                             }
-
                             dependencies.add(dependency);
                         }
                     }
-
-                    PlayerStateEffect effect =
-                            parseEffect(optionObj.getAsJsonObject("effect"));
-
+                    PlayerStateEffect effect = parseEffect(optionObj.getAsJsonObject("effect"));
                     options.add(new ObtainOption(dependencies, effect));
                 }
+            }
+            if (settings.hasDarkrooms()) {
+                System.out.println("darkrooms on");
+                removeLantern(GoalUtility.getGoalByName(result, "Lumafly Lantern"),
+                                                    result);
             }
             return result;
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse goals JSON", e);
+        }
+    }
+
+    private static void removeLantern(IObtainable lumaflyLantern, ArrayList<IObtainable> result) {
+        for (IObtainable l : result) {
+            if (LANTERN_REQUIRED.contains(l.getName())) {
+                continue;
+            }
+
+            for (ObtainOption o : l.getDependencies()) {
+                o.getDependencies().remove(lumaflyLantern);
+            }
         }
     }
 

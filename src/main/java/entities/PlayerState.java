@@ -38,8 +38,8 @@ public class PlayerState {
     }
 
     public void obtain(IObtainable o) {
-        if (o instanceof Objective objective) {
-            this.objectives.add(objective);
+        if (o instanceof Objective) {
+            this.objectives.add((Objective) o);
         }
         this.all_obtained.add(o);
     }

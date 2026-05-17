@@ -51,7 +51,7 @@
       "options": [
         {
           "dependencies": [
-            "Crystal Heart"
+            "FCA Access"
           ],
           "effect": {
             "grubs_saved": 6
@@ -159,9 +159,11 @@
           "dependencies": [
             "Lifeblood Heart + Joni's Blessing"
           ],
-          "effect": {
-            "lifeblood_masks": 15
-          },
+          "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
           "notes": "extreme"
         },
         {
@@ -303,6 +305,24 @@
         {
           "dependencies": [
             "Peaks Access"
+          ],
+          "effect": {
+            "geo": -800
+          },
+          "notes": "extreme"
+        },
+        {
+          "dependencies": [
+            "Peaks Access", "Monarch Wings"
+          ],
+          "effect": {
+            "geo": -800
+          },
+          "notes": "hard"
+        },
+        {
+          "dependencies": [
+            "Peaks Access", "Crystal Heart"
           ],
           "effect": {
             "geo": -800
@@ -492,7 +512,7 @@
       "options": [
         {
           "dependencies": [
-            "Dream Nail"
+            "Dream Nail", "Lumafly Lantern"
           ],
           "effect": {}
         }
@@ -518,6 +538,14 @@
         {
           "dependencies": [
             "Dream Nail"
+          ],
+          "effect": {},
+          "notes": "hard"
+        },
+        {
+          "dependencies": [
+            "Dream Nail",
+            "Crystal Heart"
           ],
           "effect": {}
         }
@@ -711,7 +739,7 @@
             "Dung Defender"
           ],
           "effect": {},
-          "notes": "shade skip"
+          "notes": "extreme"
         }
       ]
     },
@@ -786,7 +814,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {}
         }
       ]
@@ -820,7 +848,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {
             "geo": -250
           }
@@ -965,7 +993,8 @@
             "Sharp Shadow",
             "Monarch Wings"
           ],
-          "effect": {}
+          "effect": {},
+          "note":  "hard"
         }
       ]
     },
@@ -1016,8 +1045,13 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Crystal Heart"],
           "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "note": "hard"
         }
       ]
     },
@@ -1095,7 +1129,9 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": [
+            "Spend 3000 geo"
+          ],
           "effect": {
             "geo": -3000
           }
@@ -1139,14 +1175,16 @@
             "Queen's Gardens Access",
             "Crystal Heart"
           ],
-          "effect": {}
+          "effect": {},
+          "notes": "hard"
         },
         {
           "dependencies": [
             "Queen's Gardens Access",
             "Monarch Wings"
           ],
-          "effect": {}
+          "effect": {},
+          "notes": "hard"
         },
         {
           "dependencies": [
@@ -1222,7 +1260,8 @@
           ],
           "effect": {
             "grubs_saved": 3
-          }
+          },
+          "notes": "hard"
         }
       ]
     },
@@ -1248,7 +1287,8 @@
           ],
           "effect": {
             "grubs_saved": 3
-          }
+          },
+          "notes": "hard"
         }
       ]
     },
@@ -1279,10 +1319,17 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern", "Crystal Heart"],
           "effect": {
             "grubs_saved": 5
           }
+        },
+        {
+          "dependencies": ["Lumafly Lantern"],
+          "effect": {
+            "grubs_saved": 5
+          },
+          "note": "hard"
         }
       ]
     },
@@ -1292,7 +1339,7 @@
       "options": [
         {
           "dependencies": [
-            "Desolate Dive"
+            "Desolate Dive", "Crystal Heart"
           ],
           "effect": {
             "grubs_saved": 7
@@ -1443,8 +1490,13 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Monarch Wings"],
           "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "notes": "hard"
         }
       ]
     },
@@ -1517,7 +1569,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {}
         }
       ]
@@ -1527,7 +1579,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {}
         }
       ]
@@ -1584,7 +1636,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {
             "geo": -250,
             "tolls": 1
@@ -1597,11 +1649,19 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Monarch Wings"],
           "effect": {
             "geo": -300,
             "tolls": 1
           }
+        },
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -300,
+            "tolls": 1
+          },
+          "notes": "hard"
         }
       ]
     },
@@ -1705,27 +1765,35 @@
       "options": [
         {
           "dependencies": [
-            "Crystal Heart"
+            "Crystal Heart", "FCA Access"
           ],
           "effect": {}
         },
         {
           "dependencies": [
-            "Isma's Tear"
+            "Isma's Tear", "FCA Access"
           ],
           "effect": {}
         },
         {
           "dependencies": [
-            "Monarch Wings"
+            "Monarch Wings", "FCA Access"
           ],
           "effect": {}
         },
         {
           "dependencies": [
-            "Sharp Shadow"
+            "Sharp Shadow", "FCA Access"
           ],
-          "effect": {}
+          "effect": {},
+          "notes": "hard"
+        },
+        {
+          "dependencies": [
+            "FCA Access"
+          ],
+          "effect": {},
+          "notes": "extreme"
         }
       ]
     },
@@ -1778,7 +1846,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {}
         }
       ]
@@ -1801,7 +1869,7 @@
       "options": [
         {
           "dependencies": [
-            "Queen's Gardens Access"
+            "Queen's Gardens Access", "FCA Access"
           ],
           "effect": {
             "geo": -300
@@ -1840,7 +1908,7 @@
       "options": [
         {
           "dependencies": [
-            "Dream Nail"
+            "Dream Nail", "Lumafly Lantern"
           ],
           "effect": {
             "simple_keys": -1
@@ -1865,17 +1933,15 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [
-            "Dream Nail"
-          ],
+          "dependencies": ["Dream Nail"],
           "effect": {
             "geo": -250
           }
         },
         {
           "dependencies": [
-            "Dung Defender",
-            "Dream Nail"
+            "Dream Nail",
+            "Dung Defender"
           ],
           "effect": {
             "geo": -200
@@ -1888,7 +1954,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Peaks Access"],
           "effect": {
             "pale_ore": 1
           }
@@ -2185,7 +2251,7 @@
       "type": "Objective",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Lumafly Lantern"],
           "effect": {}
         }
       ]
@@ -2349,21 +2415,26 @@
       "options": [
         {
           "dependencies": [
-            "Crystal Heart"
+            "Crystal Heart", "FCA Access"
           ],
           "effect": {}
         },
         {
           "dependencies": [
-            "Isma's Tear"
+            "Isma's Tear", "FCA Access"
           ],
           "effect": {}
         },
         {
           "dependencies": [
-            "Monarch Wings"
+            "Monarch Wings", "FCA Access"
           ],
           "effect": {}
+        },
+        {
+          "dependencies": ["FCA Access"],
+          "effect": {},
+          "notes": "hard"
         }
       ]
     },
@@ -2412,16 +2483,6 @@
       ]
     },
     {
-      "name": "False Knight",
-      "type": "Objective",
-      "options": [
-        {
-          "dependencies": [],
-          "effect": {}
-        }
-      ]
-    },
-    {
       "name": "Bretta",
       "type": "Objective",
       "options": [
@@ -2438,6 +2499,35 @@
         {
           "dependencies": [],
           "effect": {}
+        }
+      ]
+    },
+    {
+      "name": "FCA Access",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [
+            "Crystal Heart"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Monarch Wings"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [
+            "Isma's Tear"
+          ],
+          "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "notes": "extreme"
         }
       ]
     }

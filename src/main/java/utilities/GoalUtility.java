@@ -113,11 +113,11 @@ public class GoalUtility {
 
     static boolean needsMultipleSaves(List<IObtainable> playerGoals, IObtainable goal) {
         // hardcoded for now
-        final Set<String> zoteAliveGoals = Set.of(
+        final Set<String> zoteAliveGoals = new HashSet<>(Arrays.asList(
                 "Defeat Colosseum Zote",
                 "Rescue Zote in Deepnest",
                 "Vengefly King + Massive Moss Charger"
-        );
+        ));
 
         if (Objects.equals(goal.getName(), "Slash Zote's corpse in Greenpath")) {
             for (IObtainable i : playerGoals) {
@@ -146,11 +146,11 @@ public class GoalUtility {
         for (IObtainable goal : goals) {
             IObtainable newGoal;
 
-            if (goal instanceof CollectionGoal collectionGoal) {
+            if (goal instanceof CollectionGoal) {
                 newGoal = new CollectionGoal(
-                        collectionGoal.getName(),
+                        ((CollectionGoal) goal).getName(),
                         new ArrayList<>(),
-                        collectionGoal.getCollectionCount()
+                        ((CollectionGoal) goal).getCollectionCount()
                 );
             } else if (goal instanceof Objective) {
                 newGoal = new Objective(
@@ -173,8 +173,8 @@ public class GoalUtility {
 
         // second pass, new dependencies
         for (IObtainable goal : goals) {
-            if (goal instanceof CollectionGoal collectionGoal) {
-                for (IObtainable i : collectionGoal.getCollectionItems()) {
+            if (goal instanceof CollectionGoal) {
+                for (IObtainable i : ((CollectionGoal) goal).getCollectionItems()) {
                     // terrible terrible code
                     ((CollectionGoal) byName.get(goal.getName())).getCollectionItems().add(byName.get(i.getName()));
                 }
@@ -199,5 +199,24 @@ public class GoalUtility {
             }
         }
         return null;
+    }
+
+    public static void printGoals(ArrayList<IObtainable> goals) {
+        for (IObtainable goal : goals) {
+            System.out.println(goal.getName() + ":");
+            for (ObtainOption option : goal.getDependencies()) {
+                StringBuilder builder = new StringBuilder("- ");
+                int index = 0;
+                for (IObtainable dependency : option.getDependencies()) {
+                    builder.append(dependency.getName());
+                    if (index < option.getDependencies().size() - 1) {
+                        builder.append(" + ");
+                    }
+                    index++;
+                }
+                System.out.println(builder);
+            }
+            System.out.println();
+        }
     }
 }

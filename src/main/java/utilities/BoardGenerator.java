@@ -15,7 +15,7 @@ public class BoardGenerator {
     public static final String[] MAJORS = {
             "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
             "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths",
-            "Descending Dark", "Shade Cloak"};
+            "Descending Dark", "Shade Cloak", "Isma's Tear"};
 
     public static final double INCREASED_MAJOR_CHANCE = 0.15;
     public static boolean INCREASE_MAJOR_CHANCE = false;
@@ -42,7 +42,13 @@ public class BoardGenerator {
         ArrayList<IObtainable> p2 = new ArrayList<>();
         ArrayList<IObtainable> p3 = new ArrayList<>();
         ArrayList<IObtainable> p4 = new ArrayList<>();
-        ArrayList<ArrayList<IObtainable>> board = new ArrayList<>(List.of(p1, p2, p3, p4));
+
+        ArrayList<ArrayList<IObtainable>> board = new ArrayList<>();
+        board.add(p1);
+        board.add(p2);
+        board.add(p3);
+        board.add(p4);
+
         ArrayList<IObtainable> usedGoals = new ArrayList<>();
 
         for (int round = 0; round < 6; round++) {
@@ -81,7 +87,8 @@ public class BoardGenerator {
         printPlayerGoals("player2", p2, "");
         printPlayerGoals("player3", p3, "");
         printPlayerGoals("player4", p4, "");
-        return new Board(board, centerSquareTheory.getFirst());
+        GoalUtility.printGoals(newGoals);
+        return new Board(board, centerSquareTheory.get(0));
     }
     private static void reduceInflation(ArrayList<ArrayList<IObtainable>> board,
                                         IObtainable threeK,
@@ -143,7 +150,7 @@ public class BoardGenerator {
         for (IObtainable goal : player) {
             currentPool.add(goal);
             if (getMaximalSpentGeo(currentPool) > limit) {
-                currentPool.remove(goal);
+                currentPool.remove(getGoalByName(currentPool, goal.getName()));
                 return currentPool;
             }
         }
@@ -293,7 +300,7 @@ public class BoardGenerator {
      * and are not required to obtain the goal.
      */
     public static void deepRemove(List<IObtainable> goals, IObtainable goal) {
-        goals.remove(goal);
+        goals.remove(getGoalByName(goals, goal.getName()));
 
         removeAllDependents(goals, goal);
         removeAllDependencies(goals, goal);
@@ -331,7 +338,7 @@ public class BoardGenerator {
                 continue;
             }
             System.out.println("- " + removed.getName());
-            newPool.remove(removed);
+            newPool.remove(getGoalByName(newPool, removed.getName()));
             removeAllDependencies(newPool, removed);
         }
     }
@@ -365,13 +372,50 @@ public class BoardGenerator {
         }
 
         for (IObtainable removed : toBeRemoved) {
-            if (removed instanceof Objective) {
-                System.out.println("[NOT REMOVED OBJECTIVE] " + removed.getName());
-                continue;
-            }
             System.out.println("[REMOVED DEPENDENCY] " + removed.getName());
-            newPool.remove(removed);
+            newPool.remove(getGoalByName(newPool, removed.getName()));
             removeAllDependents(newPool, removed);
         }
+    }
+
+    public static Board generateRGO(ArrayList<IObtainable> goals, int seed) {
+        RANDOM.setSeed(seed);
+
+        if (GEO_LIMIT_CHANCE == -1.0) {
+            GEO_LIMIT_CHANCE = (double) 3 / goals.size();
+        }
+
+        // guess what list implementation i like the most
+        ArrayList<IObtainable> newGoals = (ArrayList<IObtainable>) deepCopyGoals(goals);
+        ArrayList<IObtainable> p1 = new ArrayList<>();
+        ArrayList<ArrayList<IObtainable>> board = new ArrayList<>();
+        board.add(p1);
+        ArrayList<IObtainable> usedGoals = new ArrayList<>();
+
+        for (int round = 0; round < 25; round++) {
+            pickGoal(newGoals,  p1, usedGoals);
+        }
+        // artificially inject geo / grub goals
+        // blomsom reference
+        boolean possibilityOfGeocitation = RANDOM.nextDouble() < GEO_LIMIT_CHANCE;
+        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < (double) 2 / goals.size();
+        boolean possibilityOfTollicitation = RANDOM.nextDouble() < (double) 1 / goals.size();
+
+        if (possibilityOfGeocitation) {
+            reduceInflation(board, getGoalByName(goals, "Spend 3000 geo"),
+                    getGoalByName(goals, "Spend 4000 geo"),
+                    getGoalByName(goals, "Spend 5000 geo"));
+        }
+
+        if (possibilityOfGrubcipitation) {
+            injectGrubs(board, getGoalByName(goals, "Save 15 grubs"),
+                    getGoalByName(goals, "Save 20 grubs"));
+        }
+
+        if (possibilityOfTollicitation) {
+            depositTolls(board, getGoalByName(goals, "Pay for 6 tolls"));
+        }
+
+        return new Board(board);
     }
 }
