@@ -61,6 +61,7 @@ public class GeneratorUI extends JFrame {
                 .getClassLoader()
                 .getResource("galaxy_icon.png");
 
+        assert iconStream != null;
         ImageIcon icon = new ImageIcon(iconStream);
         this.setIconImage(icon.getImage());
     }

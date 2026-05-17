@@ -38,6 +38,7 @@ public class BoardGenerator {
 
         // guess what list implementation i like the most
         ArrayList<IObtainable> newGoals = (ArrayList<IObtainable>) deepCopyGoals(goals);
+
         ArrayList<IObtainable> p1 = new ArrayList<>();
         ArrayList<IObtainable> p2 = new ArrayList<>();
         ArrayList<IObtainable> p3 = new ArrayList<>();
@@ -87,7 +88,6 @@ public class BoardGenerator {
         printPlayerGoals("player2", p2, "");
         printPlayerGoals("player3", p3, "");
         printPlayerGoals("player4", p4, "");
-        GoalUtility.printGoals(newGoals);
         return new Board(board, centerSquareTheory.get(0));
     }
     private static void reduceInflation(ArrayList<ArrayList<IObtainable>> board,
@@ -273,12 +273,12 @@ public class BoardGenerator {
                 goal = majors.get(RANDOM.nextInt(majors.size()));
             }
         }
+        System.out.println("CHOSEN: " + goal.getName());
         playerGoals.add(goal);
         deepRemove(pool, goal);
         for (IObtainable usedGoal : usedGoals) {
-            deepRemove(pool, usedGoal);
+            removeAllDependencies(pool, usedGoal);
         }
-
         usedGoals.add(goal);
     }
 
@@ -304,6 +304,7 @@ public class BoardGenerator {
 
         removeAllDependents(goals, goal);
         removeAllDependencies(goals, goal);
+        hasDuplicates((ArrayList<IObtainable>) goals);
     }
 
     /**
@@ -311,34 +312,38 @@ public class BoardGenerator {
      */
     private static void removeAllDependencies(List<IObtainable> newPool, IObtainable i) {
 
-        System.out.println("\n[Backwards Step] Checking dependencies for: " + i.getName() + ".");
+        System.out.println("\n[Backwards Step] Checking dependencies for: " + i.getName() + ", " + i.getDependencies().size() + " dependencies found;");
 
         ArrayList<IObtainable> toBeRemoved = new ArrayList<>();
 
         // case 1: only one way to obtain i, so all those goals cannot be in the pool
         if (i.getDependencies().size() == 1) {
-            System.out.println("only one obtain option exists.");
+            System.out.println("only one obtain option exists, adding all options into toBeRemoved");
             toBeRemoved.addAll(i.getDependencies().get(0).getDependencies());
-
+            System.out.println("size: " + toBeRemoved.size());
+            System.out.println("size: " + i.getDependencies());
+            System.out.println("size: " + i.getDependencies().get(0).getDependencies());
         }
 
         //case 2: multiple ways, but all those ways have one shared goal
-        if (i.getDependencies().size() > 1) {
+        else if (i.getDependencies().size() > 1) {
             Set<IObtainable> shared = new HashSet<>(i.getDependencies().get(0).getDependencies());
-
             for (ObtainOption option : i.getDependencies()) {
                 shared.retainAll(option.getDependencies());
+            }
+            System.out.println(shared);
+
+            for (IObtainable dependency : toBeRemoved) {
+                System.out.println("All obtain options include: " + dependency.getName());
             }
             toBeRemoved.addAll(shared);
         }
 
-
         for (IObtainable removed : toBeRemoved) {
-            if (removed instanceof Objective) {
-                continue;
+            if (!(removed instanceof Objective)) {
+                newPool.remove(getGoalByName(newPool, removed.getName()));
+                System.out.println("- " + removed.getName());
             }
-            System.out.println("- " + removed.getName());
-            newPool.remove(getGoalByName(newPool, removed.getName()));
             removeAllDependencies(newPool, removed);
         }
     }
@@ -351,17 +356,11 @@ public class BoardGenerator {
         ArrayList<IObtainable> toBeRemoved = new ArrayList<>();
 
         for (IObtainable goal : newPool) {
-
             Iterator<ObtainOption> iterator = goal.getDependencies().iterator();
-
             while (iterator.hasNext()) {
-
                 ObtainOption option = iterator.next();
-
                 if (option.getDependencies().contains(i)) {
-
                     System.out.println("[Forward Trace] " + goal.getName() + " lost an option because it depended on: " + i.getName());
-
                     iterator.remove();
 
                     if (goal.getDependencies().isEmpty()) {
@@ -372,7 +371,7 @@ public class BoardGenerator {
         }
 
         for (IObtainable removed : toBeRemoved) {
-            System.out.println("[REMOVED DEPENDENCY] " + removed.getName());
+            System.out.println("- " + removed.getName());
             newPool.remove(getGoalByName(newPool, removed.getName()));
             removeAllDependents(newPool, removed);
         }

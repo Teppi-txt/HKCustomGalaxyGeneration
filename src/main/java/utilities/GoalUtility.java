@@ -219,4 +219,17 @@ public class GoalUtility {
             System.out.println();
         }
     }
+
+    public static void hasDuplicates(ArrayList<IObtainable> i) {
+        for (int a = 0; a < i.size(); a++) {
+            for (int b = a + 1; b < i.size(); b++) {
+                if (i.get(a).getName().equals(i.get(b).getName())) {
+                    System.out.println("Duplicate found: " + i.get(a).getName());
+                    return;
+                }
+            }
+        }
+
+        System.out.println("No duplicates found.");
+    }
 }
