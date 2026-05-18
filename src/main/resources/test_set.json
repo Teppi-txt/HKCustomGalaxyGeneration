@@ -1,0 +1,132 @@
+{
+  "test_set_name": "20 Goal Dependency Walkthrough",
+  "goals": [
+    {
+      "name": "Dream Nail",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": [], "effect": {} }]
+    },
+    {
+      "name": "Collect 500 essence",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Dream Nail"], "effect": {} }]
+    },
+    {
+      "name": "Dream Wielder",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Collect 500 essence"], "effect": {} }]
+    },
+    {
+      "name": "Dreamgate",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Dream Wielder"], "effect": {} }]
+    },
+    {
+      "name": "Soul Master",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": [], "effect": {} }]
+    },
+    {
+      "name": "Desolate Dive",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Soul Master"], "effect": {} }]
+    },
+    {
+      "name": "Peaks Access",
+      "type": "Objective",
+      "options": [{ "dependencies": ["Desolate Dive"], "effect": {} },
+        { "dependencies": ["Lumafly Lantern"], "effect": {} }]
+    },
+    {
+      "name": "Crystal Heart",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Peaks Access"], "effect": {} }]
+    },
+    {
+      "name": "Broken Vessel",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Crystal Heart"], "effect": {} }]
+    },
+    {
+      "name": "Monarch Wings",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Broken Vessel"], "effect": {} }]
+    },
+    {
+      "name": "Hornet 2",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": [], "effect": {} }]
+    },
+    {
+      "name": "Shade Cloak",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Hornet 2"], "effect": {} }]
+    },
+    {
+      "name": "Sharp Shadow",
+      "type": "AchievementGoal",
+      "options": [{ "dependencies": ["Shade Cloak"], "effect": {} }]
+    },
+    {
+      "name": "FCA Access",
+      "type": "Objective",
+      "options": [
+        { "dependencies": ["Crystal Heart"], "effect": {} },
+        { "dependencies": ["Monarch Wings"], "effect": {} },
+        { "dependencies": ["Sharp Shadow"], "effect": {}, "notes": "hard" }
+      ]
+    },
+    {
+      "name": "Uumuu",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": ["Crystal Heart", "FCA Access"], "effect": {} },
+        { "dependencies": ["Monarch Wings", "FCA Access"], "effect": {} }
+      ]
+    },
+    {
+      "name": "Monomon",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": ["Dream Nail", "Uumuu", "Crystal Heart"], "effect": {} }
+      ]
+    },
+    {
+      "name": "Dung Defender",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": ["Crystal Heart"], "effect": {} }
+      ]
+    },
+    {
+      "name": "Isma's Tear",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": ["Crystal Heart"], "effect": {} },
+        { "dependencies": ["Dung Defender"], "effect": {}, "notes": "extreme" }
+      ]
+    },
+    {
+      "name": "Queen's Gardens Access",
+      "type": "Objective",
+      "options": [
+        { "dependencies": ["Crystal Heart"], "effect": {} },
+        { "dependencies": ["Isma's Tear"], "effect": {} }
+      ]
+    },
+    {
+      "name": "Traitor Lord",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": ["Queen's Gardens Access", "Shade Cloak"], "effect": {} }
+      ]
+    },
+    {
+      "name": "Lumafly Lantern",
+      "type": "AchievementGoal",
+      "options": [
+        { "dependencies": [], "effect": {} }
+      ]
+    }
+  ]
+}

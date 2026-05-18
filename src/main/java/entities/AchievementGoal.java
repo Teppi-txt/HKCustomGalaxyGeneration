@@ -1,8 +1,8 @@
 package entities;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 import java.util.ArrayList;
 
-public class AchievementGoal implements IObtainable{
+public class AchievementGoal extends Obtainable {
     private String name;
     private ArrayList<ObtainOption> dependencies;
     

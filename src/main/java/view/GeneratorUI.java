@@ -1,12 +1,12 @@
 package view;
 
 import entities.Board;
+import entities.GenerationSettings;
 import entities.Objective;
 import entities.SkipSettings;
-import interface_adapters.IObtainable;
-import utilities.BoardGenerator;
+import interface_adapters.Obtainable;
+import utilities.GeneratorCore;
 import utilities.GoalParser;
-import utilities.GoalUtility;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,7 +39,7 @@ public class GeneratorUI extends JFrame {
     private final JCheckBox hardSkips = new JCheckBox("Hard Skips");
     private final JCheckBox extremeSkips = new JCheckBox("Extreme Skips");
 
-    ArrayList<IObtainable> goals;
+    ArrayList<Obtainable> goals;
 
     private final JTextArea resultArea = new JTextArea();
 
@@ -279,7 +279,6 @@ public class GeneratorUI extends JFrame {
     private void generateResult() {
         int seed = getSeed();
         int playerCount = (int) playerCountSpinner.getValue();
-        String customCenter = null;
 
         InputStream inputStream = getClass()
                 .getClassLoader()
@@ -291,31 +290,18 @@ public class GeneratorUI extends JFrame {
 
         // do it again, with the new settings
         goals = GoalParser.parseGoals(inputStream, getSettings());
+        GenerationSettings genSettings = getGeneratorSettings();
 
-
-        updatePlayerCountColor(playerCount);
-        applyGeneratorSettings();
-
-        if (optionThree.isSelected()) {
-            customCenter = (String) centerSquareDropdown.getSelectedItem();
-        }
-
-        Board board;
-        if (playerCount == 1) {
-            board = BoardGenerator.generateRGO(goals, seed);
-        } else {
-            board = BoardGenerator.generateBoardRobin(goals, seed, customCenter);
-        }
-
+        Board board = GeneratorCore.generateBoardRobin(goals, seed, genSettings);
         resultArea.setText(board.generateBoardJSON());
     }
 
-    private void refreshCenterSquareDropdown(ArrayList<IObtainable> goals) {
+    private void refreshCenterSquareDropdown(ArrayList<Obtainable> goals) {
         Object selected = centerSquareDropdown.getSelectedItem();
 
         centerSquareDropdown.removeAllItems();
 
-        for (IObtainable goal : goals) {
+        for (Obtainable goal : goals) {
             if (goal instanceof Objective) {
                 continue;
             }
@@ -348,21 +334,9 @@ public class GeneratorUI extends JFrame {
         }
     }
 
-    private void updatePlayerCountColor(int playerCount) {
-        if (playerCount == 1 || playerCount == 2 || playerCount == 4) {
-            playerCountSpinner.setBackground(Color.GRAY);
-        } else {
-            playerCountSpinner.setBackground(Color.RED);
-        }
-    }
-
-    private void applyGeneratorSettings() {
-        boolean geoLimitation = optionTwo.isSelected();
-
-        // this is terrible i know
-        BoardGenerator.GEO_LIMIT_CHANCE = geoLimitation ? 1 : -1;
-        BoardGenerator.INCREASE_MAJOR_CHANCE = optionOne.isSelected();
-        BoardGenerator.PREVENT_MULTIPLE_SAVES = optionFour.isSelected();
+    private GenerationSettings getGeneratorSettings() {
+        return new GenerationSettings(optionOne.isSelected(), optionTwo.isSelected(),
+                optionThree.isSelected(), (String) centerSquareDropdown.getSelectedItem(), optionFour.isSelected());
     }
 
     private class CopyListener extends MouseAdapter {

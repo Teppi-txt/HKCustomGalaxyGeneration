@@ -1,11 +1,11 @@
 package utilities;
 
 import entities.*;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 
 
 import com.google.gson.*;
-import java.io.FileReader;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,14 +16,14 @@ public class GoalParser {
 
     private static final Set<String> LANTERN_REQUIRED = new HashSet<>(Arrays.asList("No Eyes", "Peaks Access"));
 
-    public static ArrayList<IObtainable> parseGoals(InputStream inputStream, SkipSettings settings) {
+    public static ArrayList<Obtainable> parseGoals(InputStream inputStream, SkipSettings settings) {
         try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);) {
             JsonParser parser = new JsonParser();
             JsonObject object = parser.parse(reader).getAsJsonObject();
             JsonArray jsonGoals = object.getAsJsonArray("goals");
 
-            Map<String, IObtainable> byName = new HashMap<>();
-            ArrayList<IObtainable> result = new ArrayList<>();
+            Map<String, Obtainable> byName = new HashMap<>();
+            ArrayList<Obtainable> result = new ArrayList<>();
 
             // First pass: create empty objects
             for (JsonElement element : jsonGoals) {
@@ -32,7 +32,7 @@ public class GoalParser {
                 String name = obj.get("name").getAsString();
                 String type = obj.get("type").getAsString();
 
-                IObtainable goal;
+                Obtainable goal;
 
                 if (type.equals("CollectionGoal")) {
                     int count = 0;
@@ -77,7 +77,7 @@ public class GoalParser {
             for (JsonElement element : jsonGoals) {
                 JsonObject obj = element.getAsJsonObject();
                 String name = obj.get("name").getAsString();
-                IObtainable goal = byName.get(name);
+                Obtainable goal = byName.get(name);
 
                 if (!obj.has("options")) {
                     continue;
@@ -87,7 +87,7 @@ public class GoalParser {
                 if (goal instanceof CollectionGoal) {
                     for (JsonElement optionElement : obj.getAsJsonArray("options")) {
                         String dependencyName = optionElement.getAsString();
-                        IObtainable dependency = byName.get(dependencyName);
+                        Obtainable dependency = byName.get(dependencyName);
                         if (dependency == null) {
                             throw new RuntimeException(
                                     "Unknown collection dependency: " + dependencyName
@@ -108,7 +108,7 @@ public class GoalParser {
 
                 for (JsonElement optionElement : obj.getAsJsonArray("options")) {
                     JsonObject optionObj = optionElement.getAsJsonObject();
-                    HashSet<IObtainable> dependencies = new HashSet<>();
+                    HashSet<Obtainable> dependencies = new HashSet<>();
 
                     if (optionObj.has("notes")) {
                         String note = optionObj.get("notes").getAsString();
@@ -120,7 +120,7 @@ public class GoalParser {
                     if (optionObj.has("dependencies")) {
                         for (JsonElement depElement : optionObj.getAsJsonArray("dependencies")) {
                             String depName = depElement.getAsString();
-                            IObtainable dependency = byName.get(depName);
+                            Obtainable dependency = byName.get(depName);
                             if (dependency == null) {
                                 throw new RuntimeException(
                                         "Unknown dependency: " + depName
@@ -145,8 +145,8 @@ public class GoalParser {
         }
     }
 
-    private static void removeLantern(IObtainable lumaflyLantern, ArrayList<IObtainable> result) {
-        for (IObtainable l : result) {
+    private static void removeLantern(Obtainable lumaflyLantern, ArrayList<Obtainable> result) {
+        for (Obtainable l : result) {
             if (LANTERN_REQUIRED.contains(l.getName())) {
                 continue;
             }

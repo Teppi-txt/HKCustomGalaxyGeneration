@@ -1,14 +1,14 @@
 package utilities;
 
 import entities.*;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 
 import java.util.*;
 
-import static utilities.BoardGenerator.RANDOM;
+import static utilities.GeneratorCore.RANDOM;
 
 public class GoalUtility {
-    public static ArrayList<IObtainable> selectRandomGoals(List<IObtainable> allItems, int count) {
+    public static ArrayList<Obtainable> selectRandomGoals(List<Obtainable> allItems, int count) {
         List<Integer> validIndices = new ArrayList<>();
 
         for (int i = 0; i < allItems.size(); i++) {
@@ -22,7 +22,7 @@ public class GoalUtility {
                 validIndices.subList(0, Math.min(count, validIndices.size()))
         );
 
-        ArrayList<IObtainable> result = new ArrayList<>();
+        ArrayList<Obtainable> result = new ArrayList<>();
 
         for (int i = 0; i < allItems.size(); i++) {
             if (selected.contains(i)) {
@@ -33,7 +33,7 @@ public class GoalUtility {
         return result;
     }
 
-    public static IObtainable selectRandomGoal(List<IObtainable> allItems) {
+    public static Obtainable selectRandomGoal(List<Obtainable> allItems) {
         List<Integer> validIndices = new ArrayList<>();
 
         for (int i = 0; i < allItems.size(); i++) {
@@ -46,11 +46,11 @@ public class GoalUtility {
         return allItems.get(validIndices.get(RANDOM.nextInt(validIndices.size())));
     }
 
-    public static IObtainable selectMostImportantGoal(List<IObtainable> allItems) {
-        IObtainable result = null;
+    public static Obtainable selectMostImportantGoal(List<Obtainable> allItems) {
+        Obtainable result = null;
         int dNumber = 0;
         for (int i = 0; i < allItems.size(); i++) {
-            IObtainable currentGoal = allItems.get(i);
+            Obtainable currentGoal = allItems.get(i);
             int goalImportance = getDependentsCount(allItems, currentGoal) + getDependenciesCount(currentGoal);
             if (currentGoal instanceof Objective) {
                 continue;
@@ -63,11 +63,11 @@ public class GoalUtility {
         return result;
     }
 
-    public static IObtainable selectLeastImportantGoal(List<IObtainable> allItems) {
-        IObtainable result = null;
+    public static Obtainable selectLeastImportantGoal(List<Obtainable> allItems) {
+        Obtainable result = null;
         int dNumber = 0;
         for (int i = 0; i < allItems.size(); i++) {
-            IObtainable currentGoal = allItems.get(i);
+            Obtainable currentGoal = allItems.get(i);
             int goalImportance = getDependentsCount(allItems, currentGoal) + getDependenciesCount(currentGoal);
             if (currentGoal instanceof Objective || currentGoal instanceof MilestoneGoal) {
                 continue;
@@ -80,10 +80,10 @@ public class GoalUtility {
         return result;
     }
 
-    private static int getDependentsCount(List<IObtainable> allItems, IObtainable i) {
+    private static int getDependentsCount(List<Obtainable> allItems, Obtainable i) {
         int count = 0;
 
-        for (IObtainable goal : allItems) {
+        for (Obtainable goal : allItems) {
             if (goal instanceof Objective) {
                 continue;
             }
@@ -102,7 +102,7 @@ public class GoalUtility {
         return count;
     }
 
-    private static int getDependenciesCount(IObtainable i) {
+    private static int getDependenciesCount(Obtainable i) {
         int count = 0;
 
         for (ObtainOption o : i.getDependencies()) {
@@ -111,7 +111,7 @@ public class GoalUtility {
         return count;
     }
 
-    static boolean needsMultipleSaves(List<IObtainable> playerGoals, IObtainable goal) {
+    static boolean needsMultipleSaves(List<Obtainable> playerGoals, Obtainable goal) {
         // hardcoded for now
         final Set<String> zoteAliveGoals = new HashSet<>(Arrays.asList(
                 "Defeat Colosseum Zote",
@@ -120,7 +120,7 @@ public class GoalUtility {
         ));
 
         if (Objects.equals(goal.getName(), "Slash Zote's corpse in Greenpath")) {
-            for (IObtainable i : playerGoals) {
+            for (Obtainable i : playerGoals) {
                 if (zoteAliveGoals.contains(i.getName())) {
                     return true;
                 }
@@ -128,7 +128,7 @@ public class GoalUtility {
         }
 
         if (zoteAliveGoals.contains(goal.getName())) {
-            for (IObtainable i : playerGoals) {
+            for (Obtainable i : playerGoals) {
                 if (i.getName() == "Slash Zote's corpse in Greenpath") {
                     return true;
                 }
@@ -138,13 +138,13 @@ public class GoalUtility {
         return false;
     }
 
-    public static List<IObtainable> deepCopyGoals(List<IObtainable> goals) {
-        Map<String, IObtainable> byName = new HashMap<>();
-        ArrayList<IObtainable> result = new ArrayList<>();
+    public static List<Obtainable> deepCopyGoals(List<Obtainable> goals) {
+        Map<String, Obtainable> byName = new HashMap<>();
+        ArrayList<Obtainable> result = new ArrayList<>();
 
         // first pass, just the new goal objects
-        for (IObtainable goal : goals) {
-            IObtainable newGoal;
+        for (Obtainable goal : goals) {
+            Obtainable newGoal;
 
             if (goal instanceof CollectionGoal) {
                 newGoal = new CollectionGoal(
@@ -172,16 +172,16 @@ public class GoalUtility {
         }
 
         // second pass, new dependencies
-        for (IObtainable goal : goals) {
+        for (Obtainable goal : goals) {
             if (goal instanceof CollectionGoal) {
-                for (IObtainable i : ((CollectionGoal) goal).getCollectionItems()) {
+                for (Obtainable i : ((CollectionGoal) goal).getCollectionItems()) {
                     // terrible terrible code
                     ((CollectionGoal) byName.get(goal.getName())).getCollectionItems().add(byName.get(i.getName()));
                 }
             } else {
                 for (ObtainOption o : goal.getDependencies()) {
-                    HashSet<IObtainable> set = new HashSet<>();
-                    for (IObtainable dependency : o.getDependencies()) {
+                    HashSet<Obtainable> set = new HashSet<>();
+                    for (Obtainable dependency : o.getDependencies().getElements()) {
                         set.add(byName.get(dependency.getName()));
                     }
 
@@ -192,8 +192,8 @@ public class GoalUtility {
         return result;
     }
 
-    public static IObtainable getGoalByName(List<IObtainable> goals, String s) {
-        for (IObtainable goal : goals) {
+    public static Obtainable getGoalByName(List<Obtainable> goals, String s) {
+        for (Obtainable goal : goals) {
             if (goal.getName().equals(s)) {
                 return goal;
             }
@@ -201,26 +201,33 @@ public class GoalUtility {
         return null;
     }
 
-    public static void printGoals(ArrayList<IObtainable> goals) {
-        for (IObtainable goal : goals) {
-            System.out.println(goal.getName() + ":");
-            for (ObtainOption option : goal.getDependencies()) {
-                StringBuilder builder = new StringBuilder("- ");
-                int index = 0;
-                for (IObtainable dependency : option.getDependencies()) {
-                    builder.append(dependency.getName());
-                    if (index < option.getDependencies().size() - 1) {
-                        builder.append(" + ");
-                    }
-                    index++;
-                }
-                System.out.println(builder);
-            }
-            System.out.println();
+    public static void printGoals(ArrayList<Obtainable> goals) {
+        for (Obtainable goal : goals) {
+            printGoal(goal);
         }
     }
 
-    public static void hasDuplicates(ArrayList<IObtainable> i) {
+    public static void printGoal(Obtainable goal) {
+        if (goal == null) {
+            return;
+        }
+        System.out.println(goal.getName() + ":");
+        for (ObtainOption option : goal.getDependencies()) {
+            StringBuilder builder = new StringBuilder("- ");
+            int index = 0;
+            for (Obtainable dependency : option.getDependencies().getElements()) {
+                builder.append(dependency.getName());
+                if (index < option.getDependencies().size() - 1) {
+                    builder.append(" + ");
+                }
+                index++;
+            }
+            System.out.println(builder);
+        }
+        System.out.println();
+    }
+
+    public static void hasDuplicates(ArrayList<Obtainable> i) {
         for (int a = 0; a < i.size(); a++) {
             for (int b = a + 1; b < i.size(); b++) {
                 if (i.get(a).getName().equals(i.get(b).getName())) {

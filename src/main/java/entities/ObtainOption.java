@@ -1,28 +1,34 @@
 package entities;
 
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 import java.util.HashSet;
 
 public class ObtainOption {
 
-    private HashSet<IObtainable> dependencies;
+    private GoalPool dependencies;
     private PlayerStateEffect effect;
 
     // Constructor
-    public ObtainOption(HashSet<IObtainable> dependencies,
+    public ObtainOption(HashSet<Obtainable> dependencies,
                         PlayerStateEffect effect) {
-        this.dependencies = dependencies;
+        this.dependencies = new GoalPool();
+        for (Obtainable dependency : dependencies) {
+            this.dependencies.add(dependency);
+        }
         this.effect = effect;
     }
 
     // Getter for dependencies
-    public HashSet<IObtainable> getDependencies() {
+    public GoalPool getDependencies() {
         return dependencies;
     }
 
     // Setter for dependencies
-    public void setDependencies(HashSet<IObtainable> dependencies) {
-        this.dependencies = dependencies;
+    public void setDependencies(HashSet<Obtainable> dependencies) {
+        this.dependencies = new GoalPool();
+        for (Obtainable dependency : dependencies) {
+            this.dependencies.add(dependency);
+        }
     }
 
     // Getter for effect
@@ -40,7 +46,7 @@ public class ObtainOption {
         StringBuilder deps = new StringBuilder();
 
         if (dependencies != null) {
-            for (IObtainable dep : dependencies) {
+            for (Obtainable dep : dependencies.getElements()) {
                 if (deps.length() > 0) {
                     deps.append(", ");
                 }
@@ -48,9 +54,30 @@ public class ObtainOption {
             }
         }
 
-        return "ObtainOption{" +
-                "dependencies=[" + deps + "]" +
-                ", effect=" + effect +
-                '}';
+        return "[" + deps + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return this.toString().hashCode();
+    }
+
+    public boolean requires(Obtainable dependency) {
+
+        // direct dependency
+        if (dependencies.contains(dependency)) {
+            return true;
+        }
+
+        // recursive dependency
+        for (Obtainable dep : dependencies.getElements()) {
+            for (ObtainOption option : dep.getDependencies()) {
+                if (option.requires(dependency)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

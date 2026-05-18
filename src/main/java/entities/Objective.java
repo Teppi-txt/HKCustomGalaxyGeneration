@@ -1,9 +1,9 @@
 package entities;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Objective implements IObtainable{
+public class Objective extends Obtainable {
 
     private String name;
     private ArrayList<ObtainOption> dependencies;

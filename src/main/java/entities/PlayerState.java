@@ -3,7 +3,7 @@ package entities;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 
 public class PlayerState {
     public int geo_spent = 0;
@@ -12,7 +12,7 @@ public class PlayerState {
     public int tolls_unlocked = 0;
 
     public ArrayList<Objective> objectives = new ArrayList<>();
-    public ArrayList<IObtainable> all_obtained = new ArrayList<>();
+    public ArrayList<Obtainable> all_obtained = new ArrayList<>();
 
     public PlayerState(){
         
@@ -37,15 +37,15 @@ public class PlayerState {
         return objectives;
     }
 
-    public void obtain(IObtainable o) {
+    public void obtain(Obtainable o) {
         if (o instanceof Objective) {
             this.objectives.add((Objective) o);
         }
         this.all_obtained.add(o);
     }
 
-    public boolean hasItems(HashSet<IObtainable> deps) {
-        for (IObtainable dep : deps) {
+    public boolean hasItems(HashSet<Obtainable> deps) {
+        for (Obtainable dep : deps) {
             if (!all_obtained.contains(dep)) {
                 return false;
             }

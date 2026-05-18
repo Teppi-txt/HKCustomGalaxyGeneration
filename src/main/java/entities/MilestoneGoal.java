@@ -1,11 +1,11 @@
 package entities;
 
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MilestoneGoal implements IObtainable{
+public class MilestoneGoal extends Obtainable {
     private String name;
 
     private String milestoneType;

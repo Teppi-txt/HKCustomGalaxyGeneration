@@ -1,12 +1,12 @@
 package entities;
 
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 
 import java.util.*;
 
 public class Board {
-    ArrayList<ArrayList<IObtainable>> players;
-    IObtainable centerGoal;
+    ArrayList<ArrayList<Obtainable>> players;
+    Obtainable centerGoal;
 
     public static Map<String, List<Integer>> glackyIndices = new HashMap<String, List<Integer>>() {{
         put("player1", Arrays.asList(0, 1, 2, 3, 8, 13));
@@ -16,13 +16,17 @@ public class Board {
         put("neutral", Arrays.asList(12));
     }};
 
-    public Board(List<ArrayList<IObtainable>> players, IObtainable centerGoal) {
-        this.players = (ArrayList<ArrayList<IObtainable>>) players;
+    public Board(List<PlayerData> playerDatas, Obtainable centerGoal) {
+        this.players = new ArrayList<>();
+
+        for (PlayerData player : playerDatas) {
+            players.add(player.getLine());
+        }
         this.centerGoal = centerGoal;
     }
 
-    public Board(List<ArrayList<IObtainable>> players) {
-        this.players = (ArrayList<ArrayList<IObtainable>>) players;
+    public Board(List<ArrayList<Obtainable>> players) {
+        this.players = (ArrayList<ArrayList<Obtainable>>) players;
         this.centerGoal = null;
     }
 
@@ -35,10 +39,10 @@ public class Board {
 
     private String generate4PBoard() {
         StringBuilder sb = new StringBuilder("[");
-        IObtainable[] boardArray = new IObtainable[25];
+        Obtainable[] boardArray = new Obtainable[25];
         int playerCount = 1;
 
-        for (ArrayList<IObtainable> player : players) {
+        for (ArrayList<Obtainable> player : players) {
             for (int i = 0; i < player.size(); i++) {
                 boardArray[glackyIndices.get("player" + playerCount).get(i)] = player.get(i);
             }
@@ -47,7 +51,11 @@ public class Board {
         boardArray[glackyIndices.get("neutral").get(0)] = centerGoal;
 
         for (int i = 0; i < 25; i++) {
-            sb.append("{ \"name\" : \"").append(boardArray[i].getName()).append("\" }, \n");
+            if (boardArray[i] != null) {
+                sb.append("{ \"name\" : \"").append(boardArray[i].getName()).append("\" }, \n");
+            } else {
+                sb.append("{ \"name\" : \"null\" }, \n");
+            }
         }
         sb.replace(sb.length() - 3, sb.length(), "]");
         return sb.toString();

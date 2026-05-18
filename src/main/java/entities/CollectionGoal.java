@@ -1,16 +1,16 @@
 package entities;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CollectionGoal implements IObtainable{
+public class CollectionGoal extends Obtainable {
     private String name;
 
-    private ArrayList<IObtainable> collectionItems;
+    private ArrayList<Obtainable> collectionItems;
 
     private int collectionCount;
     
-    public CollectionGoal(String name, ArrayList<IObtainable> items, int count) {
+    public CollectionGoal(String name, ArrayList<Obtainable> items, int count) {
         this.name = name;
         this.collectionItems = items;
         this.collectionCount = count;
@@ -34,11 +34,11 @@ public class CollectionGoal implements IObtainable{
         return collectionCount;
     }
 
-    public List<IObtainable> getCollectionItems() {
+    public List<Obtainable> getCollectionItems() {
         return collectionItems;
     }
 
-    public void setCollectionItems(List<IObtainable> collectionItems) {
-        this.collectionItems = (ArrayList<IObtainable>) collectionItems;
+    public void setCollectionItems(List<Obtainable> collectionItems) {
+        this.collectionItems = (ArrayList<Obtainable>) collectionItems;
     }
 }

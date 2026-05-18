@@ -1,11 +1,12 @@
 package utilities;
 
-import entities.CollectionGoal;
+import entities.GoalPool;
 import entities.ObtainOption;
-import entities.PlayerState;
-import interface_adapters.IObtainable;
+import interface_adapters.Obtainable;
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import static utilities.GeneratorCore.removeAllDependencies;
+import static utilities.GeneratorCore.removeAllDependents;
 
 enum Color {
     WHITE,
@@ -14,28 +15,29 @@ enum Color {
 }
 
 public class TopologicalSort {
-    public static ArrayList<IObtainable> constructOrderingGraph(ArrayList<IObtainable> goals, ArrayList<IObtainable> exclusions) {
-        ArrayList<IObtainable> orderingGraph = new ArrayList<>();
-        for (IObtainable o : goals) {
+    public static GoalPool constructOrderingGraph(GoalPool goals, ArrayList<Obtainable> exclusions) {
+        GoalPool orderingGraph = new GoalPool();
+        for (Obtainable o : goals.getElements()) {
             constructionGraphHelper(orderingGraph, o);
         }
         reduceOrderingGraph(orderingGraph, exclusions);
         return orderingGraph;
     }
 
-    public static void reduceOrderingGraph(ArrayList<IObtainable> orderingGraph, ArrayList<IObtainable> exclusions) {
-        for (IObtainable exclusion :  exclusions) {
-            BoardGenerator.deepRemove(orderingGraph, exclusion);
+    public static void reduceOrderingGraph(GoalPool orderingGraph, ArrayList<Obtainable> exclusions) {
+        for (Obtainable exclusion :  exclusions) {
+            removeAllDependencies(orderingGraph, exclusion);
+            removeAllDependents(orderingGraph, exclusion);
         }
     }
 
-    public static void constructionGraphHelper(ArrayList<IObtainable> currentGraph, IObtainable goal) {
+    public static void constructionGraphHelper(GoalPool currentGraph, Obtainable goal) {
         if (!currentGraph.contains(goal)) {
             currentGraph.add(goal);
         }
 
         for (ObtainOption option : goal.getDependencies()) {
-            for (IObtainable child : option.getDependencies()) {
+            for (Obtainable child : option.getDependencies().getElements()) {
                 constructionGraphHelper(currentGraph, child);
             }
         }

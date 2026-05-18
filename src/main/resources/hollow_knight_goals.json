@@ -259,8 +259,7 @@
           "dependencies": [
             "Crystal Guardian 1"
           ],
-          "effect": {},
-          "notes": "shade skip"
+          "effect": {}
         }
       ]
     },
@@ -580,7 +579,7 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [],
+          "dependencies": ["Crystal Heart"],
           "effect": {}
         }
       ]
@@ -1018,7 +1017,7 @@
         {
           "dependencies": [
             "Have 2 Pale Ore",
-            "Spend 3000 geo"
+            "Nail 2"
           ],
           "effect": {
             "pale_ore": -3,
