@@ -1,9 +1,6 @@
 package view;
 
-import entities.Board;
-import entities.GenerationSettings;
-import entities.Objective;
-import entities.SkipSettings;
+import entities.*;
 import interface_adapters.Obtainable;
 import utilities.GeneratorCore;
 import utilities.GoalParser;
@@ -302,7 +299,7 @@ public class GeneratorUI extends JFrame {
         centerSquareDropdown.removeAllItems();
 
         for (Obtainable goal : goals) {
-            if (goal instanceof Objective) {
+            if (goal instanceof Objective || goal instanceof MilestoneGoal) {
                 continue;
             }
             centerSquareDropdown.addItem(goal.getName());

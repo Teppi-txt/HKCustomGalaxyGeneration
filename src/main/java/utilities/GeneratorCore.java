@@ -3,30 +3,37 @@ package utilities;
 import entities.*;
 import interface_adapters.Obtainable;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import static entities.GenerationSettings.INCREASED_MAJOR_CHANCE;
+import static utilities.GeneratorPlus.*;
 import static utilities.GoalUtility.*;
 
 public class GeneratorCore {
     public static final Random RANDOM = new Random();
     public static final String[] MAJORS = {
             "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
-            "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths",
-            "Descending Dark", "Shade Cloak", "Isma's Tear"};
+            "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"};
 
     public static Board generateBoardRobin(List<Obtainable> goals, int seed, GenerationSettings generationSettings) {
         RANDOM.setSeed(seed);
         ArrayList<PlayerData> players = createPlayers(4, (ArrayList<Obtainable>) goals);
         Obtainable centerSquare = null;
 
-        if (generationSettings.isCustomCenter()) {
+        if (generationSettings.useCustomCenter()) {
             centerSquare = getGoalByName(goals, generationSettings.getCenterGoal());
+            for (PlayerData player : players) {
+                removeAllDependents(player.getGoalPool(), centerSquare);
+                player.getGoalPool().remove(centerSquare);
+            }
         }
 
         for (int round = 0; round < 6; round++) {
             for (PlayerData player : players) {
-                Obtainable playerGoal = selectGoal(player.getGoalPool().getElements(), generationSettings);
+                System.out.println("------------------------------------------------------------------");
+                Obtainable playerGoal = pickGoal(generationSettings, player);
+                // picks a random goal from the pool with majors and exclusions settings on
 
                 // after p1 picks a goal g, p2, p3, and p4 pools cannot contain:
                 // 1. any goal that is required to get g
@@ -65,16 +72,62 @@ public class GeneratorCore {
             centerSquare = selectGoal(obtainableByAll.getElements(), generationSettings);
         }
 
+        injectMilestoneGoals(generationSettings, players, (ArrayList<Obtainable>) goals);
+
         return new Board(players, centerSquare);
     }
 
+    private static void injectMilestoneGoals(GenerationSettings generationSettings, ArrayList<PlayerData> players,
+                                                ArrayList<Obtainable> goals) {
+
+        double geoLimitChance = (double) 3 / goals.size();
+
+        if (generationSettings.isGeoLimits()) {
+            geoLimitChance = 1;
+        }
+
+        // artificially inject geo / grub goals
+        // blomsom reference
+        boolean possibilityOfGeocitation = RANDOM.nextDouble() < geoLimitChance;
+        boolean possibilityOfGrubcipitation = RANDOM.nextDouble() < (double) 2 / goals.size();
+        boolean possibilityOfTollicitation = RANDOM.nextDouble() < (double) 1 / goals.size();
+
+        if (possibilityOfGeocitation) {
+            reduceInflation(players, getGoalByName(goals, "Spend 3000 geo"),
+                    getGoalByName(goals, "Spend 4000 geo"),
+                    getGoalByName(goals, "Spend 5000 geo"));
+        }
+
+        if (possibilityOfGrubcipitation) {
+            injectGrubs(players, getGoalByName(goals, "Save 15 grubs"),
+                    getGoalByName(goals, "Save 20 grubs"));
+        }
+
+        if (possibilityOfTollicitation) {
+            depositTolls(players, getGoalByName(goals, "Pay for 6 tolls"));
+        }
+    }
+
+    private static Obtainable pickGoal(GenerationSettings generationSettings, PlayerData player) {
+        Obtainable playerGoal = selectGoal(player.getGoalPool().getElements(), generationSettings);
+
+        int testLimit = 0;
+        //check if its a legal goal
+        while (needsMultipleSaves(player.getGoalPool().getElements(), playerGoal) && testLimit < 50) {
+            playerGoal = selectGoal(player.getGoalPool().getElements(), generationSettings);
+            testLimit += 1;
+        }
+        return playerGoal;
+    }
+
     private static Obtainable selectGoal(ArrayList<Obtainable> elements, GenerationSettings generationSettings) {
-        if (generationSettings.isMajorAbilities() || RANDOM.nextDouble() < INCREASED_MAJOR_CHANCE) {
+        if (generationSettings.isMajorAbilities() && RANDOM.nextDouble() < INCREASED_MAJOR_CHANCE) {
             GoalPool majors = GoalPool.poolFromStrings(elements, MAJORS);
             if (!majors.isEmpty()) {
                 return majors.getElements().get(RANDOM.nextInt(majors.size()));
             }
         }
+
         return selectRandomGoal(elements);
     }
 
@@ -132,7 +185,7 @@ public class GeneratorCore {
                 if (option.getDependencies().contains(i)) {
                     iterator.remove();
 
-                    System.out.println(goal.getName() + " lost the dependency " + option.toString());
+                    //System.out.println(goal.getName() + " lost the dependency " + option.toString());
 
                     if (goal.getDependencies().isEmpty()) {
                         toBeRemoved.add(goal);

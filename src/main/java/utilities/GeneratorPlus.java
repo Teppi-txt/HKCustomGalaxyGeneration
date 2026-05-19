@@ -5,16 +5,17 @@ import entities.ObtainOption;
 import entities.PlayerData;
 import interface_adapters.Obtainable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static utilities.GeneratorCore.RANDOM;
 import static utilities.GoalUtility.selectLeastImportantGoal;
 
 public class GeneratorPlus {
-    private static void reduceInflation(ArrayList<PlayerData> board,
-                                        Obtainable threeK,
-                                        Obtainable fourK,
-                                        Obtainable fiveK) {
+    static void reduceInflation(ArrayList<PlayerData> board,
+                                Obtainable threeK,
+                                Obtainable fourK,
+                                Obtainable fiveK) {
         Obtainable[] geoGoals = { threeK, fourK, fiveK };
         int[] bounds = { 3000, 4000, 5000 };
 
@@ -26,7 +27,7 @@ public class GeneratorPlus {
             PlayerData targetPlayer = null;
 
             for (PlayerData player : board) {
-                int geo = getMaximalSpentGeo(player.getGoalPool());
+                int geo = getMaximalSpentGeo(player.getLine());
 
                 if (geo < bound) {
                     below.add(player);
@@ -52,7 +53,7 @@ public class GeneratorPlus {
                     return; // give up
                 }
 
-                ArrayList<Obtainable> lineArray = targetPlayer.getGoalPool().getElements();
+                ArrayList<Obtainable> lineArray = targetPlayer.getLine();
                 Obtainable leastImportantGoal = selectLeastImportantGoal(goalPool.getElements());
                 lineArray.set(lineArray.indexOf(leastImportantGoal), geoGoal);
 
@@ -70,7 +71,7 @@ public class GeneratorPlus {
         GoalPool currentPool = new GoalPool();
         for (Obtainable goal : player.getLine()) {
             currentPool.add(goal);
-            if (getMaximalSpentGeo(currentPool) > limit) {
+            if (getMaximalSpentGeo(currentPool.getElements()) > limit) {
                 currentPool.remove(goal);
                 return currentPool;
             }
@@ -78,8 +79,8 @@ public class GeneratorPlus {
         return currentPool;
     }
 
-    private static int getMaximalSpentGeo(GoalPool player) {
-        ArrayList<Obtainable> graph = TopologicalSort.constructOrderingGraph(player, new ArrayList<>()).getElements();
+    private static int getMaximalSpentGeo(ArrayList<Obtainable> goals) {
+        ArrayList<Obtainable> graph = TopologicalSort.constructOrderingGraph(new GoalPool(goals), new ArrayList<>()).getElements();
         // loop through the graph, always pick the most expensive option
         int max = 0;
         for (Obtainable goal : graph) {
@@ -94,7 +95,7 @@ public class GeneratorPlus {
         return max;
     }
 
-    private static void depositTolls(ArrayList<PlayerData> board, Obtainable sixTolls) {
+    static void depositTolls(ArrayList<PlayerData> board, Obtainable sixTolls) {
         ArrayList<PlayerData> available = new ArrayList<>();
         PlayerData targetPlayer = null;
         for (PlayerData player : board) {
@@ -114,14 +115,14 @@ public class GeneratorPlus {
             targetPlayer = available.get(RANDOM.nextInt(available.size()));
         }
 
-        ArrayList<Obtainable> lineArray = targetPlayer.getGoalPool().getElements();
+        ArrayList<Obtainable> lineArray = targetPlayer.getLine();
         Obtainable leastImportantGoal = selectLeastImportantGoal(lineArray);
         lineArray.set(lineArray.indexOf(leastImportantGoal), sixTolls);
         System.out.println("Replacing " + leastImportantGoal.getName() + " with 6 tolls");
     }
 
     private static int getMaximalTollCount(PlayerData player) {
-        GoalPool graph = TopologicalSort.constructOrderingGraph(player.getGoalPool(), new ArrayList<>());
+        GoalPool graph = TopologicalSort.constructOrderingGraph(new GoalPool(player.getLine()), new ArrayList<>());
         // loop through the graph, always pick the most toll expensive option
         int max = 0;
         for (Obtainable goal : graph.getElements()) {
@@ -136,7 +137,7 @@ public class GeneratorPlus {
         return max;
     }
 
-    private static void injectGrubs(ArrayList<PlayerData> board, Obtainable grub15, Obtainable grub20) {
+    static void injectGrubs(ArrayList<PlayerData> board, Obtainable grub15, Obtainable grub20) {
         ArrayList<PlayerData> below15Grubs = new ArrayList<>();
         ArrayList<PlayerData> below20Grubs = new ArrayList<>();
 
@@ -156,7 +157,7 @@ public class GeneratorPlus {
                 ? below15Grubs.get(RANDOM.nextInt(below15Grubs.size()))
                 : below20Grubs.get(RANDOM.nextInt(below20Grubs.size()));
 
-        ArrayList<Obtainable> lineArray = randomPlayer.getGoalPool().getElements();
+        ArrayList<Obtainable> lineArray = randomPlayer.getLine();
         Obtainable grub = use15Grubs ? grub15 : grub20;
         Obtainable leastImportantGoal = selectLeastImportantGoal(lineArray);
         lineArray.set(lineArray.indexOf(leastImportantGoal), grub);

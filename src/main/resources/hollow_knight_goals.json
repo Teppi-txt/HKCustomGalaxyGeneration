@@ -51,7 +51,7 @@
       "options": [
         {
           "dependencies": [
-            "FCA Access"
+            "FCA Access", "Crystal Heart"
           ],
           "effect": {
             "grubs_saved": 6
@@ -168,7 +168,7 @@
         },
         {
           "dependencies": [
-            "Dreamgate"
+            "Dream Gate"
           ],
           "effect": {}
         }
@@ -259,7 +259,8 @@
           "dependencies": [
             "Crystal Guardian 1"
           ],
-          "effect": {}
+          "effect": {},
+          "notes": "hard"
         }
       ]
     },
@@ -369,7 +370,7 @@
       ]
     },
     {
-      "name": "Dreamgate",
+      "name": "Dream Gate",
       "type": "AchievementGoal",
       "options": [
         {
@@ -581,6 +582,11 @@
         {
           "dependencies": ["Crystal Heart"],
           "effect": {}
+        },
+        {
+          "dependencies": [],
+          "effect": {},
+          "notes": "extreme"
         }
       ]
     },
@@ -1128,12 +1134,8 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": [
-            "Spend 3000 geo"
-          ],
-          "effect": {
-            "geo": -3000
-          }
+          "dependencies": ["Fountain Purchase"],
+          "effect": {}
         }
       ]
     },
@@ -2527,6 +2529,18 @@
           "dependencies": [],
           "effect": {},
           "notes": "extreme"
+        }
+      ]
+    },
+    {
+      "name": "Fountain Purchase",
+      "type": "Objective",
+      "options": [
+        {
+          "dependencies": [],
+          "effect": {
+            "geo": -3000
+          }
         }
       ]
     }

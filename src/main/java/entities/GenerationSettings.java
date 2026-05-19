@@ -40,7 +40,7 @@ public class GenerationSettings {
         this.geoLimits = geoLimits;
     }
 
-    public boolean isCustomCenter() {
+    public boolean useCustomCenter() {
         return customCenter;
     }
 
