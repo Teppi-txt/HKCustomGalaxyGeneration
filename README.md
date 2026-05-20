@@ -6,7 +6,7 @@ A program to generate custom Hollow Knight bingo boards for the Galaxy gamemode.
 
 Galaxy is a 4-player bingo gamemode where each player is assigned a "line" and must complete the goals on that line **in order** without marking goals belonging to other players or the center square. The gamemode is a commonly played, casual format in the Hollow Knight bingo community. BingoSync, the main bingo board hosting site, doesn't support generation of valid galaxy boards so players have to reroll boards until a valid board is found.
 
-## Example Board
+## Example Board with lines highlighted
 
 <p align="center">
   <img
