@@ -23,3 +23,4 @@
 - Uumuu (FCA Access, Dash, Claw)
 - FCA Access (Dash, Claw)
 
+If a skip isn't here, it is either considered a default skip or has not been added in logic.
