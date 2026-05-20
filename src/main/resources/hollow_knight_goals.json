@@ -309,7 +309,7 @@
           "effect": {
             "geo": -800
           },
-          "notes": "extreme"
+          "notes": "hard"
         },
         {
           "dependencies": [
@@ -1055,8 +1055,7 @@
         },
         {
           "dependencies": [],
-          "effect": {},
-          "note": "hard"
+          "effect": {}
         }
       ]
     },
@@ -1320,17 +1319,13 @@
       "type": "AchievementGoal",
       "options": [
         {
-          "dependencies": ["Lumafly Lantern", "Crystal Heart"],
+          "dependencies": [
+            "Lumafly Lantern",
+            "Crystal Heart"
+          ],
           "effect": {
             "grubs_saved": 5
           }
-        },
-        {
-          "dependencies": ["Lumafly Lantern"],
-          "effect": {
-            "grubs_saved": 5
-          },
-          "note": "hard"
         }
       ]
     },

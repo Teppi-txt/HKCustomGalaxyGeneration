@@ -5,13 +5,17 @@ import entities.ObtainOption;
 import entities.PlayerData;
 import interface_adapters.Obtainable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static utilities.GeneratorCore.RANDOM;
 import static utilities.GoalUtility.selectLeastImportantGoal;
 
+
 public class GeneratorPlus {
+    public static final String[] MAJORS = {
+            "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
+            "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"};
+
     static void reduceInflation(ArrayList<PlayerData> board,
                                 Obtainable threeK,
                                 Obtainable fourK,
@@ -178,4 +182,11 @@ public class GeneratorPlus {
         return max;
     }
 
+    public static Obtainable selectMajor(ArrayList<Obtainable> elements) {
+        GoalPool majors = GoalPool.poolFromStrings(elements, MAJORS);
+        if (!majors.isEmpty()) {
+            return majors.getElements().get(RANDOM.nextInt(majors.size()));
+        }
+        return null;
+    }
 }

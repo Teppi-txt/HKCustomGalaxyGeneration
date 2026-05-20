@@ -12,9 +12,6 @@ import static utilities.GoalUtility.*;
 
 public class GeneratorCore {
     public static final Random RANDOM = new Random();
-    public static final String[] MAJORS = {
-            "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
-            "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"};
 
     public static Board generateBoardRobin(List<Obtainable> goals, int seed, GenerationSettings generationSettings) {
         RANDOM.setSeed(seed);
@@ -122,9 +119,9 @@ public class GeneratorCore {
 
     private static Obtainable selectGoal(ArrayList<Obtainable> elements, GenerationSettings generationSettings) {
         if (generationSettings.isMajorAbilities() && RANDOM.nextDouble() < INCREASED_MAJOR_CHANCE) {
-            GoalPool majors = GoalPool.poolFromStrings(elements, MAJORS);
-            if (!majors.isEmpty()) {
-                return majors.getElements().get(RANDOM.nextInt(majors.size()));
+            Obtainable major = GeneratorPlus.selectMajor(elements);
+            if (major != null) {
+                return major;
             }
         }
 
