@@ -12,10 +12,10 @@
 - Stag Nest vessel fragment (Dash, Claw)
 - Unlock Hidden Stag Station (Shade Skip)
 - Fog Canyon Notch (FCA Access, Dash, Claw)
+- Deep Focus + Quick Focus (Peaks Access, Dash, Claw)
 
 # Extreme Skips
 - Collect 1 Arcane Egg (Crystal Heart)
-- Deep Focus + Quick Focus (Peaks Access, Dash, Claw)
 - Great Slash (Dash, Claw)
 - Isma's Tear (Dung Defender)
 - Pick up the Love Key (Dash, Claw)
