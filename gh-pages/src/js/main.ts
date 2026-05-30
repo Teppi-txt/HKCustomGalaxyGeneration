@@ -8,7 +8,7 @@ import { makeSkipSettings } from "./settings";
 // Initialize options for center square
 const inputCenterSquare = document.getElementById("inputCenterSquare");
 for (const g of hollow_knight_goals) {
-  if (g.type != "Objective") {
+  if (g.type !== "Objective") {
     const newOption = document.createElement("option");
     newOption.value = g.name;
     newOption.text = g.name;
@@ -16,9 +16,10 @@ for (const g of hollow_knight_goals) {
   }
 }
 
-let settings = {
+const settings = {
   playerCount: 4,
   centerSquare: "#Random",
+  seed: Math.floor(Math.random() * Math.pow(2, 48)),
   majorAbility: false,
   increasedMajorChance: 0.15,
   geoLimit: false,
@@ -43,6 +44,7 @@ bindCheckboxInput({ id: "inputMultipleSaves", setGlobal: updateSettings("multipl
 bindCheckboxInput({ id: "inputDarkrooms", setGlobal: updateSettings("darkrooms") });
 bindCheckboxInput({ id: "inputHardSkips", setGlobal: updateSettings("hardSkips") });
 bindCheckboxInput({ id: "inputExtremeSkips", setGlobal: updateSettings("extremeSkips") });
+bindNumberInput({ id: "inputSeed", setGlobal: updateSettings("seed") });
 
 
 const outputElement = document.getElementById("randomOrderOutput");
@@ -66,5 +68,6 @@ outputCopyBtn.onclick = () => {
   });
 }
 
+// Set the initial seed in the html element
 // @ts-ignore
-document.getElementById("settingsForm").reset();
+document.getElementById("inputSeed").value = settings.seed;

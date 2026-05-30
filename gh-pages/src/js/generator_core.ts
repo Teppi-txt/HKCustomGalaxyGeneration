@@ -83,7 +83,7 @@ export function generateBoardRobin(
         // after p1 picks a goal g, p1 pool cannot contain
         // 1. g
         // 2. any goals that are required to get g
-        console.log(otherPlayer.name + ": ");
+        // console.log(otherPlayer.name + ": ");
 
         let newPool = otherPlayer.goalPool;
         // g
