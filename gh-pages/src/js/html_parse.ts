@@ -14,9 +14,9 @@ export function bindInput<T>({ id, setGlobal, isValid, convert }: BinderParams<T
     // @ts-ignore
     const target: HTMLElement = e.target;
     // @ts-ignore
-    const value: T = target.value;
+    const value: T = convert ? convert(target.value) : target.value;
     if (isValid(value)) {
-      setGlobal(convert ? convert(value) : value);
+      setGlobal(value);
       target.classList.remove("is-invalid");
       form_validation.classList.add("d-none");
     } else {
@@ -34,4 +34,8 @@ export function bindInput<T>({ id, setGlobal, isValid, convert }: BinderParams<T
 
 export function bindCheckboxInput({ id, setGlobal }: BinderParams<boolean>) {
   bindInput<boolean>({ id, setGlobal, convert: (v : any) => v === "on" });
+}
+
+export function bindNumberInput({ id, setGlobal, isValid }: BinderParams<number>) {
+  bindInput<number>({ id, setGlobal, isValid, convert: (v : any) => parseInt(v) });
 }

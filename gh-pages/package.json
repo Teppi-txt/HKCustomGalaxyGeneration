@@ -16,7 +16,10 @@
     "url": "https://github.com/flavio-a/HKCustomGalaxyGeneration"
   },
   "homepage": "http://Teppi-txt.github.io/HKCustomGalaxyGeneration",
-  "contributors": ["flavio-a", "Teppi-txt"],
+  "contributors": [
+    "flavio-a",
+    "Teppi-txt"
+  ],
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^10.4.20",

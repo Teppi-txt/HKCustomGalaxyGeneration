@@ -1,14 +1,13 @@
-import { bindInput, bindCheckboxInput } from "./input_parse";
-// import { getRandomOrder } from "./randomize";
-// import { makeTextOrder, outputOrder } from "./make_output";
+import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
 import hollow_knight_goals from "../../resources/hollow_knight_goals.json";
-// import test_set from "../../resources/test_set.json";
-
-const goals = hollow_knight_goals.goals;
+import { generateBoardRobin } from "./generator_core";
+import { generateBoardJSON } from "./make_output";
+import { parseGoals } from "./goal_parser";
+import { makeSkipSettings } from "./settings";
 
 // Initialize options for center square
 const inputCenterSquare = document.getElementById("inputCenterSquare");
-for (const g of goals) {
+for (const g of hollow_knight_goals) {
   const newOption = document.createElement("option");
   newOption.value = g.name;
   newOption.text = g.name;
@@ -16,12 +15,12 @@ for (const g of goals) {
 }
 
 let settings = {
-  seed: 0,
   playerCount: 4,
-  centerSquare: "random",
+  centerSquare: "#Random",
   majorAbility: false,
+  increasedMajorChance: 0.15,
   geoLimit: false,
-  noMultipleSaves: true,
+  multipleSaves: false,
   darkrooms: false,
   hardSkips: false,
   extremeSkips: false,
@@ -34,26 +33,36 @@ function updateSettings<T>(field: string) {
   })
 }
 
-bindInput<number>({ id: "inputSeed", getGlobal: () => settings.seed, setGlobal: updateSettings("seed") });
-bindInput<number>({ id: "inputPlayerCount", getGlobal: () => settings.playerCount, setGlobal: updateSettings("playerCount") });
-bindInput<string>({ id: "inputCenterSquare", getGlobal: () => settings.centerSquare, setGlobal: updateSettings("centerSquare"), isValid: (v) => goals.some((g) => g.name === v) });
+bindNumberInput({ id: "inputPlayerCount", setGlobal: updateSettings("playerCount"), isValid: (n) => 0 < n && n <= 4 });
+bindInput<string>({ id: "inputCenterSquare", getGlobal: () => settings.centerSquare, setGlobal: updateSettings("centerSquare"), isValid: (v) => hollow_knight_goals.some((g) => g.name === v) });
 bindCheckboxInput({ id: "inputMajorAbility", setGlobal: updateSettings("majorAbility") });
 bindCheckboxInput({ id: "inputGeoLimit", setGlobal: updateSettings("geoLimit") });
-bindCheckboxInput({ id: "inputNoMultipleSaves", setGlobal: updateSettings("noMultipleSaves") });
+bindCheckboxInput({ id: "inputMultipleSaves", setGlobal: updateSettings("multipleSaves") });
 bindCheckboxInput({ id: "inputDarkrooms", setGlobal: updateSettings("darkrooms") });
 bindCheckboxInput({ id: "inputHardSkips", setGlobal: updateSettings("hardSkips") });
 bindCheckboxInput({ id: "inputExtremeSkips", setGlobal: updateSettings("extremeSkips") });
 
 
+const outputElement = document.getElementById("randomOrderOutput");
+const outputCopyBtn = document.getElementById("copyButton");
 document.getElementById("generateButton").onclick = () => {
   console.log(`Settings:`);
   console.log(settings);
-  // const config = { logicData: logic, itemsData: leversData };
-  // const options = { difficulty, groupingFactor };
-  // const order = getRandomOrder(config, options);
-  // const textOrder = makeTextOrder(order, leversData);
-  // outputOrder(textOrder);
+  outputCopyBtn.textContent = "Copy";
+  outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
+  const goals = parseGoals(hollow_knight_goals, makeSkipSettings(settings));
+  const board = generateBoardRobin({goals, settings});
+  const output = generateBoardJSON(board);
+  console.log(output);
+  outputElement.textContent = output;
 };
+
+outputCopyBtn.onclick = () => {
+  navigator.clipboard.writeText(outputElement.textContent).then(() => {
+    outputCopyBtn.textContent = "Copied!";
+    outputCopyBtn.classList.replace("btn-outline-secondary", "btn-success");
+  });
+}
 
 // @ts-ignore
 document.getElementById("settingsForm").reset();
