@@ -8,10 +8,12 @@ import { makeSkipSettings } from "./settings";
 // Initialize options for center square
 const inputCenterSquare = document.getElementById("inputCenterSquare");
 for (const g of hollow_knight_goals) {
-  const newOption = document.createElement("option");
-  newOption.value = g.name;
-  newOption.text = g.name;
-  inputCenterSquare.appendChild(newOption);
+  if (g.type != "Objective") {
+    const newOption = document.createElement("option");
+    newOption.value = g.name;
+    newOption.text = g.name;
+    inputCenterSquare.appendChild(newOption);
+  }
 }
 
 let settings = {

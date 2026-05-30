@@ -1,6 +1,6 @@
 "use strict";
 
-import { Obtainable } from "./entities";
+import { Obtainable,  Objective, AchievementGoal} from "./entities";
 
 // hardcoded for now
 const ZOTE_ALIVE_GOALS: Array<string> = [
@@ -27,4 +27,23 @@ export function needsMultipleSaves(playerGoals: Array<Obtainable>, goal: Obtaina
   }
 
   return false;
+}
+
+export function selectRandomGoal(playerGoals: Obtainable[]): Obtainable {
+  const validIndices: number[] = [];
+
+  for (let i = 0; i < playerGoals.length; i++) {
+    const goal = playerGoals[i];
+
+    if (goal.goalKind ==  "Objective" || goal.goalKind === "MilestoneGoal") {
+      continue;
+    }
+
+    validIndices.push(i);
+  }
+
+  const randomIndex =
+    validIndices[Math.floor(Math.random() * validIndices.length)];
+
+  return playerGoals[randomIndex];
 }

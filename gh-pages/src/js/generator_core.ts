@@ -2,7 +2,7 @@
 
 import { contains_obt, equal_obtainable, Obtainable, PlayerData, removeAllDependencies, removeAllDependents } from "./entities";
 import { GenerationSettings, hasCustomCenterSquare } from "./settings";
-import { needsMultipleSaves } from "./goal_utility";
+import { needsMultipleSaves, selectRandomGoal } from "./goal_utility";
 import { Board } from "./make_output";
 
 const MAJORS: string[] = [
@@ -17,7 +17,7 @@ function selectGoal(pool: Array<Obtainable>, settings: GenerationSettings): Obta
       return all_majors[Math.floor(Math.random() * all_majors.length)];
     }
   }
-  return pool[Math.floor(Math.random() * pool.length)];
+  return selectRandomGoal(pool);
 }
 
 function createPlayers(count: number, goals: Array<Obtainable>): Array<PlayerData> {
