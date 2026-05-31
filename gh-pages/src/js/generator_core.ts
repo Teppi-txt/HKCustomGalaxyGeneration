@@ -4,20 +4,23 @@ import { contains_obt, equal_obtainable, Obtainable, PlayerData, removeAllDepend
 import { GenerationSettings, hasCustomCenterSquare } from "./settings";
 import { needsMultipleSaves, selectRandomGoal } from "./goal_utility";
 import { Board } from "./make_output";
+import { RNG } from "./random";
 
 const MAJORS: string[] = [
   "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
   "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"];
 
+const RANDOM: RNG = new RNG();
+
 
 function selectGoal(pool: Array<Obtainable>, settings: GenerationSettings): Obtainable {
-  if (settings.majorAbility && Math.random() < settings.increasedMajorChance) {
+  if (settings.majorAbility && RANDOM.nextDouble() < settings.increasedMajorChance) {
     const all_majors = pool.filter(g => MAJORS.includes(g.name));
     if (all_majors.length > 0) {
-      return all_majors[Math.floor(Math.random() * all_majors.length)];
+      return all_majors[RANDOM.nextInt(all_majors.length)];
     }
   }
-  return selectRandomGoal(pool);
+  return selectRandomGoal(pool, RANDOM);
 }
 
 function createPlayers(count: number, goals: Array<Obtainable>): Array<PlayerData> {
@@ -50,6 +53,7 @@ export function generateBoardRobin(
 ): Board {
   const players = createPlayers(4, goals);
   let centerSquare: Obtainable | null = null;
+  RANDOM.setSeed(settings.seed);
 
   // If we use custom center square, remove it from each player's pool
   if (hasCustomCenterSquare(settings)) {

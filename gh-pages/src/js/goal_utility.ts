@@ -1,5 +1,6 @@
 "use strict";
 
+import { RNG } from "./random";
 import { Obtainable,  Objective, AchievementGoal} from "./entities";
 
 // hardcoded for now
@@ -29,7 +30,7 @@ export function needsMultipleSaves(playerGoals: Array<Obtainable>, goal: Obtaina
   return false;
 }
 
-export function selectRandomGoal(playerGoals: Obtainable[]): Obtainable {
+export function selectRandomGoal(playerGoals: Obtainable[], RANDOM: RNG): Obtainable {
   const validIndices: number[] = [];
 
   for (let i = 0; i < playerGoals.length; i++) {
@@ -43,7 +44,7 @@ export function selectRandomGoal(playerGoals: Obtainable[]): Obtainable {
   }
 
   const randomIndex =
-    validIndices[Math.floor(Math.random() * validIndices.length)];
+    validIndices[RANDOM.nextInt(validIndices.length)];
 
   return playerGoals[randomIndex];
 }

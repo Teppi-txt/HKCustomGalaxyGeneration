@@ -5,9 +5,15 @@ export class RNG {
   readonly MULTIPLIER = 0x5DEECE66Dn;
   readonly MASK = (1n << 48n) - 1n;
 
-  constructor(seed: bigint) {
-    this.seed = (seed ^ this.MULTIPLIER) & this.MASK;
+  
+  constructor() {
+    this.seed = (0n ^ this.MULTIPLIER) & this.MASK;
   }
+
+  setSeed(seed: number) {
+    this.seed = (BigInt(seed) ^ this.MULTIPLIER) & this.MASK;
+  }
+
 
   protected next(bits: number): number {
     this.seed = (this.seed * this.MULTIPLIER + 0xBn) & this.MASK;
