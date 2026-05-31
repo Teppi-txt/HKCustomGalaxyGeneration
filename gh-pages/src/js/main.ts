@@ -4,6 +4,7 @@ import { generateBoardRobin } from "./generator_core";
 import { generateBoardJSON } from "./make_output";
 import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
+import packagejson from "../../package.json";
 
 const all_goals = hollow_knight_goals.goals;
 
@@ -76,3 +77,8 @@ outputCopyBtn.onclick = () => {
 // Set the initial seed in the html element
 // @ts-ignore
 document.getElementById("inputSeed").value = settings.seed;
+
+// Print the version at the bottom
+document.getElementById(
+  "versionDisplay"
+).textContent = `Version ${packagejson.version}`;
