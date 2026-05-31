@@ -3,6 +3,7 @@ import hollow_knight_goals from "../../resources/hollow_knight_goals.json";
 import { generateBoardRobin } from "./generator_core";
 import { generateBoardJSON } from "./make_output";
 import { parseGoals } from "./goal_parser";
+import {RNG} from "./random";
 import { makeSkipSettings } from "./settings";
 
 // Initialize options for center square
