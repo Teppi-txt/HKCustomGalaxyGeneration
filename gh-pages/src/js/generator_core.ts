@@ -2,7 +2,7 @@
 
 import { contains_obt, equal_obtainable, Obtainable, PlayerData, removeAllDependencies, removeAllDependents } from "./entities";
 import { GenerationSettings, hasCustomCenterSquare } from "./settings";
-import { needsMultipleSaves, selectRandomGoal } from "./goal_utility";
+import { depositTolls, injectGrubs, needsMultipleSaves, reduceInflation, selectRandomGoal } from "./goal_utility";
 import { Board } from "./make_output";
 import { RNG } from "./random";
 
@@ -60,7 +60,7 @@ export function generateBoardRobin(
     centerSquare = goals.find((g) => g.name === settings.centerSquare);
     players.forEach(p =>
       p.goalPool = removeAllDependents(p.goalPool, centerSquare)
-        .filter(g => equal_obtainable(g, centerSquare))
+        .filter(g => !equal_obtainable(g, centerSquare))
     );
   }
 
@@ -87,8 +87,6 @@ export function generateBoardRobin(
         // after p1 picks a goal g, p1 pool cannot contain
         // 1. g
         // 2. any goals that are required to get g
-        // console.log(otherPlayer.name + ": ");
-
         let newPool = otherPlayer.goalPool;
         // g
         newPool = newPool.filter(gl => !equal_obtainable(playerGoal, gl));
@@ -113,8 +111,34 @@ export function generateBoardRobin(
     centerSquare = selectGoal(obtainableByAll, settings);
   }
 
-  // TODO
-  // injectMilestoneGoals(generationSettings, players, (ArrayList<Obtainable>) goals);
+  // Note that this modifies players in-place
+  injectMilestoneGoals(settings, players, goals);
 
   return { players, centerGoal: centerSquare };
+}
+
+function injectMilestoneGoals(
+  settings: GenerationSettings,
+  players: Array<PlayerData>,
+  goals: Array<Obtainable>
+) {
+  const geoLimitChance = settings.geoLimit ? 1 : (3 / goals.length);
+
+  // artificially inject geo / grub goals
+  // blomsom reference
+  const possibilityOfGeocitation = RANDOM.nextDouble() < geoLimitChance;
+  const possibilityOfGrubcipitation = RANDOM.nextDouble() < (2 / goals.length);
+  const possibilityOfTollicitation = RANDOM.nextDouble() < (1 / goals.length);
+
+  if (possibilityOfGeocitation) {
+    reduceInflation(players, goals, RANDOM);
+  }
+
+  if (possibilityOfGrubcipitation) {
+    injectGrubs(players, goals, RANDOM);
+  }
+
+  if (possibilityOfTollicitation) {
+    depositTolls(players, goals, RANDOM);
+  }
 }
