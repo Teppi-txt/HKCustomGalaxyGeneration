@@ -33,7 +33,11 @@ export function bindInput<T>({ id, setGlobal, isValid, convert }: BinderParams<T
 }
 
 export function bindCheckboxInput({ id, setGlobal }: BinderParams<boolean>) {
-  bindInput<boolean>({ id, setGlobal, convert: (v : any) => v === "on" });
+  const form_value = document.getElementById(id);
+  form_value.onchange = ((e: Event) => {
+    // @ts-ignore
+    setGlobal(e.target.checked);
+  });
 }
 
 export function bindNumberInput({ id, setGlobal, isValid }: BinderParams<number>) {

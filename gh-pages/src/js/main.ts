@@ -58,7 +58,6 @@ document.getElementById("generateButton").onclick = () => {
   const goals = parseGoals(hollow_knight_goals, makeSkipSettings(settings));
   const board = generateBoardRobin({goals, settings});
   const output = generateBoardJSON(board);
-  console.log(output);
   outputElement.textContent = output;
 };
 
