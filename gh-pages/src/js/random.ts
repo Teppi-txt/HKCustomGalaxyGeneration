@@ -5,7 +5,7 @@ export class RNG {
   readonly MULTIPLIER = 0x5DEECE66Dn;
   readonly MASK = (1n << 48n) - 1n;
 
-  
+
   constructor() {
     this.seed = (0n ^ this.MULTIPLIER) & this.MASK;
   }

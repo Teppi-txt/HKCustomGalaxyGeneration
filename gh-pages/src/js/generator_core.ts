@@ -24,7 +24,7 @@ function selectGoal(pool: Array<Obtainable>, settings: GenerationSettings): Obta
 }
 
 function createPlayers(count: number, goals: Array<Obtainable>): Array<PlayerData> {
-  const players = Array.from({length: count}, (_, i) => {
+  const players = Array.from({ length: count }, (_, i) => {
     return { name: `Player ${i}`, goalPool: [...goals], line: [] } as PlayerData
   });
   return players;

@@ -1,14 +1,15 @@
 import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
-import hollow_knight_goals from "../../resources/hollow_knight_goals.json";
+import hollow_knight_goals from "../../../src/main/resources/hollow_knight_goals.json";
 import { generateBoardRobin } from "./generator_core";
 import { generateBoardJSON } from "./make_output";
 import { parseGoals } from "./goal_parser";
-import {RNG} from "./random";
 import { makeSkipSettings } from "./settings";
+
+const all_goals = hollow_knight_goals.goals;
 
 // Initialize options for center square
 const inputCenterSquare = document.getElementById("inputCenterSquare");
-for (const g of hollow_knight_goals) {
+for (const g of all_goals) {
   if (g.type !== "Objective") {
     const newOption = document.createElement("option");
     newOption.value = g.name;
@@ -37,8 +38,12 @@ function updateSettings<T>(field: string) {
   })
 }
 
+bindInput<string>({
+  id: "inputCenterSquare",
+  setGlobal: updateSettings("centerSquare"),
+  isValid: (v) => all_goals.some((g) => g.name === v)
+});
 bindNumberInput({ id: "inputPlayerCount", setGlobal: updateSettings("playerCount"), isValid: (n) => 0 < n && n <= 4 });
-bindInput<string>({ id: "inputCenterSquare", getGlobal: () => settings.centerSquare, setGlobal: updateSettings("centerSquare"), isValid: (v) => hollow_knight_goals.some((g) => g.name === v) });
 bindCheckboxInput({ id: "inputMajorAbility", setGlobal: updateSettings("majorAbility") });
 bindCheckboxInput({ id: "inputGeoLimit", setGlobal: updateSettings("geoLimit") });
 bindCheckboxInput({ id: "inputMultipleSaves", setGlobal: updateSettings("multipleSaves") });
@@ -55,8 +60,8 @@ document.getElementById("generateButton").onclick = () => {
   console.log(settings);
   outputCopyBtn.textContent = "Copy";
   outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
-  const goals = parseGoals(hollow_knight_goals, makeSkipSettings(settings));
-  const board = generateBoardRobin({goals, settings});
+  const goals = parseGoals(all_goals, makeSkipSettings(settings));
+  const board = generateBoardRobin({ goals, settings });
   const output = generateBoardJSON(board);
   outputElement.textContent = output;
 };
