@@ -25,21 +25,21 @@
         <button class="btn btn-primary" id="generateButton">Generate</button>
         <!-- Form for settings -->
         <p class="mt-3 h4">Settings</p>
-        <form id="settingsForm">
+        <form id="settingsForm" class="mt-3">
 
-          <div class="mt-3">
-            <label for="inputPlayerCount" class="form-label">Player count</label>
-            <input type="number" id="inputPlayerCount" class="form-control" value="4" />
+          <div class="row align-items-center">
+            <label for="inputPlayerCount" class="col-3 col-form-label">Player count:</label>
+            <div class="col-9">
+              <input type="number" id="inputPlayerCount" class="form-control" value="4" />
+            </div>
             <div id="inputPlayerCountValidation" class="invalid-feedback d-none">
               Player count must be between 1 and 4.
             </div>
           </div>
 
           <div class="row mt-1 g-3 align-items-center">
-            <div class="col-auto">
-              <label for="inputCenterSquare" class="col-form-label">Select center square:</label>
-            </div>
-            <div class="col-auto">
+            <label for="inputCenterSquare" class="col-3 col-form-label">Center square:</label>
+            <div class="col-9">
               <select class="form-select" id="inputCenterSquare" aria-label="Center square">
                 <option value="#Random" selected>Random</option>
               </select>
@@ -80,9 +80,10 @@
 
           <div class="mt-3">
             <label for="inputSeed" class="form-label">Seed</label>
-            <input type="number" id="inputSeed" class="form-control" aria-describedby="inputSeedHelp" value="0" />
+            <input type="text" id="inputSeed" class="form-control" aria-describedby="inputSeedHelp"
+              value="Teppi fishes" />
             <div id="inputSeedHelp" class="form-text">
-              Randomization seed. Put a random number in here.
+              Randomization seed. Put a random string in here.
             </div>
           </div>
         </form>

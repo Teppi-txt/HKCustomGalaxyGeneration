@@ -51,7 +51,20 @@ bindCheckboxInput({ id: "inputMultipleSaves", setGlobal: updateSettings("multipl
 bindCheckboxInput({ id: "inputDarkrooms", setGlobal: updateSettings("darkrooms") });
 bindCheckboxInput({ id: "inputHardSkips", setGlobal: updateSettings("hardSkips") });
 bindCheckboxInput({ id: "inputExtremeSkips", setGlobal: updateSettings("extremeSkips") });
-bindNumberInput({ id: "inputSeed", setGlobal: updateSettings("seed") });
+bindInput<number>({
+  id: "inputSeed",
+  setGlobal: updateSettings("seed"),
+  convert: (v: string) => {
+    const num = Number(v);
+    if (Number.isNaN(num)) {
+      return Array.from(v)
+        .reduce((s, c) => Math.imul(31, s) + c.charCodeAt(0) | 0, 0);
+    }
+    else {
+      return num;
+    }
+  }
+});
 
 
 const outputElement = document.getElementById("randomOrderOutput");
