@@ -96,10 +96,26 @@ export function generateBoardRobin(
         } else {
           otherPlayer.line.push(playerGoal);
         }
+
         // any goals that are required to get g
         newPool = removeAllDependencies(newPool, playerGoal);
         otherPlayer.goalPool = newPool;
+
+
+        // also update the obtain options of all goals in each player's lines
+        otherPlayer.line = removeAllDependents(otherPlayer.line, playerGoal);
       }
+    }
+  }
+
+  // if after the new goal is added, a line has a goal that must be obtained with a certain dependency
+  // remove it from all player's pools
+
+  for (const p1 of players) {
+    for (const p2 of players) {
+      for (const obtainable of p1.line) {
+          p2.goalPool = removeAllDependencies(p2.goalPool, obtainable);
+        }
     }
   }
 
