@@ -26,6 +26,8 @@ const settings = {
   majorAbility: false,
   increasedMajorChance: 0.15,
   geoLimit: false,
+  tollLimit: false,
+  grubLimit: false,
   multipleSaves: false,
   darkrooms: false,
   hardSkips: false,
@@ -47,6 +49,8 @@ bindInput<string>({
 bindNumberInput({ id: "inputPlayerCount", setGlobal: updateSettings("playerCount"), isValid: (n) => 0 < n && n <= 4 });
 bindCheckboxInput({ id: "inputMajorAbility", setGlobal: updateSettings("majorAbility") });
 bindCheckboxInput({ id: "inputGeoLimit", setGlobal: updateSettings("geoLimit") });
+bindCheckboxInput({ id: "inputTollLimit", setGlobal: updateSettings("tollLimit") });
+bindCheckboxInput({ id: "inputGrubLimit", setGlobal: updateSettings("grubLimit") });
 bindCheckboxInput({ id: "inputMultipleSaves", setGlobal: updateSettings("multipleSaves") });
 bindCheckboxInput({ id: "inputDarkrooms", setGlobal: updateSettings("darkrooms") });
 bindCheckboxInput({ id: "inputHardSkips", setGlobal: updateSettings("hardSkips") });

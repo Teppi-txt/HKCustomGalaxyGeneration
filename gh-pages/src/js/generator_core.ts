@@ -8,7 +8,7 @@ import { RNG } from "./random";
 
 const MAJORS: string[] = [
   "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
-  "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"];
+  "Dream Nail", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"];
 
 const RANDOM: RNG = new RNG();
 
@@ -114,6 +114,7 @@ export function generateBoardRobin(
   for (const p1 of players) {
     for (const p2 of players) {
       for (const obtainable of p1.line) {
+          // insane O(n^3) runtime
           p2.goalPool = removeAllDependencies(p2.goalPool, obtainable);
         }
     }
@@ -139,12 +140,14 @@ function injectMilestoneGoals(
   goals: Array<Obtainable>
 ) {
   const geoLimitChance = settings.geoLimit ? 1 : (3 / goals.length);
+  const tollLimitChance = settings.tollLimit ? 1 : (2 / goals.length);
+  const grubLimitChance = settings.grubLimit ? 1 : (1 / goals.length);
 
   // artificially inject geo / grub goals
   // blomsom reference
   const possibilityOfGeocitation = RANDOM.nextDouble() < geoLimitChance;
-  const possibilityOfGrubcipitation = RANDOM.nextDouble() < (2 / goals.length);
-  const possibilityOfTollicitation = RANDOM.nextDouble() < (1 / goals.length);
+  const possibilityOfGrubcipitation = RANDOM.nextDouble() < grubLimitChance;
+  const possibilityOfTollicitation = RANDOM.nextDouble() < tollLimitChance;
 
   if (possibilityOfGeocitation) {
     reduceInflation(players, goals, RANDOM);

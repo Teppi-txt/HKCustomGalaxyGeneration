@@ -2,6 +2,7 @@
 
 import { RNG } from "./random";
 import { contains_obt, Obtainable, PlayerData } from "./entities";
+import { constructOrderingGraph } from "./topological_sort";
 
 const DEBUG = false;
 
@@ -173,11 +174,10 @@ export function reduceInflation(
 }
 
 function getMaximalSpentGeo(line: Array<Obtainable>): number {
-  // TODO this is omega-borked rn, implement the toposort...
-  // ArrayList < Obtainable > graph = TopologicalSort.constructOrderingGraph(new GoalPool(goals), new ArrayList<>()).getElements();
-  // loop through the graph, always pick the most expensive option
+  // not sure if this is correct tbh...
+  const graph = constructOrderingGraph(line, []);
   let geo_spent = 0;
-  for (const goal of line) {
+  for (const goal of graph) {
     geo_spent += Math.max(...goal.options.map(opt => opt.effect.geo_spent));
   }
   return geo_spent;
@@ -237,8 +237,9 @@ function getMaximalTollCount(player: PlayerData): number {
   // TODO this is omega-borked rn, implement the toposort...
   // ArrayList < Obtainable > graph = TopologicalSort.constructOrderingGraph(new GoalPool(goals), new ArrayList<>()).getElements();
   // loop through the graph, always pick the most toll expensive option
+  const graph = constructOrderingGraph(player.line, []);
   let tolls_spent = 0;
-  for (const goal of player.line) {
+  for (const goal of graph) {
     tolls_spent += Math.max(...goal.options.map(opt => opt.effect.tolls_collected));
   }
   return tolls_spent;

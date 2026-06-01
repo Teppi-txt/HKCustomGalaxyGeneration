@@ -5,6 +5,8 @@ export type GenerationSettings = {
   centerSquare: string;
   majorAbility: boolean;
   geoLimit: boolean;
+  tollLimit: boolean;
+  grubLimit: boolean;
   multipleSaves: boolean;
   increasedMajorChance: number;
 }
