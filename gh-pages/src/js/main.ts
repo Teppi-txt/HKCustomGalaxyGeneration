@@ -1,5 +1,5 @@
-import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
 import hollow_knight_goals from "../../../src/main/resources/hollow_knight_goals.json";
+import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
 import { generateBoardRobin } from "./generator_core";
 import { generateBoardJSON } from "./make_output";
 import { parseGoals } from "./goal_parser";
@@ -20,9 +20,9 @@ for (const g of all_goals) {
 }
 
 const settings = {
+  seed: Math.floor(Math.random() * Math.pow(2, 48)),
   playerCount: 4,
   centerSquare: "#Random",
-  seed: Math.floor(Math.random() * Math.pow(2, 48)),
   majorAbility: false,
   increasedMajorChance: 0.15,
   geoLimit: false,

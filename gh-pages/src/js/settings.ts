@@ -1,8 +1,8 @@
 "use strict"
 
 export type GenerationSettings = {
-  centerSquare: string;
   seed: number;
+  centerSquare: string;
   majorAbility: boolean;
   geoLimit: boolean;
   multipleSaves: boolean;

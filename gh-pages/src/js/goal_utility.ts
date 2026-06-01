@@ -3,22 +3,41 @@
 import { RNG } from "./random";
 import { contains_obt, Obtainable, PlayerData } from "./entities";
 
+const DEBUG = false;
+
 export function selectRandomGoal(playerGoals: Obtainable[], RANDOM: RNG): Obtainable {
+  let goalName = "#default";
+  if (DEBUG) {
+    console.log("Options for the goal:");
+    console.log(playerGoals.map(g => g.name));
+    while (goalName !== "") {
+      goalName = prompt(
+        "Pick the next goal for generation (empty for random)" + (
+          goalName !== "#default" ? `\nError: no goal with name ${goalName}` : ""
+        ));
+      if (goalName === "") {
+        break;
+      }
+      const goal = playerGoals.find((g) => g.name === goalName);
+      if (goal) {
+        return goal
+      }
+    }
+  }
+
   const validIndices: number[] = [];
 
   for (let i = 0; i < playerGoals.length; i++) {
     const goal = playerGoals[i];
 
-    if (goal.goalKind == "Objective" || goal.goalKind === "MilestoneGoal") {
+    if (goal.goalKind === "Objective" || goal.goalKind === "MilestoneGoal") {
       continue;
     }
 
     validIndices.push(i);
   }
 
-  const randomIndex =
-    validIndices[RANDOM.nextInt(validIndices.length)];
-
+  const randomIndex = validIndices[RANDOM.nextInt(validIndices.length)];
   return playerGoals[randomIndex];
 }
 
@@ -260,7 +279,7 @@ export function injectGrubs(
   lineArray[lineArray.indexOf(leastImportantGoal)] = grub;
 }
 
-function getMaximalGrubsCount(player: PlayerData ): number {
+function getMaximalGrubsCount(player: PlayerData): number {
   let grubs_saved = 0;
   // there are no intermediate grub goals, don't have to recurse
   for (const goal of player.line) {
