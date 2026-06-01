@@ -56,7 +56,25 @@ public class GeneratorCore {
                     }
                     otherPlayer.getGoalPool().remove(playerGoal); //g
                     removeAllDependencies(otherPlayer.getGoalPool(), playerGoal); // any goals that are required to get g
+                    removeAllDependencies(otherPlayer.getLineAsGoalPool(), playerGoal);
                 }
+
+                for (PlayerData p1 : players) {
+                    for (PlayerData p2 : players) {
+                        if (p1 != p2) {
+                            for (Obtainable goal : p1.getLine()) {
+                                System.out.println("removing prereq of " +
+                                        goal.getName() +
+                                        " from " + p2.name +
+                                        "'s pool because it is assigned to " +
+                                        p1.name);
+
+                                removeAllDependencies(p2.getGoalPool(), goal);
+                            }
+                        }
+                    }
+                }
+
             }
 
         }
@@ -73,6 +91,113 @@ public class GeneratorCore {
 
         return new Board(players, centerSquare);
     }
+
+    public static Board generateBoardRobinDebugInput(
+            List<Obtainable> goals,
+            int seed,
+            GenerationSettings generationSettings
+    ) {
+        RANDOM.setSeed(seed);
+
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<PlayerData> players = createPlayers(4, (ArrayList<Obtainable>) goals);
+        Obtainable centerSquare = null;
+
+        if (generationSettings.useCustomCenter()) {
+            centerSquare = getGoalByName(goals, generationSettings.getCenterGoal());
+
+            for (PlayerData player : players) {
+                removeAllDependents(player.getGoalPool(), centerSquare);
+                player.getGoalPool().remove(centerSquare);
+            }
+        }
+
+        for (int round = 0; round < 6; round++) {
+            System.out.println("\n================ ROUND " + (round + 1) + " ================");
+
+            for (PlayerData player : players) {
+                System.out.println("\nChoosing goal for " + player.name);
+
+                Obtainable playerGoal = promptForLegalGoal(
+                        scanner,
+                        goals,
+                        generationSettings,
+                        player
+                );
+
+                printGoal(playerGoal);
+
+                System.out.println("Added " + playerGoal.getName() + " to " + player.name);
+
+                for (PlayerData otherPlayer : players) {
+                    if (otherPlayer != player) {
+                        removeAllDependents(otherPlayer.getGoalPool(), playerGoal);
+                    } else {
+                        otherPlayer.getLine().add(playerGoal);
+                    }
+
+                    otherPlayer.getGoalPool().remove(playerGoal);
+                    removeAllDependencies(otherPlayer.getGoalPool(), playerGoal);
+
+                    // update the dependencies of the goals in player's lines
+                    removeAllDependents(otherPlayer.getLineAsGoalPool(), playerGoal);
+                }
+
+                // if the new goal caused any of the goals in the current lines to drop to 1 dependency
+                // remove those fromt he other palyer's pools
+                for (PlayerData p1 : players) {
+                    for (PlayerData p2 : players) {
+                        if (p1 != p2) {
+                            for (Obtainable goal : p1.getLine()) {
+                                System.out.println("Ensuring " + goal.getName() + " from " + p1.name + " stays obtainable.");
+                                removeAllDependencies(p2.getGoalPool(), goal);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (centerSquare == null) {
+            GoalPool obtainableByAll = players.get(0).getGoalPool();
+            for (PlayerData player : players) {
+                obtainableByAll = obtainableByAll.intersection(player.getGoalPool());
+            }
+            centerSquare = selectGoal(obtainableByAll.getElements(), generationSettings);
+        }
+
+        injectMilestoneGoals(generationSettings, players, (ArrayList<Obtainable>) goals);
+
+        return new Board(players, centerSquare);
+    }
+
+    private static Obtainable promptForLegalGoal(
+            Scanner scanner,
+            List<Obtainable> allGoals,
+            GenerationSettings generationSettings,
+            PlayerData player
+    ) {
+        while (true) {
+            System.out.print("Enter goal for " + player.name + ": ");
+            String input = scanner.nextLine().trim();
+
+            Obtainable chosenGoal = getGoalByName(allGoals, input);
+
+            if (chosenGoal == null) {
+                System.out.println("No goal found with name: " + input);
+                continue;
+            }
+
+            if (!player.getGoalPool().contains(chosenGoal)) {
+                System.out.println("Illegal choice: goal is not in " + player.name + "'s current pool.");
+                continue;
+            }
+
+
+            return chosenGoal;
+        }
+    }
+
 
     private static void injectMilestoneGoals(GenerationSettings generationSettings, ArrayList<PlayerData> players,
                                                 ArrayList<Obtainable> goals) {
@@ -137,34 +262,54 @@ public class GeneratorCore {
         // case 1: only one way to obtain i, so all those goals cannot be in the pool
         if (i.getDependencies().size() == 1) {
             ObtainOption singleOption = i.getDependencies().get(0);
-            toBeRemoved.addAll(singleOption.getDependencies().getElements());
+
+            for (Obtainable dep : singleOption.getDependencies().getElements()) {
+                System.out.println(
+                        "[removeAllDependencies] "
+                                + dep.getName()
+                                + " removed because it is a dependency of "
+                                + i.getName()
+                );
+
+                toBeRemoved.add(dep);
+            }
         }
 
-        //case 2: multiple ways, but all those ways have one shared goal
+        // case 2: multiple ways, but all those ways have one shared goal
         else if (i.getDependencies().size() > 1) {
             ObtainOption firstOption = i.getDependencies().get(0);
 
             for (Obtainable obtainable : firstOption.getDependencies().getElements()) {
-                // loop through all the options
                 boolean isInAllOptions = true;
+
                 for (ObtainOption o2 : i.getDependencies()) {
                     if (!o2.requires(obtainable)) {
                         isInAllOptions = false;
                         break;
                     }
                 }
+
                 if (isInAllOptions) {
+                    System.out.println(
+                            "[removeAllDependencies] "
+                                    + obtainable.getName()
+                                    + " removed because it is required by ALL obtain paths for "
+                                    + i.getName()
+                    );
+
                     toBeRemoved.add(obtainable);
                 }
             }
         }
 
         for (Obtainable removed : toBeRemoved) {
-            //System.out.println("Removing all goals needed to obtain " + i.getName());
             removeAllDependencies(newPool, removed);
             if (!(removed instanceof Objective)) {
+                if (newPool.contains(removed)) {
+                    System.out.println("B: - " + removed.getName());
+                }
                 newPool.remove(removed);
-                System.out.println("B: - " + removed.getName());
+
             }
         }
     }
@@ -193,9 +338,11 @@ public class GeneratorCore {
 
         for (Obtainable removed : toBeRemoved) {
             //System.out.println("Removing all goals needing " + i.getName() + " to obtain.");
+            if (newPool.contains(removed)) {
+                System.out.println("F: - " + removed.getName());
+            }
             newPool.remove(removed);
             removeAllDependents(newPool, removed);
-            System.out.println("F: - " + removed.getName());
         }
     }
 

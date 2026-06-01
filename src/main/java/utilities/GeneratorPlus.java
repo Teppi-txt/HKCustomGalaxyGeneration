@@ -14,7 +14,8 @@ import static utilities.GoalUtility.selectLeastImportantGoal;
 public class GeneratorPlus {
     public static final String[] MAJORS = {
             "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
-            "Dream Nail", "Dreamgate", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"};
+            "Dream Nail", "Dreamgate", "Abyss Shriek", "Howling Wraiths",
+            "Descending Dark", "Shade Cloak", "Isma's Tear"};
 
     static void reduceInflation(ArrayList<PlayerData> board,
                                 Obtainable threeK,

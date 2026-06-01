@@ -72,12 +72,16 @@ public class ObtainOption {
         // recursive dependency
         for (Obtainable dep : dependencies.getElements()) {
             for (ObtainOption option : dep.getDependencies()) {
-                if (option.requires(dependency)) {
-                    return true;
+                if (!option.requires(dependency)) {
+                    return false;
                 }
             }
         }
 
-        return false;
+        if (dependencies.isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 }

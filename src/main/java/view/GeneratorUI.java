@@ -289,7 +289,7 @@ public class GeneratorUI extends JFrame {
         goals = GoalParser.parseGoals(inputStream, getSettings());
         GenerationSettings genSettings = getGeneratorSettings();
 
-        Board board = GeneratorCore.generateBoardRobin(goals, seed, genSettings);
+        Board board = GeneratorCore.generateBoardRobinDebugInput(goals, seed, genSettings);
         resultArea.setText(board.generateBoardJSON());
     }
 

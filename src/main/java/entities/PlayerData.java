@@ -19,6 +19,10 @@ public class PlayerData {
         return line;
     }
 
+    public GoalPool getLineAsGoalPool() {
+        return new GoalPool(line);
+    }
+
     public boolean add(Obtainable ob) {
         line.add(ob);
         return true;
