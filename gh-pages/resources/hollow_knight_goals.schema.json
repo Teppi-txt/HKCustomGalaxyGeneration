@@ -1,0 +1,38 @@
+{
+  "title": "Hollow Knight bingo goal",
+  "description": "An Hollow Knight bingo goal with dependencies",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["AchievementGoal", "CollectionGoal", "Objective", "ObjectiveGroup"]
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "dependencies": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "effect": {
+            "type": "object",
+            "properties": {
+              "geo": { "type": "integer", "description": "negative when spent" },
+              "simple_keys": { "type": "integer", "description": "negative when used" },
+              "pale_ore": { "type": "integer" },
+              "grubs_saved": { "type": "integer" },
+              "tolls": { "type": "integer" },
+              "lifeblood_masks": { "type": "integer" }
+            }
+          },
+          "notes": { "type": "string" }
+        },
+        "required": ["dependencies", "effect"]
+      }
+    }
+  },
+  "required": ["name", "type", "options"]
+}
