@@ -1,6 +1,6 @@
 {
   "name": "hk-custom-galaxy-generation",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A web-based port of the Java HKCustomGalaxyGeneration",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "gh-pages": "^6.3.0",
+    "html-loader": "^5.1.0",
     "html-webpack-plugin": "^5.6.3",
     "ts-loader": "^9.5.2",
     "typescript": "^5.7.3",

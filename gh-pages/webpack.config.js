@@ -3,6 +3,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const srcDir = path.resolve(__dirname, 'src');
+
 module.exports = {
   mode: "development",
   entry: {
@@ -19,9 +21,14 @@ module.exports = {
     hot: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: "./src/index.html", chunks: ["main"] }),
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      favicon: `${srcDir}/favicon.ico`,
+      chunks: ["main"]
+    }),
     new HtmlWebpackPlugin({
       template: "./src/credits.html",
+      favicon: `${srcDir}/favicon.ico`,
       filename: "credits.html",
       chunks: ["credits"],
     }),
@@ -29,13 +36,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.html$/,
+        loader: 'html-loader'
+      },
+      {
         test: /\.tsx?$/,
         use: "ts-loader",
         exclude: /node_modules/,
-      },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
       },
     ],
   },

@@ -4,8 +4,6 @@ import { generateBoardRobin } from "./generator_core";
 import { generateBoardJSON } from "./make_output";
 import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
-// @ts-ignore
-import Grub from '../grub.png';
 import packagejson from "../../package.json";
 
 const all_goals = hollow_knight_goals.goals;
@@ -101,9 +99,3 @@ document.getElementById("inputSeed").value = settings.seed;
 document.getElementById(
   "versionDisplay"
 ).textContent = `Version ${packagejson.version}`;
-
-// Grubs
-for (const grub of document.getElementsByClassName("bg-grub")) {
-  //@ts-ignore
-  grub.src = Grub;
-}
