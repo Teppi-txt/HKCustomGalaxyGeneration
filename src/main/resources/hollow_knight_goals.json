@@ -350,6 +350,7 @@
       "options": [
         {
           "dependencies": [
+            "Lumafly Lantern",
             "Desolate Dive",
             "Peaks Access"
           ],
