@@ -7,7 +7,7 @@ export type Board = {
   centerGoal: Obtainable
 };
 
-const GLACKY_INDICES = [
+export const GLACKY_INDICES = [
   [0, 1, 2, 3, 8, 13],
   [4, 9, 14, 19, 18, 17],
   [24, 23, 22, 21, 16, 11],
@@ -23,11 +23,27 @@ export function generateBoardJSON(board: Board): string {
   return generateRGOBoard(board);
 }
 
+export function generateBoardArray(board: Board): string[] {
+  const boardArray: string[] = new Array(25);
+
+  for (const playerCount in board.players) {
+    const line = board.players[playerCount].line;
+    console.log(line);
+    for (const i in line) {
+      boardArray[GLACKY_INDICES[playerCount][i]] = line[i].name;
+    }
+  }
+  boardArray[GLACKY_INDEX_CENTER] = board.centerGoal.name;
+
+  return boardArray;
+}
+
 function generate4PBoard(board: Board): string {
   const boardArray: Obtainable[] = new Array(25);
 
   for (const playerCount in board.players) {
     const line = board.players[playerCount].line;
+    console.log(line);
     for (const i in line) {
       boardArray[GLACKY_INDICES[playerCount][i]] = line[i];
     }

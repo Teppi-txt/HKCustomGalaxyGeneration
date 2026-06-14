@@ -36,8 +36,8 @@ export interface Obtainable {
   goalKind: string;
 }
 
-export type CollectionObtainable = Obtainable & {
-  goalKind: "CollectionObtainable";
+export type CollectionGoal = Obtainable & {
+  goalKind: "CollectionGoal";
   count: number;
   collectionItems: Array<Obtainable>;
 }
@@ -70,6 +70,11 @@ function requires_opt_direct(opt: ObtainOption, dep: Obtainable): boolean {
 export function removeAllDependents(pool: Array<Obtainable>, i: Obtainable): Array<Obtainable> {
   const toBeRemoved = Array();
   for (const goal of pool) {
+    // placeholder until collectionGoal logic gets added
+    if (goal.goalKind == "CollectionGoal") {
+      continue;
+    }
+
     const newGoal: Obtainable = {
       name: goal.name,
       options: goal.options.filter(opt => !requires_opt_direct(opt, i)),

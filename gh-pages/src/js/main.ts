@@ -1,7 +1,7 @@
 import hollow_knight_goals from "../../../src/main/resources/hollow_knight_goals.json";
 import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
 import { generateBoardRobin } from "./generator_core";
-import { generateBoardJSON } from "./make_output";
+import { generateBoardJSON , generateBoardArray, GLACKY_INDICES} from "./make_output";
 import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
 import packagejson from "../../package.json";
@@ -69,8 +69,9 @@ bindInput<number>({
     }
   }
 });
+;
 
-
+let output : string[] = [];
 const outputElement = document.getElementById("randomOrderOutput");
 const outputCopyBtn = document.getElementById("copyButton");
 document.getElementById("generateButton").onclick = () => {
@@ -79,9 +80,11 @@ document.getElementById("generateButton").onclick = () => {
   outputCopyBtn.textContent = "Copy";
   outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
   const goals = parseGoals(all_goals, makeSkipSettings(settings));
+
   const board = generateBoardRobin({ goals, settings });
-  const output = generateBoardJSON(board);
-  outputElement.textContent = output;
+  output = generateBoardArray(board);
+  showBoardBtn.disabled = false;
+  outputElement.textContent = generateBoardJSON(board);
 };
 
 outputCopyBtn.onclick = () => {
@@ -99,3 +102,64 @@ document.getElementById("inputSeed").value = settings.seed;
 document.getElementById(
   "versionDisplay"
 ).textContent = `Version ${packagejson.version}`;
+
+const showBoardBtn = document.getElementById("showBoardButton") as HTMLButtonElement;
+showBoardBtn.disabled = true;
+
+const boardModal = document.getElementById("boardModal") as HTMLDivElement;
+const boardGrid = document.getElementById("boardGrid") as HTMLDivElement;
+const boardCloseBtn = boardModal.querySelector(".btn-close") as HTMLButtonElement;
+
+function openBoardModal() {
+  boardModal.classList.add("show");
+  boardModal.style.display = "block";
+  document.body.classList.add("modal-open");
+}
+
+function closeBoardModal() {
+  boardModal.classList.remove("show");
+  boardModal.style.display = "none";
+  document.body.classList.remove("modal-open");
+}
+
+showBoardBtn.onclick = () => {
+  renderBoard(output);
+  openBoardModal();
+};
+
+boardCloseBtn.onclick = closeBoardModal;
+
+boardModal.addEventListener("click", (e) => {
+  if (e.target === boardModal) {
+    closeBoardModal();
+  }
+});
+
+const colorByIndex = new Map<number, number>();
+
+GLACKY_INDICES.forEach((group, color) => {
+  group.forEach((index) => {
+    colorByIndex.set(index, color + 1);
+  });
+});
+
+function renderBoard(board: any[]) {
+  boardGrid.innerHTML = "";
+
+  board.forEach((goal, index) => {
+    const cell = document.createElement("div");
+    cell.classList.add("board-cell");
+
+    if (index === 12) {
+      cell.classList.add("center");
+    }
+
+    const color = colorByIndex.get(index);
+    if (color !== undefined) {
+      cell.classList.add(`tile-p${color}`);
+    }
+
+    cell.textContent = goal;
+    boardGrid.appendChild(cell);
+  });
+}

@@ -76,9 +76,10 @@ export function generateBoardRobin(
       // 1. any goal that is required to get g
       // 2. any goal that needs g to get
       // 3. g
-      console.log(`Added ${playerGoal.name} to ${player.name}`);
 
       for (const otherPlayer of players) {
+        const originalPool = otherPlayer.goalPool;
+
         // after p1 picks a goal g, p2, p3, and p4 pools cannot contain:
         // 1. any goal that is required to get g
         // 2. any goal that needs g to get
@@ -88,22 +89,58 @@ export function generateBoardRobin(
         // 1. g
         // 2. any goals that are required to get g
         let newPool = otherPlayer.goalPool;
+
         // g
+        const beforeRemoveGoal = newPool;
         newPool = newPool.filter(gl => !equal_obtainable(playerGoal, gl));
+
+        console.log(
+          `${otherPlayer.name}: removed selected goal "${playerGoal.name}":`,
+          beforeRemoveGoal
+            .filter(gl => !newPool.includes(gl))
+            .map(gl => gl.name)
+        );
+
         if (otherPlayer != player) {
           // any goal that needs g to get
+          const beforeDependents = newPool;
           newPool = removeAllDependents(newPool, playerGoal);
+
+          console.log(
+            `${otherPlayer.name}: removed goals that depend on "${playerGoal.name}":`,
+            beforeDependents
+              .filter(gl => !newPool.includes(gl))
+              .map(gl => gl.name)
+          );
         } else {
           otherPlayer.line.push(playerGoal);
+          console.log(`Added ${playerGoal.name} to ${player.name}`);
         }
 
         // any goals that are required to get g
+        const beforeDependencies = newPool;
         newPool = removeAllDependencies(newPool, playerGoal);
+
+        console.log(
+          `${otherPlayer.name}: removed goals required for "${playerGoal.name}":`,
+          beforeDependencies
+            .filter(gl => !newPool.includes(gl))
+            .map(gl => gl.name)
+        );
+
         otherPlayer.goalPool = newPool;
 
+        console.log(
+          `${otherPlayer.name}: total removed from pool after ${playerGoal.name}:`,
+          originalPool
+            .filter(gl => !newPool.includes(gl))
+            .map(gl => gl.name)
+        );
 
         // also update the obtain options of all goals in each player's lines
         otherPlayer.line = removeAllDependents(otherPlayer.line, playerGoal);
+        
+        // check, if a goal in the line now requires another goal, remove it from the other players
       }
     }
   }
@@ -149,15 +186,15 @@ function injectMilestoneGoals(
   const possibilityOfGrubcipitation = RANDOM.nextDouble() < grubLimitChance;
   const possibilityOfTollicitation = RANDOM.nextDouble() < tollLimitChance;
 
+  if (possibilityOfTollicitation) {
+    depositTolls(players, goals, RANDOM);
+  }
+
   if (possibilityOfGeocitation) {
     reduceInflation(players, goals, RANDOM);
   }
 
   if (possibilityOfGrubcipitation) {
     injectGrubs(players, goals, RANDOM);
-  }
-
-  if (possibilityOfTollicitation) {
-    depositTolls(players, goals, RANDOM);
   }
 }

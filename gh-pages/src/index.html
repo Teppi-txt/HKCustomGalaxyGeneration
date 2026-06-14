@@ -4,19 +4,93 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HK custom galaxy generator</title>
+  <title>HK Galaxy Generator</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <style>
+    body.modal-open > *:not(#boardModal) {
+      filter: blur(8px);
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+
+      width: min(90vw, 1000px);
+      margin: 0 auto;
+    }
+
+    .board-modal-dialog {
+      max-width: 700px;
+    }
+
+    .board-modal-content {
+      width: min(90vw, 700px);
+      aspect-ratio: 1 / 1.1;
+
+      margin: 0 auto;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .board-modal-body {
+      flex: 1;
+      overflow: auto;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .board-cell {
+      border: 1px solid #475569;
+      min-height: 100px;
+      padding: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-shadow: 2px 2px 5px #2e2b2b;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      word-break: break-word;
+      aspect-ratio: 1 / 1;
+    }
+
+    .board-cell.center {
+      background: rgba(0, 0, 0, 0.25);
+      border-color: #cf1111;
+      font-weight: bold;
+    }
+
     .title-p1 { color: #ef4444; }
     .title-p2 { color: #3b82f6; }
     .title-p3 { color: #22c55e; }
     .title-p4 { color: #f59e0b; }
 
+    .tile-p1 { background-color: #ef4444; }
+    .tile-p2 { background-color: #3b82f6; }
+    .tile-p3 { background-color: #22c55e; }
+    .tile-p4 { background-color: #f59e0b; }
+
     .btn-primary {
       background-color: #3b82f6;
       border-color: #3b82f6;
     }
+
+    .btn-accent {
+      background-color: #f6a23b;
+      border-color: #f6a23b;
+    }
+
+    .btn-accent:hover {
+      background-color: #d68d34;
+      border-color: #d68d34;
+    }
+
     .btn-primary:hover {
       background-color: #2563eb;
       border-color: #2563eb;
@@ -50,6 +124,22 @@
     .text-secondary { color: #e3e0e3 !important; }
   </style>
 </head>
+
+<!-- show board preview -->
+<div class="modal fade" id="boardModal" tabindex="-1" aria-labelledby="boardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered board-modal-dialog">
+    <div class="modal-content board-modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="boardModalLabel">Generated Board</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body board-modal-body">
+        <div id="boardGrid" class="board-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <body>
   <img src="./grub.png" class="bg-grub" style="width:90px; top:5%; left:5%; transform:rotate(-15deg);">
@@ -177,6 +267,9 @@
           <pre class="bg-body-tertiary rounded p-3 flex-grow-1 mb-3" style="min-height: 200px; font-size: 0.8rem;"><code id="randomOrderOutput"></code></pre>
           <div>
             <button id="copyButton" class="btn btn-sm btn-outline-secondary" style="min-width: 80px;">Copy</button>
+            <button id="showBoardButton" class="btn btn-sm btn-primary ms-2" style="min-width: 100px;">
+              Show Board
+            </button>
           </div>
         </div>
       </div>

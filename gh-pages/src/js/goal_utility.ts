@@ -132,45 +132,89 @@ export function reduceInflation(
   ];
 
   for (const { bound, geoGoal } of geoGoals) {
-    const below: Array<PlayerData> = [];
-    let targetPlayer: PlayerData | null = null;
+  console.log(`\n=== Evaluating geo goal ${bound / 1000}k ===`);
 
-    for (const player of players) {
-      const geo = getMaximalSpentGeo(player.line);
+  const below: Array<PlayerData> = [];
+  let targetPlayer: PlayerData | null = null;
 
-      if (geo < bound) {
-        below.push(player);
-      } else if (!targetPlayer) {
-        targetPlayer = player;
-      } else {
-        // more than one player above this bound, so this goal is illegal
-        targetPlayer = null;
-        break;
-      }
-    }
+  for (const player of players) {
+    const geo = getMaximalSpentGeo(player.line);
 
-    // all players below geo bound
-    if (below.length === players.length) {
-      targetPlayer = below[RANDOM.nextInt(below.length)];
-    }
+    console.log(
+      `Player ${player.name ?? "<unknown>"}: max geo=${geo}, bound=${bound}`
+    );
 
-    // only one below geo bound
-    if (!!targetPlayer) {
-      const goalPool: Array<Obtainable> = getGoalsBeforeGeoLimit(targetPlayer, bound);
-
-      if (goalPool.length === 0) {
-        return; // give up
-      }
-
-      const lineArray: Array<Obtainable> = targetPlayer.line;
-      const leastImportantGoal: Obtainable = selectLeastImportantGoal(goalPool);
-      lineArray[lineArray.indexOf(leastImportantGoal)] = geoGoal;
-
-      console.log(`Replacing ${leastImportantGoal.name} with geo ${bound / 1000}k`);
-
-      return;
+    if (geo < bound) {
+      console.log(`  -> below bound`);
+      below.push(player);
+    } else if (!targetPlayer) {
+      console.log(`  -> first player at/above bound, candidate target`);
+      targetPlayer = player;
+    } else {
+      console.log(
+        `  -> second player at/above bound found, geo goal is illegal`
+      );
+      targetPlayer = null;
+      break;
     }
   }
+
+  console.log(
+    `Players below bound: ${below.length}/${players.length}`
+  );
+
+  // all players below geo bound
+  if (below.length === players.length) {
+    targetPlayer = below[RANDOM.nextInt(below.length)];
+
+    console.log(
+      `All players below bound; randomly selected ${
+        targetPlayer.name ?? "<unknown>"
+      }`
+    );
+  }
+
+  // only one below geo bound
+  if (!!targetPlayer) {
+    console.log(
+      `Target player: ${targetPlayer.name ?? "<unknown>"}`
+    );
+
+    const goalPool: Array<Obtainable> = getGoalsBeforeGeoLimit(
+      targetPlayer,
+      bound
+    );
+
+    console.log(
+      `Goal pool size before geo limit: ${goalPool.length}`
+    );
+
+    if (goalPool.length === 0) {
+      console.log(
+        `No obtainable goals before geo limit ${bound}; giving up`
+      );
+      return;
+    }
+
+    const lineArray: Array<Obtainable> = targetPlayer.line;
+    const leastImportantGoal: Obtainable =
+      selectLeastImportantGoal(goalPool);
+
+    console.log(
+      `Selected least important goal: ${leastImportantGoal.name}`
+    );
+
+    lineArray[lineArray.indexOf(leastImportantGoal)] = geoGoal;
+
+    console.log(
+      `Replacing ${leastImportantGoal.name} with geo ${bound / 1000}k`
+    );
+
+    return;
+  }
+
+  console.log(`No valid target player for ${bound / 1000}k geo goal`);
+}
 }
 
 function getMaximalSpentGeo(line: Array<Obtainable>): number {
@@ -178,7 +222,14 @@ function getMaximalSpentGeo(line: Array<Obtainable>): number {
   const graph = constructOrderingGraph(line, []);
   let geo_spent = 0;
   for (const goal of graph) {
-    geo_spent += Math.max(...goal.options.map(opt => opt.effect.geo_spent));
+    if (goal.goalKind != "MilestoneGoal") {
+      let geo = Math.max(...goal.options.map(opt => opt.effect.geo_spent));
+      if (geo > 0) { // Math.max for empty array may return -inf
+        geo_spent += geo;
+      }
+    } else if (goal.name == "Pay for 6 tolls") {
+      geo_spent += 1000;
+    }
   }
   return geo_spent;
 }
@@ -226,6 +277,11 @@ export function depositTolls(
 
   const lineArray: Array<Obtainable> = targetPlayer.line;
   const leastImportantGoal = selectLeastImportantGoal(lineArray);
+
+  if (leastImportantGoal == null) {
+    console.log(`leastImportantGoal is null`);
+    return;
+  }
   lineArray[lineArray.indexOf(leastImportantGoal)] = tollsGoal;
 
   console.log(`Replacing ${leastImportantGoal.name} with 6 tolls`);

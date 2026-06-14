@@ -1,6 +1,6 @@
 "use strict";
 
-import { AchievementGoal, CollectionObtainable, MilestoneGoal, Objective, Obtainable, PlayerStateEffect } from "./entities";
+import { AchievementGoal, CollectionGoal, MilestoneGoal, Objective, Obtainable, PlayerStateEffect } from "./entities";
 import { SkipSettings } from "./settings";
 
 type Option = {
@@ -43,7 +43,7 @@ export function parseGoals(goals: Array<JSONGoal>, settings: SkipSettings): Arra
       if ("count" in element) {
         // @ts-expect-error
         let collectionGoal: CollectionObtainable = newGoal;
-        collectionGoal.goalKind = "CollectionObtainable";
+        collectionGoal.goalKind = "CollectionGoal";
         collectionGoal.count = element.count as number;
         collectionGoal.collectionItems = (element.options as string[]).map(getOrCreate);
         newGoal = collectionGoal;
