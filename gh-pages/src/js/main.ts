@@ -5,6 +5,8 @@ import { generateBoardJSON , generateBoardArray, GLACKY_INDICES} from "./make_ou
 import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
 import packagejson from "../../package.json";
+import { isBoardValid } from "./board_solver";
+import { Obtainable } from "./entities";
 
 const all_goals = hollow_knight_goals.goals;
 
@@ -18,6 +20,8 @@ for (const g of all_goals) {
     inputCenterSquare.appendChild(newOption);
   }
 }
+
+// TODO: theres something broken about removeAllDependents and obtainables with multiple paths, its not removing properly
 
 const settings = {
   seed: Math.floor(Math.random() * Math.pow(2, 48)),
@@ -80,11 +84,14 @@ document.getElementById("generateButton").onclick = () => {
   outputCopyBtn.textContent = "Copy";
   outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
   const goals = parseGoals(all_goals, makeSkipSettings(settings));
+  
+  //test(100, goals);
 
   const board = generateBoardRobin({ goals, settings });
   output = generateBoardArray(board);
   showBoardBtn.disabled = false;
   outputElement.textContent = generateBoardJSON(board);
+  console.log("Board is: " + isBoardValid(board, goals))
 };
 
 outputCopyBtn.onclick = () => {
@@ -162,4 +169,20 @@ function renderBoard(board: any[]) {
     cell.textContent = goal;
     boardGrid.appendChild(cell);
   });
+}
+
+function test(count: number, goals: Obtainable[]) {
+  let wins = 0;
+
+  for (let i: number = 0; i < count; i++) {
+    settings.seed = i;
+    const board = generateBoardRobin({ goals, settings });
+    if (isBoardValid(board, goals)) {
+      wins += 1;
+    } else {
+      console.error("error on seed: " + i);
+    }
+  }
+
+  console.log("success rate: " + wins / count);
 }

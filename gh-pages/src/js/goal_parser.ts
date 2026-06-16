@@ -97,7 +97,6 @@ export function parseGoals(goals: Array<JSONGoal>, settings: SkipSettings): Arra
   }
 
   if (settings.darkrooms) {
-    console.log("darkrooms on");
     removeLantern(result);
   }
   return result;

@@ -67,8 +67,8 @@ export function generateBoardRobin(
   // Main iteration loop: pick goals for each player, one at a time, keeping
   // other pools updated
   for (let round = 0; round < 6; round++) {
+    console.log("Round " + round + "");
     for (const player of players) {
-      console.log("------------------------------------------------------------------");
       const playerGoal: Obtainable = pickGoal(settings, player);
       // picks a random goal from the pool with majors and exclusions settings on
 
@@ -94,24 +94,11 @@ export function generateBoardRobin(
         const beforeRemoveGoal = newPool;
         newPool = newPool.filter(gl => !equal_obtainable(playerGoal, gl));
 
-        console.log(
-          `${otherPlayer.name}: removed selected goal "${playerGoal.name}":`,
-          beforeRemoveGoal
-            .filter(gl => !newPool.includes(gl))
-            .map(gl => gl.name)
-        );
-
         if (otherPlayer != player) {
           // any goal that needs g to get
           const beforeDependents = newPool;
           newPool = removeAllDependents(newPool, playerGoal);
 
-          console.log(
-            `${otherPlayer.name}: removed goals that depend on "${playerGoal.name}":`,
-            beforeDependents
-              .filter(gl => !newPool.includes(gl))
-              .map(gl => gl.name)
-          );
         } else {
           otherPlayer.line.push(playerGoal);
           console.log(`Added ${playerGoal.name} to ${player.name}`);
@@ -120,40 +107,11 @@ export function generateBoardRobin(
         // any goals that are required to get g
         const beforeDependencies = newPool;
         newPool = removeAllDependencies(newPool, playerGoal);
-
-        console.log(
-          `${otherPlayer.name}: removed goals required for "${playerGoal.name}":`,
-          beforeDependencies
-            .filter(gl => !newPool.includes(gl))
-            .map(gl => gl.name)
-        );
-
         otherPlayer.goalPool = newPool;
-
-        console.log(
-          `${otherPlayer.name}: total removed from pool after ${playerGoal.name}:`,
-          originalPool
-            .filter(gl => !newPool.includes(gl))
-            .map(gl => gl.name)
-        );
-
+        
         // also update the obtain options of all goals in each player's lines
         otherPlayer.line = removeAllDependents(otherPlayer.line, playerGoal);
-        
-        // check, if a goal in the line now requires another goal, remove it from the other players
       }
-    }
-  }
-
-  // if after the new goal is added, a line has a goal that must be obtained with a certain dependency
-  // remove it from all player's pools
-
-  for (const p1 of players) {
-    for (const p2 of players) {
-      for (const obtainable of p1.line) {
-          // insane O(n^3) runtime
-          p2.goalPool = removeAllDependencies(p2.goalPool, obtainable);
-        }
     }
   }
 

@@ -2,6 +2,7 @@
 
 export type PlayerData = {
   line: Array<Obtainable>;
+  goals: Array<Obtainable>;
   goalPool: Array<Obtainable>;
   name: string;
 }
@@ -63,30 +64,41 @@ function requires_opt_direct(opt: ObtainOption, dep: Obtainable): boolean {
 
 
 /**
- * Remove all options of goals that are dependent on obtaining i.
+ * Remove all options of goals that are dependent on obtaining i. If a goal runs out of options, remove it.
  * 
  * Returns the new pool.
  */
 export function removeAllDependents(pool: Array<Obtainable>, i: Obtainable): Array<Obtainable> {
   const toBeRemoved = Array();
+  let newPool: Obtainable[] = [];
+
   for (const goal of pool) {
     // placeholder until collectionGoal logic gets added
     if (goal.goalKind == "CollectionGoal") {
+      newPool.push(goal);
       continue;
     }
 
     const newGoal: Obtainable = {
       name: goal.name,
       options: goal.options.filter(opt => !requires_opt_direct(opt, i)),
-      goalKind: "unknown",
+      goalKind: goal.goalKind,
     };
-    if (newGoal.options.length === 0) {
+
+    // if the goal lost ALL its obtain options
+    if (newGoal.options.length === 0 && goal.options.length > 0) {
       toBeRemoved.push(newGoal)
+    } else {
+      newPool.push(newGoal);
     }
   }
-  let newPool = pool.filter(g => !contains_obt(toBeRemoved, g));
+
+  newPool = newPool.filter(g => !contains_obt(toBeRemoved, g));
   for (const toRemove of toBeRemoved) {
     newPool = removeAllDependents(newPool, toRemove);
+
+    // if toRemove is no longer obtainable, all dependencies are also not obtainable
+    newPool = removeAllDependencies(newPool, toRemove);
   }
   return newPool;
 }
