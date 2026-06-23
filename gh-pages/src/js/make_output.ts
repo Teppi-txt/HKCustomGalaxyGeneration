@@ -23,23 +23,8 @@ export function generateBoardJSON(board: Board): string {
   return generateRGOBoard(board);
 }
 
-export function generateBoardArray(board: Board): string[] {
-  const boardArray: string[] = new Array(25);
-
-  for (const playerCount in board.players) {
-    const line = board.players[playerCount].line;
-    console.log(line);
-    for (const i in line) {
-      boardArray[GLACKY_INDICES[playerCount][i]] = line[i].name;
-    }
-  }
-  boardArray[GLACKY_INDEX_CENTER] = board.centerGoal.name;
-
-  return boardArray;
-}
-
-function generate4PBoard(board: Board): string {
-  const boardArray: Obtainable[] = new Array(25);
+export function generateBoardArray(board: Board): String[] {
+  const boardArray: String[] = new Array(25);
 
   for (const playerCount in board.players) {
     const line = board.players[playerCount].line;
@@ -48,10 +33,25 @@ function generate4PBoard(board: Board): string {
       boardArray[GLACKY_INDICES[playerCount][i]] = line[i];
     }
   }
-  boardArray[GLACKY_INDEX_CENTER] = board.centerGoal;
+  boardArray[GLACKY_INDEX_CENTER] = board.centerGoal.name;
+
+  return boardArray;
+}
+
+function generate4PBoard(board: Board): string {
+  const boardArray: String[] = new Array(25);
+
+  for (const playerCount in board.players) {
+    const line = board.players[playerCount].line;
+    console.log(line);
+    for (const i in line) {
+      boardArray[GLACKY_INDICES[playerCount][i]] = line[i];
+    }
+  }
+  boardArray[GLACKY_INDEX_CENTER] = board.centerGoal.name;
 
   const output = "[\n  " + boardArray.map(
-    boardGoal => `  { "name" : "${boardGoal.name}" }`
+    boardGoal => `  { "name" : "${boardGoal}" }`
   ).join(",\n  ") + "\n]";
   return output;
 }
@@ -59,7 +59,7 @@ function generate4PBoard(board: Board): string {
 function generateRGOBoard(board: Board): string {
   let output = [];
   for (let i = 0; i < 25; i++) {
-    output.push(`{ "name" : "${board.players[0].line[i].name}" }`);
+    output.push(`{ "name" : "${board.players[0].line[i]}" }`);
   }
   return "[" + output.join(", \n") + "}";
 }

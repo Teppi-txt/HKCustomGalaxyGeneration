@@ -6,7 +6,7 @@ import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
 import packagejson from "../../package.json";
 import { isBoardValid } from "./board_solver";
-import { Obtainable } from "./entities";
+import { getStrictDependencies, Obtainable } from "./entities";
 
 const all_goals = hollow_knight_goals.goals;
 
@@ -75,7 +75,7 @@ bindInput<number>({
 });
 ;
 
-let output : string[] = [];
+let output : String[] = [];
 const outputElement = document.getElementById("randomOrderOutput");
 const outputCopyBtn = document.getElementById("copyButton");
 document.getElementById("generateButton").onclick = () => {
@@ -85,9 +85,21 @@ document.getElementById("generateButton").onclick = () => {
   outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
   const goals = parseGoals(all_goals, makeSkipSettings(settings));
   
-  //test(100, goals);
+  // test(1000, goals);
+  // console.log("Dream Gate: " + getStrictDependencies(goals, goals.find(g => g.name === "Dream Gate")!).map(g => g.name).join(", "));
+  // console.log("Monomon: " + getStrictDependencies(goals, goals.find(g => g.name === "Monomon")!).map(g => g.name).join(", "));
+  // console.log("Uumuu: " + getStrictDependencies(goals, goals.find(g => g.name === "Uumuu")!).map(g => g.name).join(", "));
+  // console.log("Love Key: " + getStrictDependencies(goals, goals.find(g => g.name === "Pick up the Love Key")!).map(g => g.name).join(", "));
+  // console.log("QG Access: " + getStrictDependencies(goals, goals.find(g => g.name === "Queen's Gardens Access")!).map(g => g.name).join(", "));
+  // console.log("Unn: " + getStrictDependencies(goals, goals.find(g => g.name === "Shape of Unn")!).map(g => g.name).join(", "));
+  // console.log("Arcane Egg: " + getStrictDependencies(goals, goals.find(g => g.name === "Collect 1 Arcane Egg")!).map(g => g.name).join(", "));
+  // console.log("Abyss Shriek: " + getStrictDependencies(goals, goals.find(g => g.name === "Abyss Shriek")!).map(g => g.name).join(", "));
 
-  const board = generateBoardRobin({ goals, settings });
+  let board = generateBoardRobin({ goals, settings });
+
+  while (!isBoardValid(board, goals)) {
+    board = generateBoardRobin({ goals, settings });
+  }
   output = generateBoardArray(board);
   showBoardBtn.disabled = false;
   outputElement.textContent = generateBoardJSON(board);
@@ -175,8 +187,8 @@ function test(count: number, goals: Obtainable[]) {
   let wins = 0;
 
   for (let i: number = 0; i < count; i++) {
-    settings.seed = i;
-    const board = generateBoardRobin({ goals, settings });
+    let testSettings = { ...settings, seed: i };
+    const board = generateBoardRobin({ goals, settings: testSettings   });
     if (isBoardValid(board, goals)) {
       wins += 1;
     } else {
@@ -184,5 +196,5 @@ function test(count: number, goals: Obtainable[]) {
     }
   }
 
-  console.log("success rate: " + wins / count);
+  console.log("success rate over " + count + " trials: " + wins / count + " (" + wins + "/" + count + ")");
 }

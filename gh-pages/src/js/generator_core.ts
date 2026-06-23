@@ -7,152 +7,174 @@ import { Board } from "./make_output";
 import { RNG } from "./random";
 
 const MAJORS: string[] = [
-  "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
-  "Dream Nail", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"];
+    "Monarch Wings", "Crystal Heart", "Lumafly Lantern", "Desolate Dive",
+    "Dream Nail", "Descending Dark", "Shade Cloak", "Isma's Tear", "Abyss Shriek"];
 
 const RANDOM: RNG = new RNG();
 
 
 function selectGoal(pool: Array<Obtainable>, settings: GenerationSettings): Obtainable {
-  if (settings.majorAbility && RANDOM.nextDouble() < settings.increasedMajorChance) {
-    const all_majors = pool.filter(g => MAJORS.includes(g.name));
-    if (all_majors.length > 0) {
-      return all_majors[RANDOM.nextInt(all_majors.length)];
+    if (settings.majorAbility && RANDOM.nextDouble() < settings.increasedMajorChance) {
+        const all_majors = pool.filter(g => MAJORS.includes(g.name));
+        if (all_majors.length > 0) {
+            return all_majors[RANDOM.nextInt(all_majors.length)];
+        }
     }
-  }
-  return selectRandomGoal(pool, RANDOM);
+    return selectRandomGoal(pool, RANDOM);
 }
 
 function createPlayers(count: number, goals: Array<Obtainable>): Array<PlayerData> {
-  const players = Array.from({ length: count }, (_, i) => {
-    return { name: `Player ${i}`, goalPool: [...goals], line: [] } as PlayerData
-  });
-  return players;
+    const players = Array.from({ length: count }, (_, i) => {
+        return { name: `Player ${i}`, goalPool: [...goals], line: [] } as PlayerData
+    });
+    return players;
 }
 
 
 function pickGoal(settings: GenerationSettings, player: PlayerData): Obtainable {
-  let playerGoal: Obtainable = selectGoal(player.goalPool, settings);
-  let testLimit: number = 0;
-  //check if its a legal goal
-  while (!settings.multipleSaves
-    && needsMultipleSaves(player.goalPool, playerGoal)
-    && testLimit < 50) {
-    playerGoal = selectGoal(player.goalPool, settings);
-    testLimit += 1;
-  }
-  if (testLimit === 50) {
-    alert("generation failed");
-  }
-  return playerGoal;
+    const choosableGoals = player.goalPool.filter(goal => goal.choosable);
+    let playerGoal: Obtainable = selectGoal(choosableGoals, settings);
+    let testLimit: number = 0;
+    //check if its a legal goal
+    while (!settings.multipleSaves
+        && needsMultipleSaves(choosableGoals, playerGoal)
+        && testLimit < 50) {
+        playerGoal = selectGoal(choosableGoals, settings);
+        testLimit += 1;
+    }
+    if (testLimit === 50 || playerGoal.choosable == false) {
+        alert("generation failed");
+    }
+    return playerGoal;
 }
 
 
 export function generateBoardRobin(
-  { goals, settings }: { goals: Array<Obtainable>; settings: GenerationSettings }
+    { goals, settings }: { goals: Array<Obtainable>; settings: GenerationSettings }
 ): Board {
-  const players = createPlayers(4, goals);
-  let centerSquare: Obtainable | null = null;
-  RANDOM.setSeed(settings.seed);
+    const players = createPlayers(4, goals);
+    let centerSquare: Obtainable | null = null;
+    RANDOM.setSeed(settings.seed);
 
-  // If we use custom center square, remove it from each player's pool
-  if (hasCustomCenterSquare(settings)) {
-    centerSquare = goals.find((g) => g.name === settings.centerSquare);
-    players.forEach(p =>
-      p.goalPool = removeAllDependents(p.goalPool, centerSquare)
-        .filter(g => !equal_obtainable(g, centerSquare))
-    );
-  }
+    // If we use custom center square, remove it from each player's pool
+    if (hasCustomCenterSquare(settings)) {
+        centerSquare = goals.find((g) => g.name === settings.centerSquare);
+        players.forEach(p =>
+            p.goalPool = removeAllDependents(p.goalPool, centerSquare)
+                .map(gl => equal_obtainable(centerSquare, gl)
+                    ? { ...gl, choosable: false }
+                    : gl
+                )
+        );
+    }
 
-  // Main iteration loop: pick goals for each player, one at a time, keeping
-  // other pools updated
-  for (let round = 0; round < 6; round++) {
-    console.log("Round " + round + "");
-    for (const player of players) {
-      const playerGoal: Obtainable = pickGoal(settings, player);
-      // picks a random goal from the pool with majors and exclusions settings on
+    // Main iteration loop: pick goals for each player, one at a time, keeping
+    // other pools updated
+    for (let round = 0; round < 6; round++) {
+        console.log("Round " + round + "");
+        for (const player of players) {
+            const playerGoal: Obtainable = pickGoal(settings, player);
+            // picks a random goal from the pool with majors and exclusions settings on
 
-      // after p1 picks a goal g, p2, p3, and p4 pools cannot contain:
-      // 1. any goal that is required to get g
-      // 2. any goal that needs g to get
-      // 3. g
+            for (const otherPlayer of players) {
+                // after p1 picks a goal g, p2, p3, and p4 pools cannot contain:
+                // 1. any goal that is required to get g
+                // 2. any goal that needs g to get
+                // 3. g
 
-      for (const otherPlayer of players) {
-        const originalPool = otherPlayer.goalPool;
+                // after p1 picks a goal g, p1 pool cannot contain
+                // 1. g
+                // 2. any goals that are required to get g
+                let newPool = otherPlayer.goalPool;
 
-        // after p1 picks a goal g, p2, p3, and p4 pools cannot contain:
-        // 1. any goal that is required to get g
-        // 2. any goal that needs g to get
-        // 3. g
+                if (otherPlayer != player) {
+                    // any goal that needs g to get
+                    newPool = removeAllDependents(newPool, playerGoal);
 
-        // after p1 picks a goal g, p1 pool cannot contain
-        // 1. g
-        // 2. any goals that are required to get g
-        let newPool = otherPlayer.goalPool;
+                } else {
+                    otherPlayer.line.push(playerGoal.name);
+                    console.log(`Added ${playerGoal.name} to ${player.name}`);
+                }
 
-        // g
-        const beforeRemoveGoal = newPool;
-        newPool = newPool.filter(gl => !equal_obtainable(playerGoal, gl));
+                // any goals that are required to get g
+                console.log(
+                    `Applying deps of ${playerGoal.name} to ${otherPlayer.name}`
+                );
 
-        if (otherPlayer != player) {
-          // any goal that needs g to get
-          const beforeDependents = newPool;
-          newPool = removeAllDependents(newPool, playerGoal);
+                newPool = removeAllDependencies(newPool, playerGoal);
+                otherPlayer.goalPool = newPool;
+            }
 
-        } else {
-          otherPlayer.line.push(playerGoal);
-          console.log(`Added ${playerGoal.name} to ${player.name}`);
+            for (const p of players) {
+                // make g unobtainable
+                p.goalPool = p.goalPool.map(gl =>
+                    equal_obtainable(playerGoal, gl)
+                        ? { ...gl, choosable: false }
+                        : gl
+                );
+                console.log(p.name);
+                console.log(p.goalPool);
+            }
+
+            for (const player of players) {
+                for (const player2 of players) {
+                    for (const obtainableName of player.line) {
+                        // find the obtain as it is in it's current state, since the line obtainables are not updated
+                        const obtainableObject = player.goalPool.find(
+                            g => g.name === obtainableName
+                        );
+
+                        // this fixes everything but its just wrong idk why this would work
+                        //player2.goalPool = removeAllDependents(player2.goalPool, obtainableAccurate);
+                        player2.goalPool = removeAllDependencies(player2.goalPool, obtainableObject);
+                    }
+                }
+            }
         }
-
-        // any goals that are required to get g
-        const beforeDependencies = newPool;
-        newPool = removeAllDependencies(newPool, playerGoal);
-        otherPlayer.goalPool = newPool;
-        
-        // also update the obtain options of all goals in each player's lines
-        otherPlayer.line = removeAllDependents(otherPlayer.line, playerGoal);
-      }
     }
-  }
 
-  if (centerSquare === null) {
-    let obtainableByAll = players[0].goalPool;
-    for (const player of players) {
-      obtainableByAll = obtainableByAll.filter(g => contains_obt(player.goalPool, g));
+    if (centerSquare === null) {
+        let obtainableByAll = players[0].goalPool.filter(goal => goal.choosable);
+        for (const player of players) {
+            obtainableByAll = obtainableByAll.filter(goal =>
+                player.goalPool.some(
+                    g => equal_obtainable(g, goal) && g.choosable
+                )
+            );
+        }
+        centerSquare = selectGoal(obtainableByAll, settings);
     }
-    centerSquare = selectGoal(obtainableByAll, settings);
-  }
 
-  // Note that this modifies players in-place
-  injectMilestoneGoals(settings, players, goals);
+    // Note that this modifies players in-place
+    injectMilestoneGoals(settings, players, goals);
 
-  return { players, centerGoal: centerSquare };
+    return { players, centerGoal: centerSquare };
 }
 
 function injectMilestoneGoals(
-  settings: GenerationSettings,
-  players: Array<PlayerData>,
-  goals: Array<Obtainable>
+    settings: GenerationSettings,
+    players: Array<PlayerData>,
+    goals: Array<Obtainable>
 ) {
-  const geoLimitChance = settings.geoLimit ? 1 : (3 / goals.length);
-  const tollLimitChance = settings.tollLimit ? 1 : (2 / goals.length);
-  const grubLimitChance = settings.grubLimit ? 1 : (1 / goals.length);
+    const geoLimitChance = settings.geoLimit ? 1 : (3 / goals.length);
+    const tollLimitChance = settings.tollLimit ? 1 : (2 / goals.length);
+    const grubLimitChance = settings.grubLimit ? 1 : (1 / goals.length);
 
-  // artificially inject geo / grub goals
-  // blomsom reference
-  const possibilityOfGeocitation = RANDOM.nextDouble() < geoLimitChance;
-  const possibilityOfGrubcipitation = RANDOM.nextDouble() < grubLimitChance;
-  const possibilityOfTollicitation = RANDOM.nextDouble() < tollLimitChance;
+    // artificially inject geo / grub goals
+    // blomsom reference
+    const possibilityOfGeocitation = RANDOM.nextDouble() < geoLimitChance;
+    const possibilityOfGrubcipitation = RANDOM.nextDouble() < grubLimitChance;
+    const possibilityOfTollicitation = RANDOM.nextDouble() < tollLimitChance;
 
-  if (possibilityOfTollicitation) {
-    depositTolls(players, goals, RANDOM);
-  }
+    if (possibilityOfTollicitation) {
+        depositTolls(players, goals, RANDOM);
+    }
 
-  if (possibilityOfGeocitation) {
-    reduceInflation(players, goals, RANDOM);
-  }
+    if (possibilityOfGeocitation) {
+        reduceInflation(players, goals, RANDOM);
+    }
 
-  if (possibilityOfGrubcipitation) {
-    injectGrubs(players, goals, RANDOM);
-  }
+    if (possibilityOfGrubcipitation) {
+        injectGrubs(players, goals, RANDOM);
+    }
 }

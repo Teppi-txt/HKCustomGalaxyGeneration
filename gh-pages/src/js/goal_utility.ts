@@ -1,7 +1,7 @@
 "use strict";
 
 import { RNG } from "./random";
-import { contains_obt, Obtainable, PlayerData } from "./entities";
+import { contains_obt, Obtainable, ObtainOption, PlayerData } from "./entities";
 import { constructOrderingGraph } from "./topological_sort";
 
 const DEBUG = false;
@@ -84,7 +84,7 @@ function getDependentsCount(allItems: Array<Obtainable>, i: Obtainable): number 
     }
 
     for (const opt of goal.options) {
-      if (contains_obt(opt.dependencies, i)) {
+      if (opt.dependencies.includes(i.name)) {
         count += 1;
       }
     }
@@ -138,7 +138,8 @@ export function reduceInflation(
   let targetPlayer: PlayerData | null = null;
 
   for (const player of players) {
-    const geo = getMaximalSpentGeo(player.line);
+    let lineAsObject = getLine(goals, player.line)
+    const geo = getMaximalSpentGeo(lineAsObject);
 
     console.log(
       `Player ${player.name ?? "<unknown>"}: max geo=${geo}, bound=${bound}`
@@ -181,6 +182,7 @@ export function reduceInflation(
     );
 
     const goalPool: Array<Obtainable> = getGoalsBeforeGeoLimit(
+      goals,
       targetPlayer,
       bound
     );
@@ -196,7 +198,7 @@ export function reduceInflation(
       return;
     }
 
-    const lineArray: Array<Obtainable> = targetPlayer.line;
+    const lineArray: Array<Obtainable> = getLine(goals, targetPlayer.line)
     const leastImportantGoal: Obtainable =
       selectLeastImportantGoal(goalPool);
 
@@ -204,7 +206,7 @@ export function reduceInflation(
       `Selected least important goal: ${leastImportantGoal.name}`
     );
 
-    lineArray[lineArray.indexOf(leastImportantGoal)] = geoGoal;
+    targetPlayer.line[targetPlayer.line.indexOf(leastImportantGoal.name)] = geoGoal.name;
 
     console.log(
       `Replacing ${leastImportantGoal.name} with geo ${bound / 1000}k`
@@ -234,10 +236,10 @@ function getMaximalSpentGeo(line: Array<Obtainable>): number {
   return geo_spent;
 }
 
-function getGoalsBeforeGeoLimit(player: PlayerData, limit: number): Array<Obtainable> {
+function getGoalsBeforeGeoLimit(goals: Array<Obtainable>, player: PlayerData, limit: number): Array<Obtainable> {
   let currentPool = [];
   for (const goal of player.line) {
-    currentPool.push(goal);
+    currentPool.push(goals.find(g => g.name == goal));
     if (getMaximalSpentGeo(currentPool) > limit) {
       currentPool.pop();
       return currentPool;
@@ -254,12 +256,11 @@ export function depositTolls(
   RANDOM: RNG
 ) {
   const bound = 6;
-  const tollsGoal = goals.find(g => g.name === "Pay for 6 tolls");
 
   const available: Array<PlayerData> = [];
   let targetPlayer: PlayerData | null = null;
   for (const player of players) {
-    const tolls = getMaximalTollCount(player);
+    const tolls = getMaximalTollCount(goals, player);
 
     if (tolls < bound) {
       available.push(player);
@@ -275,25 +276,26 @@ export function depositTolls(
     targetPlayer = available[RANDOM.nextInt(available.length)];
   }
 
-  const lineArray: Array<Obtainable> = targetPlayer.line;
-  const leastImportantGoal = selectLeastImportantGoal(lineArray);
+  let lineAsObject = getLine(goals, targetPlayer.line);
+  const leastImportantGoal = selectLeastImportantGoal(lineAsObject);
 
   if (leastImportantGoal == null) {
     console.log(`leastImportantGoal is null`);
     return;
   }
-  lineArray[lineArray.indexOf(leastImportantGoal)] = tollsGoal;
+  targetPlayer.line[targetPlayer.line.indexOf(leastImportantGoal.name)] = "Pay for 6 tolls";
 
   console.log(`Replacing ${leastImportantGoal.name} with 6 tolls`);
 
   return;
 }
 
-function getMaximalTollCount(player: PlayerData): number {
+function getMaximalTollCount(goals: Array<Obtainable>, player: PlayerData): number {
   // TODO this is omega-borked rn, implement the toposort...
   // ArrayList < Obtainable > graph = TopologicalSort.constructOrderingGraph(new GoalPool(goals), new ArrayList<>()).getElements();
   // loop through the graph, always pick the most toll expensive option
-  const graph = constructOrderingGraph(player.line, []);
+  let lineAsObject = getLine(goals, player.line)
+  const graph = constructOrderingGraph(lineAsObject, []);
   let tolls_spent = 0;
   for (const goal of graph) {
     tolls_spent += Math.max(...goal.options.map(opt => opt.effect.tolls_collected));
@@ -315,7 +317,7 @@ export function injectGrubs(
   const below20Grubs: Array<PlayerData> = [];
 
   for (const player of players) {
-    const grubbies = getMaximalGrubsCount(player);
+    const grubbies = getMaximalGrubsCount(goals, player);
 
     if (grubbies < 15) {
       below15Grubs.push(player);
@@ -330,17 +332,72 @@ export function injectGrubs(
     ? below15Grubs[RANDOM.nextInt(below15Grubs.length)]
     : below20Grubs[RANDOM.nextInt(below20Grubs.length)];
 
-  const lineArray = randomPlayer.line;
+  const lineArray: Array<Obtainable> = getLine(goals, randomPlayer.line);
   const grub = use15Grubs ? grub15 : grub20;
   const leastImportantGoal = selectLeastImportantGoal(lineArray);
-  lineArray[lineArray.indexOf(leastImportantGoal)] = grub;
+  randomPlayer.line[randomPlayer.line.indexOf(leastImportantGoal.name)] = grub.name;
 }
 
-function getMaximalGrubsCount(player: PlayerData): number {
+function getMaximalGrubsCount(goals: Array<Obtainable>, player: PlayerData): number {
   let grubs_saved = 0;
   // there are no intermediate grub goals, don't have to recurse
-  for (const goal of player.line) {
+  for (const goalName of player.line) {
+    let goal = goals.find(g => g.name == goalName);
     grubs_saved += Math.max(...goal.options.map(opt => opt.effect.grubs_collected));
   }
   return grubs_saved;
+}
+
+export function getLine(
+  goals: Obtainable[],
+  line: string[]
+): Obtainable[] {
+  const goalMap = new Map(goals.map(g => [g.name, g]));
+
+  return line
+    .map(name => goalMap.get(name))
+    .filter((g): g is Obtainable => g !== undefined);
+}
+
+
+export function hasUnchoosable(pool: Array<Obtainable>, goals: Array<String>) {
+  //check there isnt an unchoosable option
+  for (const dep of goals) {
+      const depAccurate = pool.find(g => g.name === dep);
+      if (depAccurate?.choosable == false) {
+          return true;
+      }
+  }
+  return false;
+}
+
+export function hasValidOption(
+    pool: Obtainable[],
+    options: ObtainOption[]
+): boolean {
+
+    // leaf node
+    if (options.length === 0) {
+        return true;
+    }
+
+    // if ANY option is fully valid, the obtainable is valid
+    for (const option of options) {
+        let optionValid = true;
+
+        for (const depName of option.dependencies) {
+            const dep = pool.find(g => g.name === depName);
+
+            if (!dep || !hasValidOption(pool, dep.options)) {
+                optionValid = false;
+                break;
+            }
+        }
+
+        if (optionValid) {
+            return true;
+        }
+    }
+
+    return false;
 }
