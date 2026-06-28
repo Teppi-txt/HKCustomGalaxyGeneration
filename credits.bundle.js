@@ -1,1 +1,1 @@
-(()=>{"use strict";document.getElementById("versionDisplay").textContent="Version 1.1.6"})();
+(()=>{"use strict";document.getElementById("versionDisplay").textContent="Version 1.1.7"})();
