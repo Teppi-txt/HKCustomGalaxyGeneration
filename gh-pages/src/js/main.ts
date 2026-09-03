@@ -1,12 +1,12 @@
 import hollow_knight_goals from "../../../src/main/resources/hollow_knight_goals.json";
 import { bindInput, bindCheckboxInput, bindNumberInput } from "./html_parse";
 import { generateBoardRobin } from "./generator_core";
-import { generateBoardJSON , generateBoardArray, GLACKY_INDICES} from "./make_output";
+import { generateBoardJSON, generateBoardArray, GLACKY_INDICES } from "./make_output";
 import { parseGoals } from "./goal_parser";
 import { makeSkipSettings } from "./settings";
 import packagejson from "../../package.json";
 import { isBoardValid } from "./board_solver";
-import { getStrictDependencies, Obtainable } from "./entities";
+import { Obtainable } from "./entities";
 
 const all_goals = hollow_knight_goals.goals;
 
@@ -42,6 +42,8 @@ function updateSettings<T>(field: string) {
   return ((v: T) => {
     // @ts-ignore
     settings[field] = v
+    // Updating a setting makes the generated board stale
+    generatedBoardStale = true;
   })
 }
 
@@ -73,18 +75,20 @@ bindInput<number>({
     }
   }
 });
-;
 
-let output : String[] = [];
+
+// Whether the board currently shown is up to date with the seed
+let generatedBoardStale = true;
+
+let output: String[] = [];
 const outputElement = document.getElementById("randomOrderOutput");
 const outputCopyBtn = document.getElementById("copyButton");
-document.getElementById("generateButton").onclick = () => {
+
+function generateBoard() {
   console.log(`Settings:`);
   console.log(settings);
-  outputCopyBtn.textContent = "Copy";
-  outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
   const goals = parseGoals(all_goals, makeSkipSettings(settings));
-  
+
   // test(1000, goals);
   // console.log("Dream Gate: " + getStrictDependencies(goals, goals.find(g => g.name === "Dream Gate")!).map(g => g.name).join(", "));
   // console.log("Monomon: " + getStrictDependencies(goals, goals.find(g => g.name === "Monomon")!).map(g => g.name).join(", "));
@@ -101,10 +105,14 @@ document.getElementById("generateButton").onclick = () => {
     board = generateBoardRobin({ goals, settings });
   }
   output = generateBoardArray(board);
-  showBoardBtn.disabled = false;
   outputElement.textContent = generateBoardJSON(board);
-  console.log("Board is: " + isBoardValid(board, goals))
+  generatedBoardStale = false;
+  outputCopyBtn.textContent = "Copy";
+  outputCopyBtn.classList.replace("btn-success", "btn-outline-secondary");
+  console.log("Board is: " + isBoardValid(board, goals));
 };
+
+document.getElementById("generateButton").onclick = generateBoard;
 
 outputCopyBtn.onclick = () => {
   navigator.clipboard.writeText(outputElement.textContent).then(() => {
@@ -123,7 +131,6 @@ document.getElementById(
 ).textContent = `Version ${packagejson.version}`;
 
 const showBoardBtn = document.getElementById("showBoardButton") as HTMLButtonElement;
-showBoardBtn.disabled = true;
 
 const boardModal = document.getElementById("boardModal") as HTMLDivElement;
 const boardGrid = document.getElementById("boardGrid") as HTMLDivElement;
@@ -142,6 +149,9 @@ function closeBoardModal() {
 }
 
 showBoardBtn.onclick = () => {
+  if (generatedBoardStale) {
+    generateBoard();
+  }
   renderBoard(output);
   openBoardModal();
 };
@@ -188,7 +198,7 @@ function test(count: number, goals: Obtainable[]) {
 
   for (let i: number = 0; i < count; i++) {
     let testSettings = { ...settings, seed: i };
-    const board = generateBoardRobin({ goals, settings: testSettings   });
+    const board = generateBoardRobin({ goals, settings: testSettings });
     if (isBoardValid(board, goals)) {
       wins += 1;
     } else {
